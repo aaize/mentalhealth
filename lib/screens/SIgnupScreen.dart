@@ -3,26 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'HomeScreen.dart';
-import 'LoginScreen.dart';
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Firebase Login Demo',
-      theme: ThemeData.dark(),
-      home: const LoginScreen(),
-    );
-  }
-}
+import 'LoginScreen.dart'; // Ensure this import is correct
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -72,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await userCredential.user!.sendEmailVerification();
       showToast("Verification email sent! Please check your inbox.");
-      Navigator.pop(context);
+      Navigator.pop(context); // Return to the login screen after successful signup
 
     } on FirebaseAuthException catch (e) {
       handleFirebaseError(e);
@@ -244,47 +225,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   "ALREADY HAVE AN ACCOUNT? LOGIN",
-                  style: GoogleFonts.roboto(
-                    fontSize: 16,
-                    color: Colors.deepPurple,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Update the LoginScreen's CREATE NEW ACCOUNT button:
-class _LoginScreenState extends State<LoginScreen> {
-  // ... existing code ...
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // ... other widgets ...
-              TextButton(
-                onPressed: _isLoading
-                    ? null
-                    : () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignUpScreen(),
-                  ),
-                ),
-                child: Text(
-                  "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(
                     fontSize: 16,
                     color: Colors.deepPurple,
