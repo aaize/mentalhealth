@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'HomeScreen.dart';
-import 'SIgnupScreen.dart';
+import 'SignUpScreen.dart'; // Ensure this import is correct
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _isLoading = false; // Add this line to declare the loading state
+  bool _isLoading = false;
 
   Future<void> _loginUser() async {
     setState(() => _isLoading = true);
@@ -45,13 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
-
       showToast("Please enter a valid email");
+      setState(() => _isLoading = false);
       return;
     }
 
     if (password.isEmpty || password.length < 6) {
       showToast("Password must be at least 6 characters");
+      setState(() => _isLoading = false);
       return;
     }
 
@@ -59,45 +61,24 @@ class _LoginScreenState extends State<LoginScreen> {
       final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
-
       );
 
-
+      if (!userCredential.user!.emailVerified) {
+        await _auth.signOut();
+        showToast("Please verify your email first");
+        setState(() => _isLoading = false);
+        return;
+      }
 
       showToast("Login successful!");
       // Navigate to home screen
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-
     } on FirebaseAuthException catch (e) {
       handleFirebaseError(e);
     } finally {
       setState(() => _isLoading = false);
     }
   }
-  //for Email Verification
-/*
-  Future<void> _signUpUser() async {
-    setState(() => _isLoading = true);
-
-    final String email = _emailController.text.trim();
-    final String password = _passwordController.text.trim();
-
-    try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      await userCredential.user!.sendEmailVerification();
-      showToast("Verification email sent! Please check your inbox.");
-
-    } on FirebaseAuthException catch (e) {
-      handleFirebaseError(e);
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  } */
-  //For the reset Password thing
 
   Future<void> _resetPassword() async {
     final String email = _emailController.text.trim();
@@ -271,36 +252,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              TextButton(
-                onPressed: _isLoading ? null : _signUpUser,
-                child: Text(
-                  "CREATE NEW ACCOUNT",
-                  style: GoogleFonts.roboto(
-                    fontSize: 16,
-                    color: Colors.deepPurple,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // ... your existing widgets ...
               TextButton(
                 onPressed: _isLoading
                     ? null
