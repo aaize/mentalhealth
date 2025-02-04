@@ -176,7 +176,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "EMAIL",
-                  hintStyle: GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  hintStyle: GoogleFonts.roboto(
+                      fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -199,7 +200,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "PASSWORD",
-                  hintStyle: GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  hintStyle: GoogleFonts.roboto(
+                      fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -255,12 +257,13 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: _isLoading
                     ? null
-                    : () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignUpScreen(),
-                  ),
-                ),
+                    : () =>
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignUpScreen(),
+                      ),
+                    ),
                 child: Text(
                   "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(
