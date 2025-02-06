@@ -2,9 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'HomeScreen.dart'; // Import your HomeScreen
-import 'LoginScreen.dart'; // Import your LoginScreen
+import 'HomeScreen.dart';
+import 'LoginScreen.dart';
 
+//added auto login if the user has previously logged in using email and password
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
