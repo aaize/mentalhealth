@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'HomeScreen.dart'; // Import your HomeScreen
+import 'LoginScreen.dart'; // Import your LoginScreen
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,8 +22,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _controller = AnimationController(
       duration: Duration(seconds: 3),
       vsync: this,
-    )
-      ..forward(); // Start the animation immediately
+    )..forward(); // Start the animation immediately
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
@@ -30,10 +32,35 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
 
-    // Navigate to the HomePage after 3 seconds
-    Timer(Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacementNamed('/home');
-    });
+    // Check if the user is already logged in
+    checkLoginStatus();
+  }
+
+  Future<void> checkLoginStatus() async {
+    // Get the current user from Firebase Authentication
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // Wait for 3 seconds (duration of the splash screen animation)
+    await Future.delayed(Duration(seconds: 3));
+
+    // Navigate based on login status
+    if (user != null) {
+      // User is logged in, navigate to HomeScreen
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } else {
+      // User is not logged in, navigate to LoginScreen
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => LoginScreen()),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

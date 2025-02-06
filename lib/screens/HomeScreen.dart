@@ -228,9 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: openEmojiSelection,
                 style: ButtonStyle(
                   alignment: Alignment.centerLeft,
-                  backgroundColor: MaterialStateProperty.all(Color(0xFF87CEFA)), // Light Sky Blue
-                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15, horizontal: 50)),
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(Color(0xFF87CEFA)), // Light Sky Blue
+                  padding: WidgetStateProperty.all(EdgeInsets.symmetric(vertical: 15, horizontal: 50)),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
