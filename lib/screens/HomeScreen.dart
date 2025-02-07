@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -98,6 +98,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+
+              ListTile(
+                title: Text('Mood Tracker'),
+                leading: Icon(Icons.emoji_emotions),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => MoodHistoryScreen()),
+                ),
+              ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.person, color: Color(0xFF6A5ACD)),
                 title: Text('Profile', style: GoogleFonts.poppins(fontSize: 18)),
