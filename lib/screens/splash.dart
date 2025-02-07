@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
 
-//added auto login if the user has previously logged in using email and password
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -13,45 +12,43 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+  late Animation<double> _jiggleAnimation;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 4),
       vsync: this,
-    )..forward(); // Start the animation immediately
+    )..forward();
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _jiggleAnimation = Tween<double>(begin: 0.0, end: 10.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
+    );
+
+    _colorAnimation = ColorTween(begin: Colors.black, end: Colors.deepPurple).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-
-    // Check if the user is already logged in
-    checkLoginStatus();
+    // Check login status after the animation ends
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        checkLoginStatus();
+      }
+    });
   }
 
   Future<void> checkLoginStatus() async {
-    // Get the current user from Firebase Authentication
     User? user = FirebaseAuth.instance.currentUser;
+    await Future.delayed(Duration(seconds: 1));
 
-    // Wait for 3 seconds (duration of the splash screen animation)
-    await Future.delayed(Duration(seconds: 3));
-
-    // Navigate based on login status
     if (user != null) {
-      // User is logged in, navigate to HomeScreen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => HomeScreen()),
       );
     } else {
-      // User is not logged in, navigate to LoginScreen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => LoginScreen()),
       );
@@ -67,56 +64,40 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Black background
+      backgroundColor: _colorAnimation.value,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // App name with different color for 'M'
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: RichText(
-                  text: TextSpan(
-                    style: GoogleFonts.pacifico(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Default color for the rest of the text
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "M",
-                        style: TextStyle(color: Colors.purple), // 'M' in purple
-                      ),
-                      TextSpan(
-                        text: "inCo",
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _jiggleAnimation.value),
+              child: RichText(
+                text: TextSpan(
+                  style: GoogleFonts.gabarito(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.black.withOpacity(0.5),
+                        offset: Offset(2, 2),
                       ),
                     ],
                   ),
+                  children: [
+                    TextSpan(
+                      text: "M",
+                      style: TextStyle(color: Colors.purple),
+                    ),
+                    TextSpan(
+                      text: "inCo",
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            // Tagline/Quote styled as blockquote
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Text(
-                  "Your mental well-being, our priority.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 10,
-                    letterSpacing: 1.5,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

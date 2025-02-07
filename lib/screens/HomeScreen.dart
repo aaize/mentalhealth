@@ -102,7 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
 
               ListTile(
-                title: Text('Mood Tracker'),
+                title: Text('Mood Tracker',
+                  style: TextStyle(fontSize: 18),
+                ),
                 leading: Icon(Icons.emoji_emotions),
                 onTap: () => Navigator.push(
                   context,
@@ -169,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Center(
           child: RichText(
             text: TextSpan(
-              style: GoogleFonts.pacifico(
+              style: GoogleFonts.gabarito(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -293,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            _eventCard('Support Group 1', 'Every Wednesday at 6 PM','A supportive community gathering to discuss mental health topics.'),
+            _eventCard('Harmony Helpers', 'Every Wednesday at 6 PM','A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 20),
             _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM','A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 30),
@@ -353,68 +355,79 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Event Card Widget
   Widget _eventCard(String eventName, String eventTime, String eventDescription) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(vertical: 8),
+    return GestureDetector(
+      onTap: () {
+        // Navigate to the event details page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => JoinEventScreen(
+              eventName: eventName,
+              eventTime: eventTime,
+              eventDescription: eventDescription,
+            ),
+          ),
+        );
+      },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
         elevation: 5,
-        color: Colors.grey[900],
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                eventName,
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF6A5ACD),
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                eventTime,
-                style: GoogleFonts.poppins(color: Colors.grey[600]),
-              ),
-              SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => JoinEventScreen(
-                        eventName: eventName,
-                        eventTime: eventTime,
-                        eventDescription: eventDescription,
-                      ),
+        margin: EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /*ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+            child: Image.asset(
+              'lib/assets/event_image.jpg', // Replace with your image path
+              width: double.infinity,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
+          ),*/
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    eventName,
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6A5ACD),
                     ),
-                  );
-                },
-                child: Text(
-                  'Join Event',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF87CEFA),
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 25),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  SizedBox(height: 8),
+                  Text(
+                    eventTime,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                ),
+                  SizedBox(height: 8),
+                  Text(
+                    eventDescription,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[800],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+
 
 
   // Contact Card Widget
