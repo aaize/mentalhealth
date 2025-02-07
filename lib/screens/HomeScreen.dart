@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
+import 'package:mentalhealth/screens/JoinEventScreen.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -291,9 +293,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            _eventCard('Support Group 1', 'Every Wednesday at 6 PM'),
+            _eventCard('Support Group 1', 'Every Wednesday at 6 PM','A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 20),
-            _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM'),
+            _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM','A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 30),
 
             // Emergency Contacts Section
@@ -350,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Event Card Widget
-  Widget _eventCard(String eventName, String eventTime) {
+  Widget _eventCard(String eventName, String eventTime, String eventDescription) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -381,7 +383,16 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
-                  // Navigate to the event details page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => JoinEventScreen(
+                        eventName: eventName,
+                        eventTime: eventTime,
+                        eventDescription: eventDescription,
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   'Join Event',
@@ -404,6 +415,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
   // Contact Card Widget
   Widget _contactCard(String name, String number) {
