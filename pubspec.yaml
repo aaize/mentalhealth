@@ -53,6 +53,12 @@ dev_dependencies:
   fluttertoast:
   shared_preferences:
   firebase_auth: ^4.2.1
+  table_calendar: ^3.0.9
+  fl_chart:
+
+  cloud_firestore: ^4.8.0
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

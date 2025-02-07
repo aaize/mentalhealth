@@ -49,6 +49,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  cloud_firestore:
+    dependency: "direct dev"
+    description:
+      name: cloud_firestore
+      sha256: a0f161b92610e078b4962d7e6ebeb66dc9cce0ada3514aeee442f68165d78185
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.17.5"
+  cloud_firestore_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_firestore_platform_interface
+      sha256: "6a55b319f8d33c307396b9104512e8130a61904528ab7bd8b5402678fca54b81"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.5"
+  cloud_firestore_web:
+    dependency: transitive
+    description:
+      name: cloud_firestore_web
+      sha256: "89dfa1304d3da48b3039abbb2865e3d30896ef858e569a16804a99f4362283a9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.12.5"
   collection:
     dependency: transitive
     description:
@@ -73,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -145,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.17.5"
+  fl_chart:
+    dependency: "direct dev"
+    description:
+      name: fl_chart
+      sha256: "749b3342ea3e95cbf61a0fec31a62606e837377b8b6d0caa7367a7ef80f38b7d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.55.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -200,6 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   kf_drawer:
     dependency: "direct dev"
     description:
@@ -408,6 +456,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  simple_gesture_detector:
+    dependency: transitive
+    description:
+      name: simple_gesture_detector
+      sha256: ba2cd5af24ff20a0b8d609cec3f40e5b0744d2a71804a2616ae086b9c19d19a3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -445,6 +501,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  table_calendar:
+    dependency: "direct dev"
+    description:
+      name: table_calendar
+      sha256: "0c0c6219878b363a2d5f40c7afb159d845f253d061dc3c822aa0d5fe0f721982"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   term_glyph:
     dependency: transitive
     description:
