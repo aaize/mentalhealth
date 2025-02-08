@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
+import 'package:mentalhealth/screens/ProfileScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 class HomeScreen extends StatefulWidget {
@@ -116,12 +117,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.person, color: Color(0xFF6A5ACD)),
                 title: Text('Profile', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(
-                    msg: "Profile selected",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
                   );
+
+
                   // Add further functionality here if needed
                 },
               ),
