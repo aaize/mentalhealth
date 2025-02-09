@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
+import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 
@@ -147,6 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text('Logout', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+
                   Fluttertoast.showToast(
                     msg: "Logout selected",
                     toastLength: Toast.LENGTH_SHORT,
