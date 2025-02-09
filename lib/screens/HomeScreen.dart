@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
+
+import 'ProfileScreen.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -116,10 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.person, color: Color(0xFF6A5ACD)),
                 title: Text('Profile', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
-                 /* Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );*/
+                  );
 
 
                   // Add further functionality here if needed
