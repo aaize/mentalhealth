@@ -56,7 +56,12 @@ dev_dependencies:
   table_calendar: ^3.0.9
   fl_chart:
   get:
-  line_awesome_flutter: 
+  line_awesome_flutter:
+  firebase_storage:
+  image_picker:
+  http:
+  supabase_flutter:
+
 
   cloud_firestore: ^4.8.0
 
