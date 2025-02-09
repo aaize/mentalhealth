@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentalhealth/screens/ChatScreen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
@@ -321,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 10),
             _contactCard('Suicide Prevention', '1-800-273-TALK'),
             SizedBox(height: 20),
-            _contactCard('Crisis Text Line', 'Text HOME to 741741'),
+            _contactCard('Emergency', 'Assist you at any time..'),
           ],
         ),
       ),
@@ -473,12 +474,25 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Spacer(),
-            IconButton(
-              icon: Icon(Icons.call, color: Color(0xFF87CEFA)),
-              onPressed: () {
-                // Handle call action
-              },
-            ),
+            // Different icons based on name
+            if (name == 'Suicide Prevention')
+              IconButton(
+                icon: Icon(Icons.call, color: Color(0xFF87CEFA)),
+                onPressed: () {
+                  // Handle call action for Suicide Prevention
+                },
+              ),
+            if (name == 'Emergency')
+              IconButton(
+                icon: Icon(Icons.chat, color: Color(0xFF87CEFA)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatScreen()),
+                  );
+                  // Handle chat action for Chat with a Person
+                },
+              ),
           ],
         ),
       ),

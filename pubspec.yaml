@@ -62,6 +62,11 @@ dev_dependencies:
   http:
   supabase_flutter:
   flutter_animated_splash:
+  flutter_dotenv:
+  geolocator:
+  permission_handler:
+  google_maps_flutter:
+  location:
 
 
   cloud_firestore: ^4.8.0
