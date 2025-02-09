@@ -61,6 +61,7 @@ dev_dependencies:
   image_picker:
   http:
   supabase_flutter:
+  flutter_animated_splash:
 
 
   cloud_firestore: ^4.8.0
