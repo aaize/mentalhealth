@@ -5,7 +5,7 @@ import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 
-import 'ProfileScreen.dart';
+import 'ProfilePage.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
                   );
 
 
