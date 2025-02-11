@@ -12,11 +12,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late String displayName;
-  late String email;
-  late String imageUrl;
-  late String lastUpdated;
-  bool isLoading = true; // To manage the loading state
+  late String displayName = "Loading...";
+  late String email = "";
+  late String imageUrl = "";
+  late String lastUpdated = "";
+  bool isLoading = true; // To manage loading state
 
   @override
   void initState() {
@@ -28,9 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadUserProfile() async {
     final user = _auth.currentUser;
 
-    // Wait for 2 seconds to show animation
-    await Future.delayed(Duration(seconds: 2));
-
     if (user != null) {
       final profileDoc = await FirebaseFirestore.instance
           .collection('ProfileDetails')
@@ -38,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
           .get();
 
       setState(() {
-        displayName = user.displayName ?? 'No name';
+        displayName = profileDoc['displayName'] ?? 'No name';
         email = user.email ?? 'No email';
         imageUrl = profileDoc['imageUrl'] ?? '';
         lastUpdated = profileDoc['lastUpdated'] != null
@@ -47,6 +44,54 @@ class _ProfilePageState extends State<ProfilePage> {
         isLoading = false; // Update loading state
       });
     }
+  }
+
+  // Function to show edit popup
+  void _showEditPopup() {
+    TextEditingController _nameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Edit Display Name"),
+          content: TextField(
+            controller: _nameController,
+            decoration: InputDecoration(hintText: "Enter new display name"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String newName = _nameController.text.trim();
+                if (newName.isNotEmpty) {
+                  User? user = _auth.currentUser;
+
+                  if (user != null) {
+                    String uid = user.uid;
+
+                    await FirebaseFirestore.instance
+                        .collection('ProfileDetails')
+                        .doc(uid)
+                        .update({'displayName': newName});
+
+                    setState(() {
+                      displayName = newName; // Update the UI
+                    });
+
+                    Navigator.pop(context); // Close popup
+                  }
+                }
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -59,14 +104,20 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
+        actions: [
+          IconButton(
+            onPressed: _showEditPopup, // Open the popup when edit button is clicked
+            icon: Icon(Icons.edit),
+          ),
+        ],
       ),
-      body: Center( // Center the content
+      body: Center(
         child: isLoading
-            ? CircularProgressIndicator() // Show loading indicator while data is loading
+            ? CircularProgressIndicator()
             : Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Vertically center the content
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Profile Picture
