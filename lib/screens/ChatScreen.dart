@@ -14,7 +14,7 @@ void main() {
 }
 
 class OpenAIService {
-  final String apiKey = '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'; // Your API key
+  final String apiKey = 'yourkey'; // Your API key
 
   Future<String> getResponse(String userMessage) async {
     final url = Uri.parse('https://api.openai.com/v1/chat/completions'); // Endpoint for chat models
