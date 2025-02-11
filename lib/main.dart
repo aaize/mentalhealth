@@ -4,7 +4,6 @@ import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/splash.dart';
 import 'package:mentalhealth/screens/HomeScreen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// open ai : 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
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

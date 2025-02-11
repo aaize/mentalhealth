@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
-//haousdfhaiuwbgairwgbaihbasfhbfshbfsi
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
