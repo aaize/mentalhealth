@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String selectedEmoji = '😊'; // Default emoji
-
+  Color backgroundColor = Color(0xFF6A5ACD);  // Default color
   @override
   void initState() {
     super.initState();
@@ -30,6 +30,42 @@ class _HomeScreenState extends State<HomeScreen> {
       fontSize: 16.0,
     );
   }
+  void _emojiButtonColor(String emoji) {
+    setState(() {
+      selectedEmoji = emoji;
+
+      // Change background color based on the emoji selected
+      if (emoji == '😊') {
+        backgroundColor = Colors.yellow;  // Example color for happy emoji
+      } else if (emoji == '😢') {
+        backgroundColor = Colors.blueAccent;  // Example color for sad emoji
+      } else if (emoji == '😡') {
+        backgroundColor = Colors.red;  // Example color for angry emoji
+      } else if (emoji == '😎') {
+        backgroundColor = Colors.green;  // Example color for cool emoji
+      }else if (emoji == '😍') {
+        backgroundColor = Colors.pink;  // Example color for cool emoji
+      }
+      else if (emoji == '🚫') {
+        backgroundColor = Colors.deepPurple;  // Example color for cool emoji
+      }
+      // Add more conditions for other emojis if needed
+    });
+  }
+  Widget _emojiButton(String emoji) {
+    return GestureDetector(
+      onTap: () {
+        _emojiButtonColor(emoji); // Call method to update emoji and color
+        Navigator.of(context).pop(); // Close the dialog
+      },
+      child: Text(
+        emoji,
+        style: TextStyle(fontSize: 32),
+      ),
+    );
+  }
+
+
 
   void openEmojiSelection() {
     showDialog(
@@ -55,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _emojiButton('😍'),
                     _emojiButton('🤔'),
                     _emojiButton('😴'),
+                    _emojiButton('🚫'),
                   ],
                 ),
               ],
@@ -63,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
+
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text(
@@ -76,20 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _emojiButton(String emoji) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedEmoji = emoji; // Update the selected emoji
-        });
-        Navigator.of(context).pop(); // Close the dialog
-      },
-      child: Text(
-        emoji,
-        style: TextStyle(fontSize: 32),
-      ),
-    );
-  }
+
 
   // Function to show the bottom sheet with profile/menu options
   void _showProfileMenu() {
@@ -109,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text('Mood Tracker',
                   style: TextStyle(fontSize: 18),
                 ),
-                leading: Icon(Icons.emoji_emotions),
+                leading: Icon(Icons.emoji_emotions, color: backgroundColor,),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => MoodHistoryScreen()),
@@ -117,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.person, color: Color(0xFF6A5ACD)),
+                leading: Icon(Icons.person, color: backgroundColor),
                 title: Text('Profile', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
                   Navigator.push(
@@ -131,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.settings, color: Color(0xFF6A5ACD)),
+                leading: Icon(Icons.settings, color: backgroundColor),
                 title: Text('Settings', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
                   Navigator.pop(context);
@@ -145,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.logout, color: Color(0xFF6A5ACD)),
+                leading: Icon(Icons.logout, color: backgroundColor),
                 title: Text('Logout', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
                   Navigator.pop(context);
@@ -198,7 +223,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        backgroundColor: Color(0xFF6A5ACD),
+        backgroundColor: backgroundColor,
+        //backgroundColor: Color(0xFF6A5ACD),
         elevation: 0,
         actions: [
           // Add the selected emoji to the AppBar
@@ -227,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6A5ACD),
+                color: backgroundColor,
               ),
             ),
             SizedBox(height: 8),
@@ -243,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6A5ACD),
+                color: backgroundColor,
               ),
             ),
             SizedBox(height: 10),
@@ -278,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6A5ACD),
+                color: backgroundColor,
               ),
             ),
             SizedBox(height: 10),
@@ -301,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6A5ACD),
+                color: backgroundColor,
               ),
             ),
             SizedBox(height: 10),
@@ -316,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6A5ACD),
+                color: backgroundColor,
               ),
             ),
             SizedBox(height: 10),
@@ -407,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF6A5ACD),
+                      color:backgroundColor,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -451,7 +477,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundColor: Color(0xFF6A5ACD),
+              backgroundColor:
+              backgroundColor,
               child: Icon(Icons.person, color: Colors.white),
             ),
             SizedBox(width: 16),
@@ -463,7 +490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF6A5ACD),
+                    color: backgroundColor,
                   ),
                 ),
                 SizedBox(height: 5),
