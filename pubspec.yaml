@@ -67,10 +67,14 @@ dev_dependencies:
   permission_handler:
   google_maps_flutter:
   location:
+  flutter_launcher_icons:
 
 
   cloud_firestore: ^4.8.0
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/Logo.png"
 
 
 # For information on the generic Dart part of this file, see the
