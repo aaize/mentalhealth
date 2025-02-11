@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.emoji_emotions, color: backgroundColor),
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => MoodHistoryScreen()),
+                  MaterialPageRoute(builder: (_) => MoodHistoryScreen(email: widget.userEmail,backgroundColor: backgroundColor,)),
                 ),
               ),
               Divider(),
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfilePage(email: widget.userEmail),
+                      builder: (context) => ProfilePage(email: widget.userEmail, backgroundColor: backgroundColor,),
                     ),
                   );
                 },

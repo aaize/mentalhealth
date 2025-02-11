@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/mood_entry.dart';
 import 'package:mentalhealth/widgets/mood_calendar.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_analytics_screen.dart';
+
 class MoodHistoryScreen extends StatefulWidget {
+  final String email;
+  final Color backgroundColor; // Receive the backgroundColor
+
+
+  const MoodHistoryScreen({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
+
   @override
   _MoodHistoryScreenState createState() => _MoodHistoryScreenState();
 }
 
 class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final User? _user = FirebaseAuth.instance.currentUser;
   late Stream<QuerySnapshot> _moodEntriesStream;
 
   @override
   void initState() {
     super.initState();
     _moodEntriesStream = _firestore
-        .collection('users')
-        .doc(_user?.uid)
-        .collection('moodEntries')
+        .collection('moods')
+        .doc(widget.email)
+        .collection('entries')
         .snapshots();
   }
 
   Future<void> _saveMoodEntry(DateTime date, String emoji) async {
     await _firestore
-        .collection('users')
-        .doc(_user?.uid)
-        .collection('moodEntries')
+        .collection('moods')
+        .doc(widget.email)
+        .collection('entries')
         .doc(date.toString())
         .set({
       'date': date,
@@ -53,13 +58,16 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mood History'),
+        centerTitle: true,
+        title: Text('Mood History',
+        style: TextStyle(fontWeight: FontWeight.bold),),
+        backgroundColor: widget.backgroundColor, // Use backgroundColor here
         actions: [
           IconButton(
             icon: Icon(Icons.analytics),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => MoodAnalyticsScreen()),
+              MaterialPageRoute(builder: (_) => MoodAnalyticsScreen(email: widget.email,backgroundColor: widget.backgroundColor,)),
             ),
           ),
         ],

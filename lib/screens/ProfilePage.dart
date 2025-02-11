@@ -9,7 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   final String email; // Passed from the login (or home) screen
-  const ProfilePage({Key? key, required this.email}) : super(key: key);
+  final Color backgroundColor;
+  const ProfilePage({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -125,6 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: widget.backgroundColor,
           title: Text("Edit Display Name"),
           content: TextField(
             controller: _nameController,
@@ -166,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: widget.backgroundColor,
         actions: [
           IconButton(
             onPressed: _showEditPopup,
@@ -237,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: widget.backgroundColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
