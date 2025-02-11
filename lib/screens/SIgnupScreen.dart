@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'LoginScreen.dart'; // Ensure this import is correct
+import 'LoginScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -13,20 +13,28 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _nameController = TextEditingController(); // For display name
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
   Future<void> _signUpUser() async {
     setState(() => _isLoading = true);
 
+    final String name = _nameController.text.trim();
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
-    if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    if (name.isEmpty) {
+      showToast("Please enter your name");
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    if (!RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       showToast("Please enter a valid email");
       setState(() => _isLoading = false);
@@ -46,38 +54,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      // Manually create a document in the "ProfileDetails" collection.
+      // Using the email as the document ID (or you could use a generated UID)
+      await FirebaseFirestore.instance
+          .collection('ProfileDetails')
+          .doc(email)
+          .set({
+        'displayName': name,
+        'email': email,
+        'password': password, // In production, store a hashed version!
+        'imageUrl': '', // Provide a default URL or leave empty
+        'lastUpdated': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
-      await userCredential.user!.sendEmailVerification();
-      showToast("Verification email sent! Please check your inbox.");
-      Navigator.pop(context); // Return to the login screen after successful signup
-
-    } on FirebaseAuthException catch (e) {
-      handleFirebaseError(e);
+      showToast("Sign-up successful! You can now log in.");
+      Navigator.pop(context); // Return to the login screen
+    } catch (e) {
+      showToast("Error: ${e.toString()}");
     } finally {
       setState(() => _isLoading = false);
     }
-  }
-
-  void handleFirebaseError(FirebaseAuthException e) {
-    String message = 'An error occurred';
-    switch (e.code) {
-      case 'email-already-in-use':
-        message = 'Email already registered';
-        break;
-      case 'weak-password':
-        message = 'Password is too weak';
-        break;
-      case 'invalid-email':
-        message = 'Invalid email address';
-        break;
-      default:
-        message = e.message ?? 'An error occurred';
-    }
-    showToast(message);
   }
 
   void showToast(String message) {
@@ -92,6 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -104,7 +102,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+          padding:
+          const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -125,6 +124,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Name Field
+              TextField(
+                controller: _nameController,
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                  color: Colors.white,
+                  letterSpacing: 0.24,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  hintText: "NAME",
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  enabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Email Field
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -136,7 +160,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "EMAIL",
-                  hintStyle: GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -148,6 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Password Field
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -159,7 +185,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "PASSWORD",
-                  hintStyle: GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -171,6 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Confirm Password Field
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: true,
@@ -182,7 +210,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "CONFIRM PASSWORD",
-                  hintStyle: GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -207,7 +236,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.white),
                   )
                       : Text(
                     "SIGN UP",
@@ -239,4 +269,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-//helooooo

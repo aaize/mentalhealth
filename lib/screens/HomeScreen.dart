@@ -5,10 +5,12 @@ import 'package:mentalhealth/screens/ChatScreen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
-import 'package:mentalhealth/screens/JoinEventScreen.dart';
+import 'package:mentalhealth/screens/ProfilePage.dart';
 
-import 'ProfilePage.dart';
 class HomeScreen extends StatefulWidget {
+  final String userEmail; // The email of the logged-in user
+  const HomeScreen({Key? key, required this.userEmail}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String selectedEmoji = '😊'; // Default emoji
   Color backgroundColor = Color(0xFF6A5ACD);  // Default color
+
   @override
   void initState() {
     super.initState();
@@ -30,32 +33,31 @@ class _HomeScreenState extends State<HomeScreen> {
       fontSize: 16.0,
     );
   }
+
   void _emojiButtonColor(String emoji) {
     setState(() {
       selectedEmoji = emoji;
-
       // Change background color based on the emoji selected
       if (emoji == '😊') {
-        backgroundColor = Colors.yellow;  // Example color for happy emoji
+        backgroundColor = Colors.yellow;
       } else if (emoji == '😢') {
-        backgroundColor = Colors.blueAccent;  // Example color for sad emoji
+        backgroundColor = Colors.blueAccent;
       } else if (emoji == '😡') {
-        backgroundColor = Colors.red;  // Example color for angry emoji
+        backgroundColor = Colors.red;
       } else if (emoji == '😎') {
-        backgroundColor = Colors.green;  // Example color for cool emoji
-      }else if (emoji == '😍') {
-        backgroundColor = Colors.pink;  // Example color for cool emoji
+        backgroundColor = Colors.green;
+      } else if (emoji == '😍') {
+        backgroundColor = Colors.pink;
+      } else if (emoji == '🚫') {
+        backgroundColor = Colors.deepPurple;
       }
-      else if (emoji == '🚫') {
-        backgroundColor = Colors.deepPurple;  // Example color for cool emoji
-      }
-      // Add more conditions for other emojis if needed
     });
   }
+
   Widget _emojiButton(String emoji) {
     return GestureDetector(
       onTap: () {
-        _emojiButtonColor(emoji); // Call method to update emoji and color
+        _emojiButtonColor(emoji); // Update emoji and background color
         Navigator.of(context).pop(); // Close the dialog
       },
       child: Text(
@@ -64,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
 
   void openEmojiSelection() {
     showDialog(
@@ -86,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     _emojiButton('😊'),
                     _emojiButton('😢'),
                     _emojiButton('😡'),
-                    _emojiButton('😱'),
                     _emojiButton('😎'),
                     _emojiButton('😍'),
                     _emojiButton('🤔'),
@@ -100,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
-
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text(
@@ -113,8 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-
 
   // Function to show the bottom sheet with profile/menu options
   void _showProfileMenu() {
@@ -129,12 +125,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-
               ListTile(
-                title: Text('Mood Tracker',
+                title: Text(
+                  'Mood Tracker',
                   style: TextStyle(fontSize: 18),
                 ),
-                leading: Icon(Icons.emoji_emotions, color: backgroundColor,),
+                leading: Icon(Icons.emoji_emotions, color: backgroundColor),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => MoodHistoryScreen()),
@@ -145,13 +141,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.person, color: backgroundColor),
                 title: Text('Profile', style: GoogleFonts.poppins(fontSize: 18)),
                 onTap: () {
+                  // Pass the user's email to ProfilePage
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(email: widget.userEmail),
+                    ),
                   );
-
-
-                  // Add further functionality here if needed
                 },
               ),
               Divider(),
@@ -165,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                   );
-                  // Add settings functionality here
                 },
               ),
               Divider(),
@@ -179,13 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
-
                   Fluttertoast.showToast(
                     msg: "Logout selected",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                   );
-                  // Add logout functionality here
                 },
               ),
             ],
@@ -224,10 +217,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         backgroundColor: backgroundColor,
-        //backgroundColor: Color(0xFF6A5ACD),
         elevation: 0,
         actions: [
-          // Add the selected emoji to the AppBar
+          // Display the selected emoji in the AppBar
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
@@ -262,7 +254,6 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
             ),
             SizedBox(height: 30),
-
             // Emotional Check-In Section
             Text(
               'How are you feeling today?',
@@ -278,9 +269,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: openEmojiSelection,
                 style: ButtonStyle(
                   alignment: Alignment.centerLeft,
-                  backgroundColor: WidgetStateProperty.all(Color(0xFF87CEFA)), // Light Sky Blue
-                  padding: WidgetStateProperty.all(EdgeInsets.symmetric(vertical: 15, horizontal: 50)),
-                  shape: WidgetStateProperty.all(
+                  backgroundColor: MaterialStateProperty.all(backgroundColor),
+                  padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                  ),
+                  shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -297,8 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 30),
-
-            // Image Gallery Section
+            // Image Gallery Section (example)
             Text(
               'Explore Resources',
               style: GoogleFonts.poppins(
@@ -320,7 +312,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 30),
-
             // Upcoming Events or Support Groups
             Text(
               'Upcoming Peer Support Groups',
@@ -331,11 +322,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            _eventCard('Harmony Helpers', 'Every Wednesday at 6 PM','A supportive community gathering to discuss mental health topics.'),
+            _eventCard('Harmony Helpers', 'Every Wednesday at 6 PM', 'A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 20),
-            _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM','A supportive community gathering to discuss mental health topics.'),
+            _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM', 'A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 30),
-
             // Emergency Contacts Section
             Text(
               'Emergency Contacts',
@@ -393,7 +383,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _eventCard(String eventName, String eventTime, String eventDescription) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the event details page
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -411,60 +400,43 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         elevation: 5,
         margin: EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.asset(
-              'lib/assets/event_image.jpg', // Replace with your image path
-              width: double.infinity,
-              height: 150,
-              fit: BoxFit.cover,
-            ),
-          ),*/
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    eventName,
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color:backgroundColor,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    eventTime,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    eventDescription,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.grey[800],
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                eventName,
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: backgroundColor,
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                eventTime,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                eventDescription,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.grey[800],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
-
 
   // Contact Card Widget
   Widget _contactCard(String name, String number) {
@@ -477,8 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundColor:
-              backgroundColor,
+              backgroundColor: backgroundColor,
               child: Icon(Icons.person, color: Colors.white),
             ),
             SizedBox(width: 16),
@@ -501,7 +472,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Spacer(),
-            // Different icons based on name
             if (name == 'Suicide Prevention')
               IconButton(
                 icon: Icon(Icons.call, color: Color(0xFF87CEFA)),
@@ -517,7 +487,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     MaterialPageRoute(builder: (context) => ChatScreen()),
                   );
-                  // Handle chat action for Chat with a Person
                 },
               ),
           ],

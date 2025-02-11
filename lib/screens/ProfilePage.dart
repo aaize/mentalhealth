@@ -1,22 +1,29 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:mentalhealth/screens/UploadProfilePic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
+  final String email; // Passed from the login (or home) screen
+  const ProfilePage({Key? key, required this.email}) : super(key: key);
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   late String displayName = "Loading...";
-  late String email = "";
   late String imageUrl = "";
   late String lastUpdated = "";
   bool isLoading = true; // To manage loading state
+  File? _image;
+  bool _isUploading = false;
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -24,29 +31,93 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserProfile();
   }
 
-  // Load user profile data from Firebase
+  // Loads the user's profile details from Firestore using the email (document ID)
   Future<void> _loadUserProfile() async {
-    final user = _auth.currentUser;
-
-    if (user != null) {
-      final profileDoc = await FirebaseFirestore.instance
+    try {
+      final DocumentSnapshot profileDoc = await FirebaseFirestore.instance
           .collection('ProfileDetails')
-          .doc(user.uid)
+          .doc(widget.email) // Using the email as the document ID
           .get();
 
+      if (profileDoc.exists) {
+        final data = profileDoc.data() as Map<String, dynamic>;
+        setState(() {
+          displayName = data['displayName'] ?? 'No name';
+          imageUrl = data['imageUrl'] ?? '';
+          lastUpdated = data['lastUpdated'] != null
+              ? DateFormat.yMMMd().format(
+            (data['lastUpdated'] as Timestamp).toDate(),
+          )
+              : 'Not updated';
+          isLoading = false;
+        });
+      } else {
+        // Document not found
+        setState(() {
+          displayName = 'Profile not found';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
-        displayName = profileDoc['displayName'] ?? 'No name';
-        email = user.email ?? 'No email';
-        imageUrl = profileDoc['imageUrl'] ?? '';
-        lastUpdated = profileDoc['lastUpdated'] != null
-            ? DateFormat.yMMMd().format(profileDoc['lastUpdated'].toDate())
-            : 'Not updated';
-        isLoading = false; // Update loading state
+        displayName = 'Error loading profile';
+        isLoading = false;
       });
+      print("Error loading profile: $e");
     }
   }
 
-  // Function to show edit popup
+  // Method to pick an image from the gallery and upload it
+  Future<void> _pickAndUploadImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        _isUploading = true; // Show loading state while uploading
+      });
+
+      try {
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${_image!.path.split('/').last}';
+
+        // Upload the file to Supabase Storage
+        final fileKey = await Supabase.instance.client.storage
+            .from('mentalhealth')
+            .upload(fileName, _image!);
+
+        final publicUrl = Supabase.instance.client.storage
+            .from('mentalhealth')
+            .getPublicUrl(fileName);
+
+        setState(() {
+          imageUrl = publicUrl;  // Update the imageUrl immediately
+        });
+
+        // Update Firestore with the new image URL
+        await FirebaseFirestore.instance
+            .collection('ProfileDetails')
+            .doc(widget.email)
+            .update({
+          'imageUrl': imageUrl,
+          'lastUpdated': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile image uploaded successfully!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error uploading image: $e')),
+        );
+      } finally {
+        setState(() {
+          _isUploading = false;  // Hide loading state after upload
+        });
+      }
+    }
+  }
+
+  // Function to show an edit popup for updating the display name
   void _showEditPopup() {
     TextEditingController _nameController = TextEditingController();
 
@@ -68,22 +139,14 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 String newName = _nameController.text.trim();
                 if (newName.isNotEmpty) {
-                  User? user = _auth.currentUser;
-
-                  if (user != null) {
-                    String uid = user.uid;
-
-                    await FirebaseFirestore.instance
-                        .collection('ProfileDetails')
-                        .doc(uid)
-                        .update({'displayName': newName});
-
-                    setState(() {
-                      displayName = newName; // Update the UI
-                    });
-
-                    Navigator.pop(context); // Close popup
-                  }
+                  await FirebaseFirestore.instance
+                      .collection('ProfileDetails')
+                      .doc(widget.email)
+                      .update({'displayName': newName});
+                  setState(() {
+                    displayName = newName;
+                  });
+                  Navigator.pop(context);
                 }
               },
               child: Text("Save"),
@@ -106,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
-            onPressed: _showEditPopup, // Open the popup when edit button is clicked
+            onPressed: _showEditPopup,
             icon: Icon(Icons.edit),
           ),
         ],
@@ -118,20 +181,22 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Profile Picture
-              CircleAvatar(
-                radius: 80,
-                backgroundImage: imageUrl.isNotEmpty
-                    ? NetworkImage(imageUrl)
-                    : AssetImage('assets/default_profile_pic.png') as ImageProvider,
-                child: imageUrl.isEmpty
-                    ? Icon(Icons.camera_alt, size: 50, color: Colors.white)
-                    : null,
+              GestureDetector(
+                onTap: _pickAndUploadImage,  // Trigger image pick and upload
+                child: CircleAvatar(
+                  radius: 80,
+                  backgroundImage: imageUrl.isNotEmpty
+                      ? NetworkImage(imageUrl)
+                      : AssetImage('assets/default_profile_pic.png')
+                  as ImageProvider,
+                  child: imageUrl.isEmpty
+                      ? Icon(Icons.camera_alt, size: 50, color: Colors.white)
+                      : null,
+                ),
               ),
               SizedBox(height: 20),
-
               // Profile Information
               Text(
                 displayName,
@@ -141,8 +206,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
               ),
+              SizedBox(height: 10),
               Text(
-                email,
+                widget.email,
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   color: Colors.grey[600],
@@ -156,18 +222,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.grey[500],
                 ),
               ),
-
               SizedBox(height: 40),
-
-              // Button to navigate to Upload Profile Pic Screen
+              // Button to upload the profile image
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );
-                },
-                child: Text(
+                onPressed: _isUploading ? null : _pickAndUploadImage,  // Bind to the new function
+                child: _isUploading
+                    ? CircularProgressIndicator()
+                    : Text(
                   'Upload Profile Picture',
                   style: GoogleFonts.poppins(
                     fontSize: 16,

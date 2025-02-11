@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'HomeScreen.dart';
-import 'SignUpScreen.dart'; // Ensure this import is correct
+import 'SignUpScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Login Demo',
+      title: 'Custom Login Demo',
       theme: ThemeData.dark(),
       home: const LoginScreen(),
     );
@@ -35,7 +35,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
   Future<void> _loginUser() async {
@@ -44,7 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
-    if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    // Basic email format validation
+    if (!RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       showToast("Please enter a valid email");
       setState(() => _isLoading = false);
@@ -58,67 +59,37 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      // Query the ProfileDetails collection for a document with the given email
+      QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('ProfileDetails')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-      if (!userCredential.user!.emailVerified) {
-        await _auth.signOut();
-        showToast("Please verify your email first");
-        setState(() => _isLoading = false);
-        return;
+      if (query.docs.isEmpty) {
+        showToast("No user found with this email");
+      } else {
+        // Get the first (and only) document
+        var userDoc = query.docs.first;
+        // Compare stored password with provided password
+        // (In production, compare hashed passwords)
+        if (userDoc['password'] == password) {
+          showToast("Login successful!");
+          // Navigate to the HomeScreen (pass user data if needed)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => HomeScreen(userEmail: email)),
+          );
+
+        } else {
+          showToast("Incorrect password");
+        }
       }
-
-      showToast("Login successful!");
-      // Navigate to home screen
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-    } on FirebaseAuthException catch (e) {
-      handleFirebaseError(e);
+    } catch (e) {
+      showToast("Error: ${e.toString()}");
     } finally {
       setState(() => _isLoading = false);
     }
-  }
-
-  Future<void> _resetPassword() async {
-    final String email = _emailController.text.trim();
-
-    if (email.isEmpty) {
-      showToast("Please enter your email");
-      return;
-    }
-
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      showToast("Password reset email sent to $email");
-    } on FirebaseAuthException catch (e) {
-      showToast(e.message ?? "Error sending reset email");
-    }
-  }
-
-  void handleFirebaseError(FirebaseAuthException e) {
-    String message = 'An error occurred';
-    switch (e.code) {
-      case 'user-not-found':
-        message = 'No user found with this email';
-        break;
-      case 'wrong-password':
-        message = 'Incorrect password';
-        break;
-      case 'user-disabled':
-        message = 'This account has been disabled';
-        break;
-      case 'email-already-in-use':
-        message = 'Email already registered';
-        break;
-      case 'weak-password':
-        message = 'Password is too weak';
-        break;
-      case 'invalid-email':
-        message = 'Invalid email address';
-        break;
-    }
-    showToast(message);
   }
 
   void showToast(String message) {
@@ -144,7 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+          padding:
+          const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -176,8 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "EMAIL",
-                  hintStyle: GoogleFonts.roboto(
-                      fontSize: 13, color: Colors.grey),
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -200,8 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: "PASSWORD",
-                  hintStyle: GoogleFonts.roboto(
-                      fontSize: 13, color: Colors.grey),
+                  hintStyle:
+                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -209,20 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   focusedBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _resetPassword,
-                  child: Text(
-                    "Forgot Password?",
-                    style: GoogleFonts.roboto(
-                      color: Colors.deepPurple,
-                      fontSize: 14,
-                    ),
                   ),
                 ),
               ),
@@ -240,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.white),
                   )
                       : Text(
                     "LOG IN",
@@ -257,13 +216,12 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: _isLoading
                     ? null
-                    : () =>
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpScreen(),
-                      ),
-                    ),
+                    : () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SignUpScreen(),
+                  ),
+                ),
                 child: Text(
                   "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(
@@ -280,4 +238,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-// checkingupdate th8ingssga;isgubwri;gb

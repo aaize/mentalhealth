@@ -35,12 +35,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Check login status after the animation ends
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        checkLoginStatus();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => LoginScreen()),
+        );
+
       }
     });
   }
 
-  Future<void> checkLoginStatus() async {
+  /*Future<void> checkLoginStatus() async {
     User? user = FirebaseAuth.instance.currentUser;
     await Future.delayed(Duration(seconds: 1));
 
@@ -53,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         MaterialPageRoute(builder: (_) => LoginScreen()),
       );
     }
-  }
+  }*/
 
   @override
   void dispose() {
