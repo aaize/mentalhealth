@@ -106,29 +106,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : (_image != null ? FileImage(_image!) : null);
 
     return Scaffold(
+
       appBar: AppBar(
-        title: Text('Profile'),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+
+        title: Text('Update Profile Picture',
+        style: TextStyle(fontWeight: FontWeight.bold,
+        ),),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Center(
+
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: _pickImage,
               child: CircleAvatar(
-                radius: 50,
+                radius: 90,
                 backgroundImage: displayImage,
                 child: displayImage == null
                     ? Icon(Icons.camera_alt, size: 40)
                     : null,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 40),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(34)
+                )
+              ),
               onPressed: _isLoading ? null : _uploadImage,
               child: _isLoading
                   ? CircularProgressIndicator()
-                  : Text('Upload Profile Image'),
+                  : Text('      Upload      ',
+                      style: TextStyle(fontWeight: FontWeight.bold,
+                      fontSize: 20),),
             ),
             if (_uploadedImageUrl != null) ...[
               SizedBox(height: 20),
