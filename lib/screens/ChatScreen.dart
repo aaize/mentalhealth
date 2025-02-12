@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -9,163 +8,84 @@ void main() {
     theme: ThemeData.dark().copyWith(
       textTheme: GoogleFonts.robotoTextTheme(),
     ),
-    home: ChatScreen(),
+    home: EmergencyScreen(),
   ));
 }
 
-class OpenAIService {
-  final String apiKey = 'yourkey'; // Your API key
+class EmergencyScreen extends StatelessWidget {
+  final List<Map<String, dynamic>> emergencyOptions = [
+    {"text": "Send Help to My Location", "action": () => _sendHelp()},
+    {"text": "Call Emergency Services", "action": () => _callNumber("112")},
+    {"text": "Alert My Emergency Contacts", "action": () => _alertContacts()},
+    {"text": "Find Nearest Hospital", "action": () => _openMaps("hospital near me")},
+    {"text": "Safety Tips", "action": () => _showSafetyTips()},
+  ];
 
-  Future<String> getResponse(String userMessage) async {
-    final url = Uri.parse('https://api.openai.com/v1/chat/completions'); // Endpoint for chat models
+  static void _sendHelp() {
+    print("Sending help to your location...");
+    // Implement GPS location sending logic
+  }
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey', // Use the provided API key here
-        },
-        body: json.encode({
-          'model': 'gpt-3.5-turbo',
-          'messages': [
-            {'role': 'user', 'content': userMessage}
-          ],
-          'max_tokens': 150,
-          'temperature': 0.7,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        return responseBody['choices'][0]['message']['content'].trim();
-      } else if (response.statusCode == 429) {
-        throw Exception('Quota exceeded. Please check your plan and try again later.');
-      } else {
-        throw Exception('Error: ${response.statusCode} - ${response.body}');
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-      throw Exception('Failed to fetch AI response: $e');
+  static void _callNumber(String number) async {
+    final Uri url = Uri.parse("tel:$number");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      print("Could not launch $number");
     }
   }
-}
 
-
-class ChatScreen extends StatefulWidget {
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final _controller = TextEditingController();
-  final List<Map<String, String>> _messages = [];
-  final OpenAIService _openAIService = OpenAIService();
-
-  void _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-
-    String userMessage = _controller.text;
-
-    // Add user message to chat
-    setState(() {
-      _messages.add({"sender": "user", "message": userMessage});
-    });
-
-    // Fetch AI response
-    String aiResponse = await _openAIService.getResponse(userMessage);
-
-    // Add AI response to chat
-    setState(() {
-      _messages.add({"sender": "ai", "message": aiResponse});
-    });
-
-    // Clear text input
-    _controller.clear();
+  static void _alertContacts() {
+    print("Alerting emergency contacts...");
+    // Implement alert logic
   }
 
-  Widget _buildMessage(Map<String, String> message) {
-    return Align(
-      alignment:
-      message['sender'] == 'user' ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(
-          color: message['sender'] == 'user' ? Colors.blueAccent : Colors.grey[800],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          crossAxisAlignment: message['sender'] == 'user'
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            Text(
-              message['message']!,
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            SizedBox(height: 5),
-            Text(
-              'Just now',
-              style: TextStyle(color: Colors.grey[400], fontSize: 12),
-            ),
-          ],
-        ),
-      ),
-    );
+  static void _openMaps(String query) async {
+    final Uri url = Uri.parse("https://www.google.com/maps/search/?api=1&query=$query");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      print("Could not open maps");
+    }
+  }
+
+  static void _showSafetyTips() {
+    print("Displaying safety tips...");
+    // Show a dialog or navigate to a safety tips screen
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with AI'),
-        backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Handle settings if needed
-            },
-          ),
-        ],
+        title: Text('Emergency Assistance'),
+        backgroundColor: Colors.redAccent,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return _buildMessage(_messages[index]);
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: "Type your message...",
-                      filled: true,
-                      fillColor: Colors.grey[900],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: emergencyOptions.map((option) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: option['action'],
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage,
+                child: Text(
+                  option['text'],
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
