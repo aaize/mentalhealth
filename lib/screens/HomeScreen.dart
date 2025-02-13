@@ -6,6 +6,10 @@ import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/ProfilePage.dart';
+import 'hscreens/ArticlesScreen.dart';
+import 'hscreens/PodcastScreen.dart';
+import 'hscreens/VideosScreen.dart';
+import 'hscreens/WorkshopScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userEmail; // The email of the logged-in user
@@ -304,13 +308,14 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               child: PageView(
                 children: [
-                  _imageCard('lib/assets/articlesonmental.png', 'Articles on Mental Health'),
-                  _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos'),
-                  _imageCard('lib/assets/mentalhealthpodcast.jpeg', 'Mental Health Podcasts'),
-                  _imageCard('lib/assets/wellnessworkshop.png', 'Wellness Workshops'),
+                  _imageCard('lib/assets/articlesonmental.png', 'Articles on Mental Health', ArticlesScreen()),
+                  _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos', VideosScreen()),
+                  _imageCard('lib/assets/mentalhealthpodcast.jpeg', 'Mental Health Podcasts', PodcastScreen()),
+                  _imageCard('lib/assets/wellnessworkshop.png', 'Wellness Workshops', WorkshopScreen()),
                 ],
               ),
             ),
+
             SizedBox(height: 30),
             // Upcoming Events or Support Groups
             Text(
@@ -346,31 +351,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Image Card Widget
-  Widget _imageCard(String imagePath, String title) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(
-            image: AssetImage(imagePath),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(15),
+  // Image Card Widget with Navigation
+  Widget _imageCard(String imagePath, String title, Widget destinationScreen) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => destinationScreen),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
             ),
-            child: Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+          ),
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -378,6 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
   // Event Card Widget
   Widget _eventCard(String eventName, String eventTime, String eventDescription) {
