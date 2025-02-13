@@ -69,6 +69,8 @@ dev_dependencies:
   location:
   flutter_launcher_icons:
   google_sign_in:
+  url_launcher:
+
 
 
   cloud_firestore: ^4.8.0
