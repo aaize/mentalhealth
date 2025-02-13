@@ -70,10 +70,8 @@ dev_dependencies:
   flutter_launcher_icons:
   google_sign_in:
   url_launcher:
-
-
-
   cloud_firestore: ^4.8.0
+  video_player:
 flutter_icons:
   android: true
   ios: true
@@ -91,6 +89,12 @@ flutter:
     - lib/assets/mentalhealthpodcast.jpeg
     - lib/assets/wellnessworkshop.png
     - lib/assets/Logo.png
+    - lib/assets/hscreen/article1.webp
+    - lib/assets/hscreen/article2.jpeg
+    - lib/assets/hscreen/article3.webp
+    - lib/assets/hscreen/video1.png
+    - lib/assets/hscreen/video2.png
+    - lib/assets/hscreen/video3.png
 
 
   # The following line ensures that the Material Icons font is
