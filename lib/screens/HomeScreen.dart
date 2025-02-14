@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: PageView(
                 children: [
                   _imageCard('lib/assets/articlesonmental.png', 'Articles on Mental Health', ArticlesScreen()),
-                  _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos', VideosScreen()),
+                  _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos', VideosScreen(backgroundColor: backgroundColor)),
                   _imageCard('lib/assets/mentalhealthpodcast.jpeg', 'Mental Health Podcasts', PodcastScreen()),
                   _imageCard('lib/assets/wellnessworkshop.png', 'Wellness Workshops', WorkshopScreen()),
                 ],
@@ -327,7 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            _eventCard('Harmony Helpers', 'Every Wednesday at 6 PM', 'A supportive community gathering to discuss mental health topics.'),
+            _eventCard('Harmony Helpers', 'Thursday October 10 at 10AM - 2PM', '''A supportive community gathering to discuss mental health topics.
+                \n Shared Experiences: Engaging with others facing similar challenges fosters a sense of belonging and reduces feelings of isolation.
+                \n Emotional Support: Regular interactions in a supportive environment can alleviate stress and promote emotional well-being.'''),
             SizedBox(height: 20),
             _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM', 'A supportive community gathering to discuss mental health topics.'),
             SizedBox(height: 30),
@@ -401,13 +403,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => JoinEventScreen(
+            builder: (_) => JoinEventScreen(
               eventName: eventName,
               eventTime: eventTime,
               eventDescription: eventDescription,
+              backgroundColor: backgroundColor, // Pass the backgroundColor here
             ),
           ),
         );
+
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -433,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 eventTime,
                 style: GoogleFonts.poppins(
                   fontSize: 16,
-                  color: Colors.grey[600],
+                  color: Colors.grey[100],
                 ),
               ),
               SizedBox(height: 8),
@@ -441,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 eventDescription,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Colors.grey[800],
+                  color: Colors.grey[500],
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
