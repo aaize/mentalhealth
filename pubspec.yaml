@@ -95,6 +95,7 @@ flutter:
     - lib/assets/hscreen/video1.png
     - lib/assets/hscreen/video2.png
     - lib/assets/hscreen/video3.png
+    - lib/assets/harmony.png
 
 
   # The following line ensures that the Material Icons font is

@@ -3,6 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 class VideosScreen extends StatelessWidget {
+  final Color backgroundColor;
+  VideosScreen({
+    Key? key,
+    required this.backgroundColor,
+  }) : super(key: key);
   final List<Map<String, String>> videos = [
     {
       'title': 'Mental Health Explainer: What is OCD?',
@@ -32,7 +37,8 @@ class VideosScreen extends StatelessWidget {
           'Mental Health Videos',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF6A5ACD),
+        centerTitle: true,
+        backgroundColor: backgroundColor,
       ),
       body: ListView.builder(
         itemCount: videos.length,
@@ -44,7 +50,7 @@ class VideosScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(10),
               leading: Image.asset(
                 video['image']!,
-                width: 100,
+                width: 150,
                 fit: BoxFit.cover,
               ),
               title: Text(
