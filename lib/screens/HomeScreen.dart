@@ -10,7 +10,7 @@ import 'hscreens/ArticlesScreen.dart';
 import 'hscreens/PodcastScreen.dart';
 import 'hscreens/VideosScreen.dart';
 import 'hscreens/WorkshopScreen.dart';
-
+import 'package:mentalhealth/screens/hscreens/QuestionnaireScreen.dart';
 class HomeScreen extends StatefulWidget {
   final String userEmail; // The email of the logged-in user
   const HomeScreen({Key? key, required this.userEmail}) : super(key: key);
@@ -52,6 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor = Colors.green;
       } else if (emoji == '😍') {
         backgroundColor = Colors.pink;
+      } else if (emoji == '🤔') {
+        backgroundColor = Colors.grey;
+      } else if (emoji == '😴') {
+        backgroundColor = Colors.brown;
       } else if (emoji == '🚫') {
         backgroundColor = Colors.deepPurple;
       }
@@ -256,6 +260,27 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'Here to support you through your journey. Take a deep breath, you are not alone.',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => QuestionnaireScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                ),
+                child: Text(
+                  'Take Questionnaire',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: 30),
             // Emotional Check-In Section
