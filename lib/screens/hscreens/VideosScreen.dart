@@ -45,27 +45,50 @@ class VideosScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final video = videos[index];
           return Card(
-            margin: EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: EdgeInsets.all(10),
-              leading: Image.asset(
-                video['image']!,
-                width: 150,
-                fit: BoxFit.cover,
+            elevation: 4,
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image Container with fixed height
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      video['image']!,
+                      width: 150,
+                      height: 100,  // Ensure height is set
+                      fit: BoxFit.cover, // Fills the box while maintaining aspect ratio
+                    ),
+                  ),
+                  SizedBox(width: 10), // Spacing between image and text
+                  // Text Column
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          video['title']!,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          video['source']!,
+                          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              title: Text(
-                video['title']!,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                video['source']!,
-                style: GoogleFonts.poppins(),
-              ),
-              onTap: () {
-                // Implement navigation to a video player or external link
-              },
             ),
           );
+
         },
       ),
     );
