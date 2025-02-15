@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'ResultScreen.dart'; // Import the result screen file
+import 'package:mentalhealth/screens/hscreens/ResultScreen.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   @override
@@ -8,26 +8,53 @@ class QuestionnaireScreen extends StatefulWidget {
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
-  // Define a list of questions
   final List<String> questions = [
-    'How often do you feel overwhelmed?',
-    'How often do you feel hopeless?',
+    'How often do you feel depressed?',
     'How often do you feel anxious?',
-    'How often do you have trouble sleeping?',
-    'How often do you feel isolated?'
+    'How often do you feel overwhelmed?',
+    'How often do you experience panic attacks?',
+    'How often do you have difficulty sleeping?',
+    'How often do you feel hopeless?',
+    'How often do you feel isolated?',
+    'How often do you have difficulty concentrating?',
+    'How often do you feel irritable?',
+    'How often do you withdraw from social activities?',
   ];
 
-  // Default rating of 3 for each question (range 1-5)
-  List<double> ratings = [3, 3, 3, 3, 3];
+  List<int> responses = List.filled(10, 3);
 
-  // Define a threshold (e.g., if total score is less than 15, consider that needing help)
-  final double threshold = 15.0;
+  int mapResponseToScore(int response) {
+    switch (response) {
+      case 1:
+        return 1;
+      case 2:
+        return 2;
+      case 3:
+        return 0;
+      case 4:
+        return -1;
+      case 5:
+        return -2;
+      default:
+        return 0;
+    }
+  }
+
+  void handleSubmit() {
+    int totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResultScreen(totalScore: totalScore, responses: responses),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mental Health Questionnaire", style: GoogleFonts.poppins()),
+        title: Text('Mental Health Questionnaire', style: GoogleFonts.poppins()),
         backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
@@ -41,6 +68,9 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                   return Card(
                     elevation: 3,
                     margin: EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -55,14 +85,14 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                           ),
                           SizedBox(height: 8),
                           Slider(
-                            value: ratings[index],
+                            value: responses[index].toDouble(),
                             min: 1,
                             max: 5,
                             divisions: 4,
-                            label: ratings[index].round().toString(),
+                            label: responses[index].toString(),
                             onChanged: (value) {
                               setState(() {
-                                ratings[index] = value;
+                                responses[index] = value.toInt();
                               });
                             },
                           ),
@@ -74,20 +104,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Calculate total score
-                double totalScore = ratings.reduce((a, b) => a + b);
-                bool needsHelp = totalScore < threshold;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ResultScreen(
-                      totalScore: totalScore,
-                      needsHelp: needsHelp,
-                    ),
-                  ),
-                );
-              },
+              onPressed: handleSubmit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
