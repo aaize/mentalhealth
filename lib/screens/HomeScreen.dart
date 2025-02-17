@@ -58,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor = Colors.grey;
       } else if (emoji == '😴') {
         backgroundColor = Colors.brown;
-      } else if (emoji == '🚫') {
-        backgroundColor = Colors.deepPurple;
+      } else if (emoji == '👾') {
+        backgroundColor = Colors.deepPurpleAccent;
       }
     });
   }
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _emojiButton('😍'),
                     _emojiButton('🤔'),
                     _emojiButton('😴'),
-                    _emojiButton('🚫'),
+                    _emojiButton('👾'),
                   ],
                 ),
               ],
@@ -233,12 +233,20 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
+
+              child: GestureDetector(
+                onTap: (){
+                  print('hello');
+                  backgroundColor = Color(0xFF6A5ACD);
+
+                },
               child: Text(
                 selectedEmoji,
                 style: TextStyle(
                   fontSize: 28,
                   color: Colors.white,
                 ),
+              ),
               ),
             ),
           ),
@@ -263,6 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'Here to support you through your journey. Take a deep breath, you are not alone.',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
             ),
+            SizedBox(height: 10),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -272,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Colors.lightBlue,
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
                 child: Text(
