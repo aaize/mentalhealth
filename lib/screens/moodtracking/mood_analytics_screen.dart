@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/mood_entry.dart';
@@ -28,7 +27,7 @@ class MoodAnalyticsScreen extends StatelessWidget {
             letterSpacing: 1.5,
           ),
         ),
-        elevation: 4, // Subtle shadow for depth
+        elevation: 4,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -50,7 +49,21 @@ class MoodAnalyticsScreen extends StatelessWidget {
               children: [
                 _buildWeeklySummary(moodEntries),
                 SizedBox(height: 20),
-                Expanded(child: MoodChart(moodEntries: moodEntries)),
+                Expanded(
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: MoodChart(moodEntries: moodEntries),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                if (_calculateWeeklyAverage(moodEntries) < 3.3)
+                  _buildProfessionalContacts(),
               ],
             ),
           );
@@ -60,16 +73,13 @@ class MoodAnalyticsScreen extends StatelessWidget {
   }
 
   Widget _buildWeeklySummary(List<MoodEntry> entries) {
-    final weeklyAverage = entries
-        .where((e) => e.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
-        .map((e) => e.rating)
-        .average;
+    final weeklyAverage = _calculateWeeklyAverage(entries);
 
     return Card(
       color: Colors.blueGrey[50],
-      elevation: 5, // Added elevation for a more dynamic effect
+      elevation: 5,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15), // Rounded corners for a soft feel
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,8 +116,75 @@ class MoodAnalyticsScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-extension on Iterable<int> {
-  double get average => isEmpty ? 0 : reduce((a, b) => a + b) / length;
+  double _calculateWeeklyAverage(List<MoodEntry> entries) {
+    final recentEntries = entries
+        .where((e) => e.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+        .toList();
+
+    if (recentEntries.isEmpty) return 0.0;
+
+    final total = recentEntries.map((e) => e.rating).reduce((a, b) => a + b);
+    return total / recentEntries.length;
+  }
+
+  Widget _buildProfessionalContacts() {
+    final List<Map<String, String>> professionals = [
+      {
+        'name': 'Dr. Krishen Ranganath',
+        'experience': '25 years',
+        'rating': '99%',
+        'location': 'Seshadripuram',
+        'fee': '₹1800',
+      },
+      {
+        'name': 'Dr. Sushruth',
+        'experience': '13 years',
+        'rating': '98%',
+        'location': 'Indiranagar',
+        'fee': '₹750',
+      },
+      {
+        'name': 'Dr. Venkatesh Babu G M',
+        'experience': '19 years',
+        'rating': '85%',
+        'location': 'HSR Layout',
+        'fee': '₹1200',
+      },
+      // Add more professionals as needed
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Consider reaching out to a mental health professional:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent,
+          ),
+        ),
+        SizedBox(height: 10),
+        ...professionals.map((professional) {
+          return Card(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              leading: Icon(Icons.local_hospital, color: Colors.deepPurple),
+              title: Text(
+                professional['name']!,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                '${professional['experience']} experience\n'
+                    'Rating: ${professional['rating']}\n'
+                    'Location: ${professional['location']}\n'
+                    'Consultation Fee: ${professional['fee']}',
+              ),
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
 }
