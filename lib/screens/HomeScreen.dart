@@ -21,7 +21,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String selectedEmoji = '😊'; // Default emoji
-  Color backgroundColor = Color(0xFF6A5ACD);  // Default color
+  Color backgroundColor = Color(0xFF6A5ACD);
+  final PageController _pageController = PageController(viewportFraction: 0.9);
+// Default color
 
   @override
   void initState() {
@@ -332,6 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               height: 200,
               child: PageView(
+                controller: _pageController,
                 children: [
                   _imageCard('lib/assets/articlesonmental.png', 'Articles on Mental Health', ArticlesScreen()),
                   _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos', VideosScreen(backgroundColor: backgroundColor)),
