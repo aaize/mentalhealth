@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => QuestionnaireScreen()),
+                    MaterialPageRoute(builder: (_) => QuestionnaireScreen(backgroundColor: backgroundColor,)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

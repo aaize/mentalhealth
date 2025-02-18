@@ -22,9 +22,9 @@ class MoodAnalyticsScreen extends StatelessWidget {
         title: Text(
           'Mood Analytics',
           style: TextStyle(
+
             fontWeight: FontWeight.bold,
-            fontSize: 24,
-            letterSpacing: 1.5,
+            fontSize: 20,
           ),
         ),
         elevation: 4,
