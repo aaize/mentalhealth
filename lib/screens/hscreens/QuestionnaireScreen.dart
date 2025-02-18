@@ -4,10 +4,17 @@ import 'package:mentalhealth/screens/hscreens/ResultScreen.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   @override
+  final Color backgroundColor;
+
+  const QuestionnaireScreen({
+    Key? key,
+    required this.backgroundColor,
+  }) : super(key: key);
   _QuestionnaireScreenState createState() => _QuestionnaireScreenState();
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
+
   final List<String> questions = [
     'How often do you feel depressed?',
     'How often do you feel anxious?',
@@ -45,7 +52,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ResultScreen(totalScore: totalScore, responses: responses),
+        builder: (context) => ResultScreen(totalScore: totalScore, responses: responses,backgroundColor: widget.backgroundColor,),
       ),
     );
   }
@@ -54,8 +61,11 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mental Health Questionnaire', style: GoogleFonts.poppins()),
-        backgroundColor: Colors.deepPurple,
+        title: Text('Mental Health Questionnaire',
+          style: TextStyle(color: Colors.white,
+          fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: widget.backgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

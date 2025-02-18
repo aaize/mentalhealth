@@ -73,6 +73,8 @@ dev_dependencies:
   cloud_firestore: ^4.8.0
   video_player:
   syncfusion_flutter_charts:
+  simple_table_calendar:
+
 flutter_icons:
   android: true
   ios: true
