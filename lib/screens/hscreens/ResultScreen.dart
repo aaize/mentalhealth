@@ -27,9 +27,10 @@ class Professional {
 
 class ResultScreen extends StatelessWidget {
   final int totalScore;
+  final Color backgroundColor;
   final List<int> responses;
 
-  ResultScreen({required this.totalScore, required this.responses});
+  ResultScreen({required this.totalScore, required this.responses, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +68,13 @@ class ResultScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Assessment Results', style: GoogleFonts.poppins()),
-        backgroundColor: Colors.deepPurple,
+        title: Text('Assessment Results',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold)
+        ),
+
+
+        backgroundColor: backgroundColor,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -106,29 +112,17 @@ class ResultScreen extends StatelessWidget {
                     xValueMapper: (QuestionScore qs, _) => qs.question,
                     yValueMapper: (QuestionScore qs, _) => qs.score,
                     dataLabelSettings: DataLabelSettings(isVisible: true),
-                    color: Colors.deepPurple,
+                    color: backgroundColor,
                   ),
                 ],
               ),
             ),
             SizedBox(height: 30),
 
-            // Conditional Content Based on Total Score
-            if (totalScore > 10) ...[
-              Center(
-                child: Text(
-                  'Great job! Your assessment indicates a positive mental health status. Keep up the good work!',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ] else ...[
+            // Conditional Display of Contact Cards
+            if (totalScore < 10) ...[
               Text(
-                'Based on your assessment, you might find it helpful to consult with a mental health professional. Here are some options in Bengaluru:',
+                'We recommend consulting with a mental health professional:',
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -140,7 +134,8 @@ class ResultScreen extends StatelessWidget {
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
-                      leading: Icon(Icons.local_hospital, color: Colors.deepPurple),
+                      leading: Icon(Icons.local_hospital, color: backgroundColor,
+                      size: 67 ,),
                       title: Text(
                         professional.name,
                         style: GoogleFonts.poppins(fontWeight: FontWeight.bold),

@@ -7,8 +7,7 @@ import 'package:mentalhealth/screens/moodtracking/mood_analytics_screen.dart';
 
 class MoodHistoryScreen extends StatefulWidget {
   final String email;
-  final Color backgroundColor; // Receive the backgroundColor
-
+  final Color backgroundColor;
 
   const MoodHistoryScreen({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
 
@@ -59,36 +58,110 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Mood History',
-        style: TextStyle(fontWeight: FontWeight.bold),),
-        backgroundColor: widget.backgroundColor, // Use backgroundColor here
+        title: Text(
+          'Mood History',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: widget.backgroundColor,
         actions: [
           IconButton(
             icon: Icon(Icons.analytics),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => MoodAnalyticsScreen(email: widget.email,backgroundColor: widget.backgroundColor,)),
+              MaterialPageRoute(
+                builder: (_) => MoodAnalyticsScreen(
+                  email: widget.email,
+                  backgroundColor: widget.backgroundColor,
+                ),
+              ),
             ),
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _moodEntriesStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Mood Calendar Section
+            StreamBuilder<QuerySnapshot>(
+              stream: _moodEntriesStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-          final moodEntries = snapshot.data!.docs
-              .map((doc) => MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();
+                final moodEntries = snapshot.data!.docs
+                    .map((doc) => MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
+                    .toList();
 
-          return MoodCalendar(
-            moodEntries: moodEntries,
-            onDayPressed: (date) => _showEmojiPicker(context, date),
-          );
-        },
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: MoodCalendar(
+                    moodEntries: moodEntries,
+                    onDayPressed: (date) => _showEmojiPicker(context, date),
+                  ),
+                );
+              },
+            ),
+            // Divider
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            // Tips Section
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Mental Health Tips',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: widget.backgroundColor,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  _buildTipCard(
+                    'Stay Active',
+                    'Regular physical activity can help reduce stress and improve your mood.',
+                  ),
+                  _buildTipCard(
+                    'Eat Healthy',
+                    'A balanced diet nourishes your body and mind, contributing to better mental health.',
+                  ),
+                  _buildTipCard(
+                    'Get Enough Sleep',
+                    'Adequate sleep is essential for emotional and psychological well-being.',
+                  ),
+                  _buildTipCard(
+                    'Practice Mindfulness',
+                    'Mindfulness techniques can help you stay grounded and manage stress effectively.',
+                  ),
+                  _buildTipCard(
+                    'Connect with Others',
+                    'Building strong relationships can provide emotional support and improve your mood.',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTipCard(String title, String description) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        leading: Icon(Icons.lightbulb_outline, color: widget.backgroundColor),
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(description),
       ),
     );
   }
