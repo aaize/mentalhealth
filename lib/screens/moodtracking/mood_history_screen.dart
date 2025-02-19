@@ -151,7 +151,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       ),
     );
   }
-
+//For tips
   Widget _buildTipCard(String title, String description) {
     return Card(
       margin: EdgeInsets.only(bottom: 10),
