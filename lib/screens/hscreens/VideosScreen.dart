@@ -1,13 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:video_player/video_player.dart';
+import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:mentalhealth/screens/HomeScreen.dart';
 
 class VideosScreen extends StatelessWidget {
   final Color backgroundColor;
-  VideosScreen({
-    Key? key,
-    required this.backgroundColor,
-  }) : super(key: key);
+
+  VideosScreen({Key? key, required this.backgroundColor}) : super(key: key);
+
   final List<Map<String, String>> videos = [
     {
       'title': 'Mental Health Explainer: What is OCD?',
@@ -33,12 +34,31 @@ class VideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+
+            // Handle back action
+          },
+        ),
         title: Text(
-          'Mental Health Videos',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          'Videos',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         backgroundColor: backgroundColor,
+        actions: [
+          /*IconButton(
+            icon: Icon(CupertinoIcons.search, color: Colors.white),
+            onPressed: () {
+              // Handle search action
+            },
+          ),*/
+        ],
       ),
       body: ListView.builder(
         itemCount: videos.length,
@@ -47,24 +67,24 @@ class VideosScreen extends StatelessWidget {
           return Card(
             elevation: 4,
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image Container with fixed height
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
                       video['image']!,
                       width: 150,
-                      height: 100,  // Ensure height is set
-                      fit: BoxFit.cover, // Fills the box while maintaining aspect ratio
+                      height: 100,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: 10), // Spacing between image and text
-                  // Text Column
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +99,10 @@ class VideosScreen extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           video['source']!,
-                          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
@@ -88,7 +111,6 @@ class VideosScreen extends StatelessWidget {
               ),
             ),
           );
-
         },
       ),
     );

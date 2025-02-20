@@ -75,6 +75,7 @@ dev_dependencies:
   syncfusion_flutter_charts:
   simple_table_calendar:
   charts_flutter_updated:
+  cupertino_icons:
 
 flutter_icons:
   android: true
