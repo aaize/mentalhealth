@@ -1,0 +1,2 @@
+/Users/aaize/AndroidStudioProjects/mentalhealth/android/app/.cxx/Debug/r6d15h3r/x86_64/CMakeFiles/edit_cache.dir
+/Users/aaize/AndroidStudioProjects/mentalhealth/android/app/.cxx/Debug/r6d15h3r/x86_64/CMakeFiles/rebuild_cache.dir
