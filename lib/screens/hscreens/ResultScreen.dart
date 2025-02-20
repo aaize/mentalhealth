@@ -1,15 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter_updated/charts_flutter_updated.dart' as charts;
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class QuestionScore {
   final String question;
   final int score;
-  final charts.Color color;
 
-  QuestionScore(this.question, this.score, Color color)
-      : this.color = charts.Color(
-      r: color.red, g: color.green, b: color.blue, a: color.alpha);
+  QuestionScore(this.question, this.score);
 }
 
 class Professional {
@@ -33,35 +31,15 @@ class ResultScreen extends StatelessWidget {
   final Color backgroundColor;
   final List<int> responses;
 
-  ResultScreen({
-    required this.totalScore,
-    required this.responses,
-    required this.backgroundColor,
-  });
+  ResultScreen({required this.totalScore, required this.responses, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    // Data for the stacked bar chart
+    // Data for the bar chart
     final List<QuestionScore> data = List.generate(
       responses.length,
-          (index) => QuestionScore(
-        'Q${index + 1}',
-        responses[index],
-        backgroundColor,
-      ),
+          (index) => QuestionScore('Q${index + 1}', responses[index]),
     );
-
-    List<charts.Series<QuestionScore, String>> _createSampleData() {
-      return [
-        charts.Series<QuestionScore, String>(
-          id: 'Scores',
-          domainFn: (QuestionScore qs, _) => qs.question,
-          measureFn: (QuestionScore qs, _) => qs.score,
-          colorFn: (QuestionScore qs, _) => qs.color,
-          data: data,
-        )
-      ];
-    }
 
     // List of mental health professionals in Bengaluru
     final List<Professional> professionals = [
@@ -91,12 +69,19 @@ class ResultScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Assessment Results',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        title: Text('Assessment Results',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold)
         ),
+
+
         backgroundColor: backgroundColor,
         centerTitle: true,
+        leading: IconButton(
+            icon: Icon(CupertinoIcons.back), onPressed: () {
+              Navigator.pop(context);
+        },
+
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -115,7 +100,7 @@ class ResultScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            // Stacked Bar Chart
+            // Bar Chart
             Text(
               'Your Responses Overview:',
               style: GoogleFonts.poppins(
@@ -125,12 +110,18 @@ class ResultScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Container(
-              height: 300,
-              child: charts.BarChart(
-                _createSampleData(),
-                animate: true,
-                barGroupingType: charts.BarGroupingType.stacked,
-                vertical: true,
+              height: 200,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                series: <CartesianSeries>[
+                  ColumnSeries<QuestionScore, String>(
+                    dataSource: data,
+                    xValueMapper: (QuestionScore qs, _) => qs.question,
+                    yValueMapper: (QuestionScore qs, _) => qs.score,
+                    dataLabelSettings: DataLabelSettings(isVisible: true),
+                    color: backgroundColor,
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 30),
@@ -150,11 +141,8 @@ class ResultScreen extends StatelessWidget {
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
-                      leading: Icon(
-                        Icons.local_hospital,
-                        color: backgroundColor,
-                        size: 50,
-                      ),
+                      leading: Icon(Icons.local_hospital, color: backgroundColor,
+                        size: 67 ,),
                       title: Text(
                         professional.name,
                         style: GoogleFonts.poppins(fontWeight: FontWeight.bold),

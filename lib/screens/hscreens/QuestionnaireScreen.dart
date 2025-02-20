@@ -1,20 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/hscreens/ResultScreen.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
-  @override
   final Color backgroundColor;
 
   const QuestionnaireScreen({
     Key? key,
     required this.backgroundColor,
   }) : super(key: key);
+
+  @override
   _QuestionnaireScreenState createState() => _QuestionnaireScreenState();
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
-
   final List<String> questions = [
     'How often do you feel depressed?',
     'How often do you feel anxious?',
@@ -51,80 +51,74 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     int totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b);
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ResultScreen(totalScore: totalScore, responses: responses,backgroundColor: widget.backgroundColor,),
+      CupertinoPageRoute(
+        builder: (context) => ResultScreen(
+          totalScore: totalScore,
+          responses: responses,
+          backgroundColor: widget.backgroundColor,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Mental Health Questionnaire',
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Questionnaire',
           style: TextStyle(color: Colors.white,
-          fontWeight: FontWeight.bold),
-        ),
+          fontWeight: FontWeight.w400,
+          fontSize: 23)),
         backgroundColor: widget.backgroundColor,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(CupertinoIcons.back),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
                 itemCount: questions.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            questions[index],
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Slider(
-                            value: responses[index].toDouble(),
-                            min: 1,
-                            max: 5,
-                            divisions: 4,
-                            label: responses[index].toString(),
-                            onChanged: (value) {
-                              setState(() {
-                                responses[index] = value.toInt();
-                              });
-                            },
-                          ),
-                        ],
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: CupertinoFormSection(
+                      header: Text(
+                        questions[index],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      children: [
+                        CupertinoSlider(
+                          value: responses[index].toDouble(),
+                          min: 1,
+                          max: 5,
+                          divisions: 4,
+                          onChanged: (value) {
+                            setState(() {
+                              responses[index] = value.toInt();
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   );
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: handleSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-              ),
-              child: Text(
-                'Submit Questionnaire',
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.all(17.0),
+              child: CupertinoButton(
+                color: CupertinoColors.systemIndigo,
+                onPressed: handleSubmit,
+                child: Text('Submit Questionnaire',
                 ),
+
               ),
             ),
           ],
