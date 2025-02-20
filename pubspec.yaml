@@ -74,6 +74,7 @@ dev_dependencies:
   video_player:
   syncfusion_flutter_charts:
   simple_table_calendar:
+  charts_flutter_updated:
 
 flutter_icons:
   android: true
