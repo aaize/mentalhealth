@@ -205,11 +205,11 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: CupertinoColors.systemBackground,
+        color: Colors.black45,
         borderRadius: BorderRadius.circular(12),
         // Remove boxShadow and use border instead
         border: Border.all(
-          color: CupertinoColors.systemGrey4,
+          color: CupertinoColors.black,
           width: 0.5,
         ),
       ),
@@ -226,7 +226,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: Icon(CupertinoIcons.heart_fill,
+              child: Icon(CupertinoIcons.bell_circle_fill,
                   size: 20,
                   color: widget.backgroundColor
               ),
@@ -238,7 +238,9 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(title,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      decoration: TextDecoration.none,
+                        color: widget.backgroundColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         height: 1.2 // Add line height
@@ -246,14 +248,15 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 2),
                   Text(description,
                     style: TextStyle(
-                        color: CupertinoColors.systemGrey,
+                        decoration: TextDecoration.none,
+                        color: CupertinoColors.inactiveGray,
                         fontSize: 14,
                         height: 1.3 // Add line height
                     ),
-                    maxLines: 2,
+                    maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

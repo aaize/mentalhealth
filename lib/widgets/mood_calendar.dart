@@ -106,6 +106,7 @@ class MoodCalendar extends StatelessWidget {
           Text(
             DateFormat('MMMM yyyy').format(currentMonth),
             style:  TextStyle(
+              decoration: TextDecoration.none,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
