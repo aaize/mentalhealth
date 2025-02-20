@@ -268,32 +268,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Center(
-              child: ElevatedButton(
-                onPressed: openEmojiSelection,
-                style: ButtonStyle(
-                  alignment: Alignment.centerLeft,
-                  backgroundColor: MaterialStateProperty.all(backgroundColor),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-                child: Text(
-                  'Select..',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+          Center(
+            child: CupertinoButton(
+              onPressed: openEmojiSelection,
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+              color: backgroundColor, // iOS-style filled button
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+              child: Text(
+                'Select..',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 30),
+          ),
+
+          SizedBox(height: 30),
             // Image Gallery Section (example)
             Text(
               'Explore Resources',
@@ -308,14 +300,32 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 205,
               child: PageView(
                 controller: _pageController,
+                physics: BouncingScrollPhysics(), // iOS-style smooth scrolling
                 children: [
-                  _imageCard('lib/assets/articlesonmental.png', 'Articles on Mental Health', ArticlesScreen()),
-                  _imageCard('lib/assets/mentalhealthvideos.jpg', 'Mental Health Videos', VideosScreen(backgroundColor: backgroundColor)),
-                  _imageCard('lib/assets/mentalhealthpodcast.jpeg', 'Mental Health Podcasts', PodcastScreen()),
-                  _imageCard('lib/assets/wellnessworkshop.png', 'Wellness Workshops', WorkshopScreen()),
+                  _imageCard(
+                      'lib/assets/articlesonmental.png',
+                      'Articles on Mental Health',
+                      ArticlesScreen()
+                  ),
+                  _imageCard(
+                      'lib/assets/mentalhealthvideos.jpg',
+                      'Mental Health Videos',
+                      VideosScreen(backgroundColor: backgroundColor)
+                  ),
+                  _imageCard(
+                      'lib/assets/mentalhealthpodcast.jpeg',
+                      'Mental Health Podcasts',
+                      PodcastScreen()
+                  ),
+                  _imageCard(
+                      'lib/assets/wellnessworkshop.png',
+                      'Wellness Workshops',
+                      WorkshopScreen()
+                  ),
                 ],
               ),
             ),
+
 
             SizedBox(height: 30),
             // Upcoming Events or Support Groups
@@ -356,11 +366,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // Image Card Widget
   // Image Card Widget with Navigation
   Widget _imageCard(String imagePath, String title, Widget destinationScreen) {
-    return GestureDetector(
-      onTap: () {
+    return CupertinoButton(
+      padding: EdgeInsets.zero, // Removes default button padding
+      onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => destinationScreen),
+          CupertinoPageRoute(builder: (context) => destinationScreen), // iOS-style transition
         );
       },
       child: ClipRRect(
@@ -369,6 +380,14 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
+            boxShadow: [ // Adds iOS-style soft shadow
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: Offset(0, 4),
+              ),
+            ],
             image: DecorationImage(
               image: AssetImage(imagePath),
               fit: BoxFit.cover,
@@ -395,6 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
 
   // Event Card Widget
