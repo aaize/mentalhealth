@@ -41,6 +41,7 @@ class ResultScreen extends StatelessWidget {
           (index) => QuestionScore('Q${index + 1}', responses[index]),
     );
 
+
     // List of mental health professionals in Bengaluru
     final List<Professional> professionals = [
       Professional(
@@ -89,15 +90,7 @@ class ResultScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display Total Score
-            Center(
-              child: Text(
-                'Your Total Score: $totalScore',
-                style: GoogleFonts.poppins(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+
             SizedBox(height: 20),
 
             // Bar Chart

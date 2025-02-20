@@ -48,7 +48,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   }
 
   void handleSubmit() {
-    int totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b);
+    int totalScore = responses.map(mapResponseToScore as Function(int e)).reduce((a, b) => a + b);
     Navigator.push(
       context,
       CupertinoPageRoute(
@@ -65,10 +65,15 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Questionnaire',
-          style: TextStyle(color: Colors.white,
-          fontWeight: FontWeight.w400,
-          fontSize: 23)),
+        middle: Text(
+          'Questionnaire',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            fontSize: 23,
+            decoration: TextDecoration.none, // Remove any text decoration
+          ),
+        ),
         backgroundColor: widget.backgroundColor,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -91,19 +96,23 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none, // Remove underline
                         ),
                       ),
                       children: [
-                        CupertinoSlider(
-                          value: responses[index].toDouble(),
-                          min: 1,
-                          max: 5,
-                          divisions: 4,
-                          onChanged: (value) {
-                            setState(() {
-                              responses[index] = value.toInt();
-                            });
-                          },
+                        Container(
+                          width: double.infinity, // Expand to full width
+                          child: CupertinoSlider(
+                            value: responses[index].toDouble(),
+                            min: 1,
+                            max: 5,
+                            divisions: 4,
+                            onChanged: (value) {
+                              setState(() {
+                                responses[index] = value.toInt();
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -116,9 +125,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               child: CupertinoButton(
                 color: CupertinoColors.systemIndigo,
                 onPressed: handleSubmit,
-                child: Text('Submit Questionnaire',
-                ),
-
+                child: Text('Submit Questionnaire'),
               ),
             ),
           ],
