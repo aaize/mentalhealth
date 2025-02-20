@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,36 +31,75 @@ class ArticlesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Text(
-          'Articles on Mental Health',
+          'Articles',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF6A5ACD),
+        centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: articles.length,
         itemBuilder: (context, index) {
           final article = articles[index];
           return Card(
-            margin: EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: EdgeInsets.all(10),
-              leading: Image.asset(
-                article['image']!,
-                width: 100,
-                fit: BoxFit.cover,
-              ),
-              title: Text(
-                article['title']!,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                '${article['source']} - ${article['date']}',
-                style: GoogleFonts.poppins(),
-              ),
+            elevation: 4,
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: InkWell(
               onTap: () {
                 // Implement navigation to a detailed view or external link
               },
+              child: Padding(
+                padding: EdgeInsets.all(6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image Container with fixed height
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        article['image']!,
+                        width: 150,
+                        height: 120, // Ensure height is set
+                        fit: BoxFit.cover, // Fills the box while maintaining aspect ratio
+                      ),
+                    ),
+                    SizedBox(width: 10), // Spacing between image and text
+                    // Text Column
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            article['title']!,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            '${article['source']} - ${article['date']}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         },

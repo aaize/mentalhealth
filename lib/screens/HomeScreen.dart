@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,9 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
       } else if (emoji == '🤔') {
         backgroundColor = Colors.grey;
       } else if (emoji == '😴') {
-        backgroundColor = Colors.brown;
-      } else if (emoji == '👾') {
-        backgroundColor = Colors.deepPurpleAccent;
+        backgroundColor = Colors.grey;
+      } else if (emoji == '☂️') {
+        backgroundColor = Colors.deepPurple;
       }
     });
   }
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _emojiButton('😍'),
                     _emojiButton('🤔'),
                     _emojiButton('😴'),
-                    _emojiButton('👾'),
+                    _emojiButton('☂️'),
                   ],
                 ),
               ],
@@ -203,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.white), // Hamburger menu icon
+          icon: Icon(CupertinoIcons.bars, color: Colors.white), // Hamburger menu icon
           onPressed: _showProfileMenu,
         ),
         title: Center(
@@ -222,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextSpan(
                   text: "inCo",
                 ),
+
               ],
             ),
           ),
@@ -341,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 10),
             Container(
-              height: 200,
+              height: 205,
               child: PageView(
                 controller: _pageController,
                 children: [
@@ -530,14 +532,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Spacer(),
             if (name == 'Suicide Prevention')
               IconButton(
-                icon: Icon(Icons.call, color: Color(0xFF87CEFA)),
+                icon: Icon(CupertinoIcons.phone_solid, color: Color(0xFF87CEFA)),
                 onPressed: () {
                   // Handle call action for Suicide Prevention
                 },
               ),
             if (name == 'Emergency')
               IconButton(
-                icon: Icon(Icons.chat, color: Color(0xFF87CEFA)),
+                icon: Icon(CupertinoIcons.chat_bubble_fill, color: Color(0xFF87CEFA)),
                 onPressed: () {
                   Navigator.push(
                     context,
