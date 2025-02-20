@@ -77,6 +77,7 @@ dev_dependencies:
   charts_flutter_updated:
   cupertino_icons:
   interactive_slider:
+  table_calendar_jalali:
 
 flutter_icons:
   android: true
