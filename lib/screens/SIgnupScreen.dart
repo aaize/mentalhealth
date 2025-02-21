@@ -250,7 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
@@ -258,7 +258,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: GoogleFonts.roboto(
                     fontSize: 16,
                     color: Colors.deepPurple,
-                    decoration: TextDecoration.underline,
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ),

@@ -71,7 +71,9 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Assessment Results',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold)
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w400,
+            fontSize: 20,)
+
         ),
 
 
@@ -132,9 +134,9 @@ class ResultScreen extends StatelessWidget {
               Column(
                 children: professionals.map((professional) {
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
+                    margin: EdgeInsets.symmetric(vertical: 3),
                     child: ListTile(
-                      leading: Icon(Icons.local_hospital, color: backgroundColor,
+                      leading: Icon(CupertinoIcons.person_fill, color: backgroundColor,
                         size: 67 ,),
                       title: Text(
                         professional.name,

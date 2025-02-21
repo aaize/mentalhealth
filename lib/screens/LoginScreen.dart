@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               TextButton(
                 onPressed: _isLoading
                     ? null
@@ -223,11 +223,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Text(
+
                   "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(
+
                     fontSize: 16,
                     color: Colors.deepPurple,
-                    decoration: TextDecoration.underline,
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ),

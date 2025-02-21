@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WorkshopScreen extends StatelessWidget {
+  final Color backgroundColor;
+  WorkshopScreen({Key? key,
+    required this.backgroundColor}) : super(key: key);
   final List<Map<String, String>> workshops = [
     {
       "title": "Mindfulness Meditation",
@@ -19,7 +23,18 @@ class WorkshopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Wellness Workshops")),
+      appBar: AppBar(title: Text("Wellness Workshops",
+      style: TextStyle(
+        fontWeight: FontWeight.bold
+      ),),
+          leading: IconButton(icon: Icon(CupertinoIcons.back,
+
+      ), onPressed: () {
+            Navigator.pop(context);
+          },),
+        centerTitle: true,
+        backgroundColor: backgroundColor,
+      ),
       body: ListView.builder(
         padding: EdgeInsets.all(10),
         itemCount: workshops.length,

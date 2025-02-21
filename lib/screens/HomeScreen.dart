@@ -100,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: CupertinoActionSheet(
           actions: [
-            _buildActionSheetItem('Mood Tracker', CupertinoIcons.heart, () {
+            _buildActionSheetItem('Mood Tracker',
+                CupertinoIcons.heart, () {
               _navigateTo(MoodHistoryScreen(
                 email: widget.userEmail,
                 backgroundColor: backgroundColor,
@@ -305,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _imageCard(
                       'lib/assets/articlesonmental.png',
                       'Articles on Mental Health',
-                      ArticlesScreen()
+                      ArticlesScreen(backgroundColor: backgroundColor,)
                   ),
                   _imageCard(
                       'lib/assets/mentalhealthvideos.jpg',
@@ -315,12 +316,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   _imageCard(
                       'lib/assets/mentalhealthpodcast.jpeg',
                       'Mental Health Podcasts',
-                      PodcastScreen()
+                      PodcastScreen(backgroundColor: backgroundColor,)
                   ),
                   _imageCard(
                       'lib/assets/wellnessworkshop.png',
                       'Wellness Workshops',
-                      WorkshopScreen()
+                      WorkshopScreen(backgroundColor: backgroundColor,)
                   ),
                 ],
               ),

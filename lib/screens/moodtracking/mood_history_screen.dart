@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../../models/mood_entry.dart';
 import '../../widgets/mood_calendar.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_analytics_screen.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class MoodHistoryScreen extends StatefulWidget {
   final String email;
   final Color backgroundColor;
@@ -61,6 +61,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       '😐': 3,
       '😊': 4,
       '😁': 5,
+      '🚫':0,
     };
     return emojiRatings[emoji] ?? 3;
   }
@@ -69,8 +70,12 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Mood History',
-            style: TextStyle(color: CupertinoColors.white)),
+        middle: Text('Mood History',
+            style: GoogleFonts.poppins(
+              color: CupertinoColors.white,
+              fontWeight: FontWeight.w400,
+          fontSize: 20,)
+      ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(CupertinoIcons.back,
@@ -203,14 +208,14 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   // Update the _buildTipCard widget
   Widget _buildTipCard(String title, String description) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 1),
       decoration: BoxDecoration(
         color: Colors.black45,
         borderRadius: BorderRadius.circular(12),
         // Remove boxShadow and use border instead
         border: Border.all(
           color: CupertinoColors.black,
-          width: 0.5,
+          width: 0.2,
         ),
       ),
       child: Padding(
@@ -220,7 +225,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
           children: [
             Container(
               width: 40,
-              height: 40,
+              height: 55,
               decoration: BoxDecoration(
                 color: widget.backgroundColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -243,12 +248,12 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                         color: widget.backgroundColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        height: 1.2 // Add line height
+                        height: 1 // Add line height
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(description,
                     style: TextStyle(
                         decoration: TextDecoration.none,
@@ -273,7 +278,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       context: context,
       builder: (context) => CupertinoActionSheet(
         title: const Text('Select Your Mood'),
-        actions: ['😢', '😞', '😐', '😊', '😁'].map((emoji) {
+        actions: ['😢', '😞', '😐', '😊', '😁','🚫'].map((emoji) {
           return CupertinoActionSheetAction(
             child: Text(emoji, style: const TextStyle(fontSize: 32)),
             onPressed: () {

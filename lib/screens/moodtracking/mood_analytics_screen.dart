@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/mood_entry.dart';
 import 'package:mentalhealth/widgets/mood_chart.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class MoodAnalyticsScreen extends StatelessWidget {
   final String email;
   final Color backgroundColor;
@@ -19,15 +20,19 @@ class MoodAnalyticsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: backgroundColor,
         centerTitle: true,
+
         title: Text(
           'Mood Analytics',
-          style: TextStyle(
-
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w400,
+          fontSize: 20,)
         ),
-        elevation: 4,
+        elevation: 14,
+        leading: IconButton(
+            icon: Icon(CupertinoIcons.back), onPressed: () {
+              Navigator.pop(context);
+        },),
+
+
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -84,14 +89,15 @@ class MoodAnalyticsScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               '7-Day Mood Average',
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.blueGrey[700],
+                fontWeight: FontWeight.w600,
+                color: CupertinoColors.darkBackgroundGray,
+
               ),
             ),
             SizedBox(height: 10),
@@ -165,12 +171,13 @@ class MoodAnalyticsScreen extends StatelessWidget {
             color: Colors.redAccent,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 18),
         ...professionals.map((professional) {
           return Card(
-            margin: EdgeInsets.symmetric(vertical: 8),
+            margin: EdgeInsets.all(2),
             child: ListTile(
-              leading: Icon(Icons.local_hospital, color: Colors.deepPurple),
+              hoverColor: backgroundColor,
+              leading: Icon(CupertinoIcons.person_fill, color: Colors.deepPurple),
               title: Text(
                 professional['name']!,
                 style: TextStyle(fontWeight: FontWeight.bold),

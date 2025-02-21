@@ -1,6 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PodcastScreen extends StatelessWidget {
+  final Color backgroundColor;
+  PodcastScreen({
+    Key? key,
+    required this.backgroundColor,
+  }) : super(key: key);
+
   final List<Map<String, String>> podcasts = [
     {
       "title": "Overcoming Anxiety",
@@ -33,11 +40,16 @@ class PodcastScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Mental Health Podcasts",
+          "Podcasts",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: backgroundColor,
         centerTitle: true,
+        leading: IconButton(icon: Icon(CupertinoIcons.back,
+        ), onPressed: () {
+          Navigator.pop(context);
+        },
+        ),
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(10),

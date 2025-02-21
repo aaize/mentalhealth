@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ArticlesScreen extends StatelessWidget {
+  final Color backgroundColor;
+  ArticlesScreen({
+    Key? key,
+    required this.backgroundColor,
+  }) : super(key: key);
   final List<Map<String, String>> articles = [
     {
       'title': 'Children Still Being Sent Far from Home for Mental Health Care in England',
@@ -41,7 +46,7 @@ class ArticlesScreen extends StatelessWidget {
           'Articles',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF6A5ACD),
+        backgroundColor: backgroundColor,
         centerTitle: true,
       ),
       body: ListView.builder(
