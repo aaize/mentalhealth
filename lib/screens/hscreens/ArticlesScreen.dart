@@ -8,6 +8,7 @@ class ArticlesScreen extends StatelessWidget {
     Key? key,
     required this.backgroundColor,
   }) : super(key: key);
+
   final List<Map<String, String>> articles = [
     {
       'title': 'Children Still Being Sent Far from Home for Mental Health Care in England',
@@ -35,19 +36,32 @@ class ArticlesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          'Articles',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
+      appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
-        centerTitle: true,
+        border: null, // Remove bottom border
+        brightness: Brightness.dark, // For light status bar icons
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous screen
+          },
+          child: Icon(CupertinoIcons.back, color: Colors.white),
+        ),
+        middle: Text(
+          'Articles',
+          style: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            // Add functionality for the trailing button
+          },
+          child: Icon(CupertinoIcons.search, color: Colors.white),
+        ),
       ),
       body: ListView.builder(
         itemCount: articles.length,

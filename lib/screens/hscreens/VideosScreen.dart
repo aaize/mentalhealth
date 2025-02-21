@@ -33,32 +33,20 @@ class VideosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-
-            // Handle back action
-          },
-        ),
-        title: Text(
-          'Videos',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
-        actions: [
-          /*IconButton(
-            icon: Icon(CupertinoIcons.search, color: Colors.white),
-            onPressed: () {
-              // Handle search action
-            },
-          ),*/
-        ],
+        border: null,
+        brightness: Brightness.dark,
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+            onPressed: (){
+            Navigator.pop(context);
+            }, child: Icon(CupertinoIcons.back,color: Colors.white,),
+        ),
+        middle: Text('Videos',
+        style: TextStyle(fontWeight: FontWeight.w400,
+        fontSize: 20,
+        color: Colors.white),),
       ),
       body: ListView.builder(
         itemCount: videos.length,
