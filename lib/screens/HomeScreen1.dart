@@ -165,39 +165,57 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-        backgroundColor: backgroundColor,
-        border: null, // Remove bottom border
-        brightness: Brightness.dark, // For light status bar icons
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.bars, color: Colors.white), // Hamburger menu icon
           onPressed: _showProfileMenu,
-          child: Icon(CupertinoIcons.bars, color: Colors.white),
         ),
-        middle: RichText(
-          text: TextSpan(
-            style: GoogleFonts.gabarito(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            children: [
-              TextSpan(
-                text: "M",
-                style: TextStyle(color: Colors.purple),
+        title: Center(
+          child: RichText(
+            text: TextSpan(
+              style: GoogleFonts.gabarito(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              TextSpan(text: "inCo"),
-            ],
+              children: [
+                TextSpan(
+                  text: "M",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                TextSpan(
+                  text: "inCo",
+                ),
+
+              ],
+            ),
           ),
         ),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: openEmojiSelection,
-          child: Text(
-            selectedEmoji,
-            style: TextStyle(fontSize: 28, color: Colors.white),
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        actions: [
+          // Display the selected emoji in the AppBar
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Center(
+
+              child: GestureDetector(
+                onTap: (){
+                  print('hello');
+                  backgroundColor = Color(0xFF6A5ACD);
+
+                },
+                child: Text(
+                  selectedEmoji,
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -242,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
             // Emotional Check-In Section
-            /*Text(
+            Text(
               'How are you feeling today?',
               style: GoogleFonts.poppins(
                 fontSize: 22,
@@ -266,9 +284,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-          ),*/
+          ),
 
-          SizedBox(height: 0),
+          SizedBox(height: 30),
             // Image Gallery Section (example)
             Text(
               'Explore Resources',
