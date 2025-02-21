@@ -6,12 +6,12 @@ class QuestionnaireScreen extends StatefulWidget {
   final Color backgroundColor;
 
   const QuestionnaireScreen({
-    Key? key,
+    super.key,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
-  _QuestionnaireScreenState createState() => _QuestionnaireScreenState();
+  State<QuestionnaireScreen> createState() => _QuestionnaireScreenState();
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
@@ -66,10 +66,10 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   }
 
   void handleSubmit() {
-    int totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b);
-    totalScore += ageScores[selectedAgeRange]!;
-    totalScore += mealScores[selectedMeals]!;
-    totalScore += workPressureScores[selectedWorkPressure]!;
+    final totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b) +
+        ageScores[selectedAgeRange]! +
+        mealScores[selectedMeals]! +
+        workPressureScores[selectedWorkPressure]!;
 
     Navigator.push(
       context,
@@ -78,40 +78,43 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
           totalScore: totalScore,
           responses: responses,
           backgroundColor: widget.backgroundColor,
-          ageRange: selectedAgeRange,      // Add this
-          meals: selectedMeals,            // Add this
-          workPressure: selectedWorkPressure, // Add this
+          ageRange: selectedAgeRange,
+          meals: selectedMeals,
+          workPressure: selectedWorkPressure,
         ),
       ),
     );
   }
 
-  Widget _buildDropdownQuestion(String title, String value, List<String> items, Function(String?) onChanged) {
+  Widget _buildDropdownQuestion(String title, String value, List<String> items, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 16.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
-            color: CupertinoColors.systemBackground.resolveFrom(context),
+            color: CupertinoTheme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 6,
                 spreadRadius: 2,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
-          ), // <-- Closing BoxDecoration properly
+          ),
           child: CupertinoFormSection(
-            header: Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                color: widget.backgroundColor,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.none,
+            header: Padding(
+              padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: widget.backgroundColor,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.none
+                ),
               ),
             ),
             children: [
@@ -119,11 +122,19 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: CupertinoSlidingSegmentedControl<String>(
                   groupValue: value,
+                  thumbColor: widget.backgroundColor,
+                  backgroundColor: CupertinoColors.tertiarySystemFill,
                   children: {
                     for (var item in items)
                       item: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(item),
+                        child: Text(
+                          item,
+                          style: const TextStyle(color: CupertinoColors.opaqueSeparator,
+                              decoration: TextDecoration.none
+
+                          ),
+                        ),
                       )
                   },
                   onValueChanged: onChanged,
@@ -131,8 +142,78 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               ),
             ],
           ),
-        ), // <-- Closing Container properly
+        ),
+      ),
+    );
+  }
 
+  Widget _buildQuestionSlider(int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6,
+                spreadRadius: 2,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: CupertinoFormSection(
+            header: Padding(
+              padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+              child: Text(
+                questions[index],
+                style: TextStyle(
+                  fontSize: 18,
+                  color: widget.backgroundColor,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.none
+                ),
+              ),
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    CupertinoSlider(
+                      value: responses[index].toDouble(),
+                      min: 1,
+                      max: 5,
+                      divisions: 4,
+                      activeColor: widget.backgroundColor,
+                      thumbColor: widget.backgroundColor,
+                      onChanged: (value) {
+                        setState(() {
+                          responses[index] = value.toInt();
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text('Never', style: TextStyle(fontSize: 12,
+                          decoration: TextDecoration.none)),
+                          Text('Always', style: TextStyle(fontSize: 12,
+                              decoration: TextDecoration.none)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -144,16 +225,16 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         middle: Text(
           'Questionnaire',
           style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-            fontSize: 20,
             decoration: TextDecoration.none,
+            color: CupertinoColors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
           ),
         ),
         backgroundColor: widget.backgroundColor,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: Icon(CupertinoIcons.back, color: Colors.white),
+          child: const Icon(CupertinoIcons.back, color: CupertinoColors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -162,6 +243,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
           children: [
             Expanded(
               child: ListView(
+
+                physics: const BouncingScrollPhysics(),
                 children: [
                   _buildDropdownQuestion(
                     'Select your age range:',
@@ -170,75 +253,34 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                         (value) => setState(() => selectedAgeRange = value!),
                   ),
                   _buildDropdownQuestion(
-                    'How many meals do you have daily?',
+                    'Daily meals:',
                     selectedMeals,
                     ['1', '2', '3', '4+'],
                         (value) => setState(() => selectedMeals = value!),
                   ),
                   _buildDropdownQuestion(
-                    'How would you rate your work pressure?',
+                    'Work pressure level:',
                     selectedWorkPressure,
                     ['Low', 'Moderate', 'High'],
                         (value) => setState(() => selectedWorkPressure = value!),
                   ),
-                  ...List.generate(questions.length, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 16.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: CupertinoColors.systemBackground.resolveFrom(context),
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 6,
-                                spreadRadius: 2,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: CupertinoFormSection(
-                            header: Text(
-                              questions[index],
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: widget.backgroundColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CupertinoSlider(
-                                  value: responses[index].toDouble(),
-                                  min: 1,
-                                  max: 5,
-                                  divisions: 4,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      responses[index] = value.toInt();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                  ...List.generate(questions.length, (index) => _buildQuestionSlider(index)),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(17.0),
-              child: CupertinoButton(
-                color: CupertinoColors.systemIndigo,
+              padding: const EdgeInsets.all(16.0),
+              child: CupertinoButton.filled(
+                borderRadius: BorderRadius.circular(12),
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 onPressed: handleSubmit,
-                child: Text('Submit Questionnaire'),
+                child: const Text(
+                  'Submit Questionnaire',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none
+                  ),
+
+                ),
               ),
             ),
           ],
