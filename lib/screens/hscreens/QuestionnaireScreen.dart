@@ -269,17 +269,20 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CupertinoButton.filled(
-                borderRadius: BorderRadius.circular(12),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.all(20.0),
+              child: CupertinoButton(
+                color: widget.backgroundColor, // Set your custom button color here
+                borderRadius: BorderRadius.circular(20),
+                padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
                 onPressed: handleSubmit,
                 child: const Text(
-                  'Submit Questionnaire',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.none
+                  'Results!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: CupertinoColors.white, // Ensure text color contrasts with the button
+                    decoration: TextDecoration.none,
                   ),
-
                 ),
               ),
             ),
