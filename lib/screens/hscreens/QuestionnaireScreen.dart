@@ -42,25 +42,25 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   };
 
   final Map<String, int> mealScores = {
-    '1': 3,
-    '2': 2,
-    '3': 1,
-    '4+': 0
+    '1': 1,
+    '2': 10,
+    '3': 20,
+    '4+': 30
   };
 
   final Map<String, int> workPressureScores = {
-    'Low': 0,
-    'Moderate': 2,
-    'High': 4
+    'Low': 4,
+    'Moderate': 5,
+    'High': 10
   };
 
   int mapResponseToScore(int response) {
     switch (response) {
-      case 1: return 1;
-      case 2: return 2;
+      case 1: return -5;
+      case 2: return -6;
       case 3: return 0;
-      case 4: return -1;
-      case 5: return -2;
+      case 4: return 4;
+      case 5: return 5;
       default: return 0;
     }
   }

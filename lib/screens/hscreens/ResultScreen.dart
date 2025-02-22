@@ -22,8 +22,9 @@ class ResultScreen extends StatelessWidget {
   });
 
   int _calculateMentalHealthScore() {
-    return responses.reduce((a, b) => a + b);
+    return (responses.reduce((a, b) => a + b) ~/ 4); // Integer division by 2
   }
+
 
   int _ageScore(String range) {
     const scores = {'18-25': 0, '26-35': 1, '36-45': 2, '46-55': 3, '56+': 4};
@@ -51,7 +52,9 @@ class ResultScreen extends StatelessWidget {
           color: Colors.white60,
           decoration: TextDecoration.none
         ),
+
       ),
+
     );
     Divider();
   }
@@ -157,12 +160,15 @@ class ResultScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: backgroundColor.withOpacity(0.1),
             shape: BoxShape.circle,
+
           ),
           child: Icon(CupertinoIcons.person_fill, color: backgroundColor),
         ),
         title: Text(
           professional.name,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w500,
+          color: CupertinoColors.opaqueSeparator),
+
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,9 +244,7 @@ class ResultScreen extends StatelessWidget {
               ),
               children: [
                 CupertinoListTile(
-                  title: Text('Overall Score', style: GoogleFonts.poppins(
-                    color: Colors.blueGrey
-                  )),
+                  title: Text('Overall Score', style: GoogleFonts.poppins(color: Colors.blueGrey)),
                   additionalInfo: Text(
                     totalScore.toString(),
                     style: GoogleFonts.poppins(
@@ -265,7 +269,9 @@ class ResultScreen extends StatelessWidget {
               ],
             ),
 
-            _buildSectionHeader('Health Breakdown', context),
+            _buildSectionHeader('Key Areas of Concern', context),
+
+
             Container(
               height: 220,
               margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -282,7 +288,7 @@ class ResultScreen extends StatelessWidget {
                   BarSeries(
                     dataSource: [
                       MapEntry('Mental\nHealth', _calculateMentalHealthScore()),
-                      MapEntry('Age\nFactor', _ageScore(ageRange)),
+                      //MapEntry('Age\nFactor', _ageScore(ageRange)),
                       MapEntry('Nutrition', _mealScore(meals)),
                       MapEntry('Work\nStress', _workScore(workPressure)),
                     ],
@@ -290,30 +296,21 @@ class ResultScreen extends StatelessWidget {
                     yValueMapper: (entry, _) => entry.value,
                     color: backgroundColor,
                     borderRadius: BorderRadius.circular(8),
-                    dataLabelSettings: DataLabelSettings(
-                      isVisible: true,
-                      textStyle: GoogleFonts.poppins(
-                        color: CupertinoColors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                   ),
                 ],
               ),
             ),
 
-            _buildSectionHeader('Personalized Recommendations', context),
             _buildAgeRecommendations(context),
             _buildNutritionAdvice(context),
             _buildWorkStressAdvice(context),
 
-            if (totalScore > 15) ...[
-              _buildSectionHeader('Recommended Specialists', context),
-              ...professionals.map((p) => _buildProfessionalCard(p, context)),
-            ],
+            _buildSectionHeader('Recommended Professionals', context),
+
+            ...professionals.map((professional) => _buildProfessionalCard(professional, context)).toList(),
           ],
-        ),
+        )
+
       ),
     );
   }
