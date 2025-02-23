@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +9,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String email; // Passed from the login (or home) screen
+  final String email;
   final Color backgroundColor;
+
   const ProfilePage({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
 
   @override
@@ -20,10 +22,9 @@ class _ProfilePageState extends State<ProfilePage> {
   late String displayName = "Loading...";
   late String imageUrl = "";
   late String lastUpdated = "";
-  bool isLoading = true; // To manage loading state
+  bool isLoading = true;
   File? _image;
   bool _isUploading = false;
-
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -32,12 +33,11 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserProfile();
   }
 
-  // Loads the user's profile details from Firestore using the email (document ID)
   Future<void> _loadUserProfile() async {
     try {
       final DocumentSnapshot profileDoc = await FirebaseFirestore.instance
           .collection('ProfileDetails')
-          .doc(widget.email) // Using the email as the document ID
+          .doc(widget.email)
           .get();
 
       if (profileDoc.exists) {
@@ -46,14 +46,11 @@ class _ProfilePageState extends State<ProfilePage> {
           displayName = data['displayName'] ?? 'No name';
           imageUrl = data['imageUrl'] ?? '';
           lastUpdated = data['lastUpdated'] != null
-              ? DateFormat.yMMMd().format(
-            (data['lastUpdated'] as Timestamp).toDate(),
-          )
+              ? DateFormat.yMMMd().format((data['lastUpdated'] as Timestamp).toDate())
               : 'Not updated';
           isLoading = false;
         });
       } else {
-        // Document not found
         setState(() {
           displayName = 'Profile not found';
           isLoading = false;
@@ -68,37 +65,24 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Method to pick an image from the gallery and upload it
   Future<void> _pickAndUploadImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-        _isUploading = true; // Show loading state while uploading
+        _isUploading = true;
       });
 
       try {
-        final fileName =
-            '${DateTime.now().millisecondsSinceEpoch}_${_image!.path.split('/').last}';
-
-        // Upload the file to Supabase Storage
-        final fileKey = await Supabase.instance.client.storage
-            .from('mentalhealth')
-            .upload(fileName, _image!);
-
-        final publicUrl = Supabase.instance.client.storage
-            .from('mentalhealth')
-            .getPublicUrl(fileName);
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${_image!.path.split('/').last}';
+        final fileKey = await Supabase.instance.client.storage.from('mentalhealth').upload(fileName, _image!);
+        final publicUrl = Supabase.instance.client.storage.from('mentalhealth').getPublicUrl(fileName);
 
         setState(() {
-          imageUrl = publicUrl;  // Update the imageUrl immediately
+          imageUrl = publicUrl;
         });
 
-        // Update Firestore with the new image URL
-        await FirebaseFirestore.instance
-            .collection('ProfileDetails')
-            .doc(widget.email)
-            .update({
+        await FirebaseFirestore.instance.collection('ProfileDetails').doc(widget.email).update({
           'imageUrl': imageUrl,
           'lastUpdated': FieldValue.serverTimestamp(),
         });
@@ -112,39 +96,40 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       } finally {
         setState(() {
-          _isUploading = false;  // Hide loading state after upload
+          _isUploading = false;
         });
       }
     }
   }
 
-  // Function to show an edit popup for updating the display name
   void _showEditPopup() {
     TextEditingController _nameController = TextEditingController();
 
-    showDialog(
+    showCupertinoDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: widget.backgroundColor,
+        return CupertinoAlertDialog(
           title: Text("Edit Display Name"),
-          content: TextField(
-            controller: _nameController,
-            decoration: InputDecoration(hintText: "Enter new display name"),
+          content: Column(
+            children: [
+              CupertinoTextField(
+                controller: _nameController,
+                placeholder: "Enter new display name",
+                padding: EdgeInsets.all(12),
+              ),
+            ],
           ),
           actions: [
-            TextButton(
+            CupertinoDialogAction(
+              isDefaultAction: true,
               onPressed: () => Navigator.pop(context),
               child: Text("Cancel"),
             ),
-            TextButton(
+            CupertinoDialogAction(
               onPressed: () async {
                 String newName = _nameController.text.trim();
                 if (newName.isNotEmpty) {
-                  await FirebaseFirestore.instance
-                      .collection('ProfileDetails')
-                      .doc(widget.email)
-                      .update({'displayName': newName});
+                  await FirebaseFirestore.instance.collection('ProfileDetails').doc(widget.email).update({'displayName': newName});
                   setState(() {
                     displayName = newName;
                   });
@@ -159,90 +144,84 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _showImagePickerActionSheet() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: Text("Select Image"),
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                _pickAndUploadImage();
+              },
+              child: Text("Choose from Gallery"),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
           "Your Profile",
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
-        backgroundColor: widget.backgroundColor,
-        actions: [
-          IconButton(
-            onPressed: _showEditPopup,
-            icon: Icon(Icons.edit),
-          ),
-        ],
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Icon(CupertinoIcons.pencil),
+          onPressed: _showEditPopup,
+        ),
       ),
-      body: Center(
+      child: Center(
         child: isLoading
-            ? CircularProgressIndicator()
+            ? CupertinoActivityIndicator(radius: 15)
             : Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Profile Picture
               GestureDetector(
-                onTap: _pickAndUploadImage,  // Trigger image pick and upload
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundImage: imageUrl.isNotEmpty
-                      ? NetworkImage(imageUrl)
-                      : AssetImage('assets/default_profile_pic.png')
-                  as ImageProvider,
-                  child: imageUrl.isEmpty
-                      ? Icon(Icons.camera_alt, size: 50, color: Colors.white)
-                      : null,
+                onTap: _showImagePickerActionSheet,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: imageUrl.isNotEmpty
+                      ? Image.network(imageUrl, width: 100, height: 100, fit: BoxFit.cover)
+                      : Icon(CupertinoIcons.camera, size: 100, color: CupertinoColors.systemGrey),
                 ),
               ),
               SizedBox(height: 20),
-              // Profile Information
               Text(
                 displayName,
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
               Text(
                 widget.email,
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Colors.grey[600],
-                ),
+                style: GoogleFonts.poppins(fontSize: 18, color: CupertinoColors.systemGrey),
               ),
               SizedBox(height: 10),
               Text(
                 'Last updated: $lastUpdated',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.grey[500],
-                ),
+                style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey2),
               ),
               SizedBox(height: 40),
-              // Button to upload the profile image
-              ElevatedButton(
-                onPressed: _isUploading ? null : _pickAndUploadImage,  // Bind to the new function
+              CupertinoButton.filled(
+                onPressed: _isUploading ? null : _pickAndUploadImage,
                 child: _isUploading
-                    ? CircularProgressIndicator()
+                    ? CupertinoActivityIndicator()
                     : Text(
                   'Upload Profile Picture',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                  backgroundColor: widget.backgroundColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

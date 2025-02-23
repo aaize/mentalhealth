@@ -1,117 +1,200 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'webview_screen.dart';
 
-class ArticlesScreen extends StatelessWidget {
+class Article {
+  final String title;
+  final String source;
+  final String date;
+  final String imageUrl;
+  final String url;
+
+  Article({
+    required this.title,
+    required this.source,
+    required this.date,
+    required this.imageUrl,
+    required this.url,
+  });
+}
+
+class ArticlesScreen extends StatefulWidget {
   final Color backgroundColor;
-  ArticlesScreen({
-    Key? key,
-    required this.backgroundColor,
-  }) : super(key: key);
+  const ArticlesScreen({Key? key, required this.backgroundColor}) : super(key: key);
 
-  final List<Map<String, String>> articles = [
-    {
-      'title': 'Children Still Being Sent Far from Home for Mental Health Care in England',
-      'source': 'The Guardian',
-      'date': 'February 8, 2025',
-      'url': 'https://www.theguardian.com/society/2025/feb/08/children-sent-far-from-home-mental-health-care-nhs-england',
-      'image': 'lib/assets/hscreen/article1.webp',
-    },
-    {
-      'title': 'Reversing Memory Loss in Early Alzheimer\'s',
-      'source': 'ScienceDaily',
-      'date': 'February 10, 2025',
-      'url': 'https://www.sciencedaily.com/releases/2025/02/250210101010.htm',
-      'image': 'lib/assets/hscreen/article2.jpeg',
-    },
-    {
-      'title': 'Anxiety and Stress Weighing Heavily at Night? A New Blanket Might Help',
-      'source': 'Harvard Health',
-      'date': 'February 7, 2025',
-      'url': 'https://www.health.harvard.edu/blog/anxiety-and-stress-weighing-heavily-at-night-a-new-blanket-might-help-2025020720107',
-      'image': 'lib/assets/hscreen/article3.webp',
-    },
+  @override
+  _ArticlesScreenState createState() => _ArticlesScreenState();
+}
+
+class _ArticlesScreenState extends State<ArticlesScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  List<Article> _filteredArticles = [];
+
+  final List<Article> articles = [
+    Article(
+      title: 'Mental Fitness: How to Stay Sharp in a Distracted World',
+      source: 'Journal Courier',
+      date: 'February 23, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.myjournalcourier.com/features/article/mental-fitness-in-stay-sharp-distracted-world-20149370.php',
+    ),
+    Article(
+      title: 'Prescribing Stand-Up Comedy: A New Approach to Mental Health',
+      source: 'The Times',
+      date: 'February 20, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.thetimes.co.uk/article/comedy-prescription-antidepressants-nhs-craic-health-0dc52zrkf',
+    ),
+    Article(
+      title: 'PILLAR Expands Mental Health Support with New Grant',
+      source: 'LMT Online',
+      date: 'February 22, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.lmtonline.com/local/article/webb-nonprofit-funding-methodist-ministries-laredo-20175717.php',
+    ),
+    Article(
+      title: 'Narcissism and the Youth Mental Health Crisis',
+      source: 'The Australian',
+      date: 'February 19, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.theaustralian.com.au/commentary/narcissism-at-the-heart-of-childrens-mental-health-crisis/news-story/f369002722fc008c3b3c2af3db32737a',
+    ),
+    Article(
+      title: 'Supporting New Dads: Protecting Mental Health After Childbirth',
+      source: 'Herald Sun',
+      date: 'February 19, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.heraldsun.com.au/health/mental-health/deakin-university-study-reveals-firsttime-dads-struggle-with-parenthood/news-story/9ab0237af75e22c19c42cd3dcd153f37',
+    ),
+    Article(
+      title: 'Rise in Teenagers Seeking Mental Health Benefits Post-COVID',
+      source: 'The Times',
+      date: 'February 21, 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.thetimes.co.uk/article/more-teenagers-on-benefits-for-mental-health-than-before-covid-tskrlh5qv',
+    ),
+    Article(
+      title: 'Top 10 Trends to Watch in 2025',
+      source: 'American Psychological Association',
+      date: 'January 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.apa.org/monitor/2025/01/top-10-trends-to-watch',
+    ),
+    Article(
+      title: 'Recovering Wellbeing from the Diseases of Despair',
+      source: 'Nature Mental Health',
+      date: '2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.nature.com/natmentalhealth/articles?year=2025',
+    ),
+    Article(
+      title: 'A Mind Reading for 2025: Our Mental Health Forecast',
+      source: 'Verywell Mind',
+      date: 'February 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.verywellmind.com/mind-reading-2025-trends-8762268',
+    ),
+    Article(
+      title: '4 Imperatives for Improving Mental Health Care in 2025',
+      source: 'World Economic Forum',
+      date: 'January 2025',
+      imageUrl: 'lib/assets/articlesonmental.png',
+      url: 'https://www.weforum.org/stories/2025/01/4-imperatives-for-improving-mental-health-care-in-2025/',
+    ),
   ];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredArticles = articles;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _filteredArticles = articles.where((article) {
+        return article.title.toLowerCase().contains(_searchController.text.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CupertinoNavigationBar(
-        backgroundColor: backgroundColor,
-        border: null, // Remove bottom border
-        brightness: Brightness.dark, // For light status bar icons
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen
-          },
-          child: Icon(CupertinoIcons.back, color: Colors.white),
-        ),
-        middle: Text(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: widget.backgroundColor,
+        middle: _isSearching
+            ? CupertinoSearchTextField(
+          controller: _searchController,
+          style: GoogleFonts.poppins(),
+          prefixIcon: const Icon(CupertinoIcons.search),
+        )
+            : Text(
           'Articles',
-          style: GoogleFonts.poppins(
-            fontSize: 24,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
+          style: GoogleFonts.poppins(fontSize: 20,
+          color: Colors.white,
+          fontWeight: FontWeight.w400),
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
-            // Add functionality for the trailing button
-          },
-          child: Icon(CupertinoIcons.search, color: Colors.white),
+          child: Icon(_isSearching ? CupertinoIcons.xmark : CupertinoIcons.search),
+          onPressed: () => setState(() => _isSearching = !_isSearching),
         ),
       ),
-      body: ListView.builder(
-        itemCount: articles.length,
-        itemBuilder: (context, index) {
-          final article = articles[index];
-          return Card(
-            elevation: 4,
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: InkWell(
-              onTap: () {
-                // Implement navigation to a detailed view or external link
+      child: SafeArea(
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: _filteredArticles.length,
+          itemBuilder: (context, index) {
+            final article = _filteredArticles[index];
+            return CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => WebViewScreen(url: article.url,backgroundColor: widget.backgroundColor,),
+                  ),
+                );
               },
-              child: Padding(
-                padding: EdgeInsets.all(6),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: CupertinoColors.darkBackgroundGray,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Image Container with fixed height
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
-                        article['image']!,
-                        width: 150,
-                        height: 120, // Ensure height is set
-                        fit: BoxFit.cover, // Fills the box while maintaining aspect ratio
+                        article.imageUrl,
+                        width: 120,
+                        height: 86,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    SizedBox(width: 10), // Spacing between image and text
-                    // Text Column
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            article['title']!,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                            article.title,
+                            style: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 16,
+                            color: widget.backgroundColor),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 4),
                           Text(
-                            '${article['source']} - ${article['date']}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
+                            '${article.source} • ${article.date}',
+                            style: GoogleFonts.poppins(fontSize: 12, color: CupertinoColors.systemGrey),
                           ),
                         ],
                       ),
@@ -119,9 +202,9 @@ class ArticlesScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

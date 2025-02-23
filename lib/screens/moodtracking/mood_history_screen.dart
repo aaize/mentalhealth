@@ -6,6 +6,7 @@ import '../../models/mood_entry.dart';
 import '../../widgets/mood_calendar.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_analytics_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class MoodHistoryScreen extends StatefulWidget {
   final String email;
   final Color backgroundColor;
@@ -61,46 +62,121 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       '😐': 3,
       '😊': 4,
       '😁': 5,
-      '🚫':0,
+      '🚫': 0,
     };
     return emojiRatings[emoji] ?? 3;
+  }
+
+  Future<void> _clearAllMoodEntries() async {
+    final batch = _firestore.batch();
+    final collectionRef = _firestore
+        .collection('moods')
+        .doc(widget.email)
+        .collection('entries');
+
+    final snapshot = await collectionRef.get();
+    for (var doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
+  }
+
+  void _showClearConfirmationDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text('Clear All Entries'),
+        content: Text('Are you sure you want to delete all mood entries? This action cannot be undone.'),
+        actions: [
+          CupertinoDialogAction(
+            child: Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          CupertinoDialogAction(
+            child: Text('Delete', style: TextStyle(color: CupertinoColors.destructiveRed)),
+            onPressed: () async {
+              await _clearAllMoodEntries();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEmojiPicker(BuildContext context, DateTime date) {
+    if (date.isAfter(DateTime.now())) {
+      return;
+    }
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        title: const Text('Select Your Mood'),
+        actions: ['😢', '😞', '😐', '😊', '😁', '🚫'].map((emoji) {
+          return CupertinoActionSheetAction(
+            child: Text(emoji, style: const TextStyle(fontSize: 32)),
+            onPressed: () {
+              _saveMoodEntry(date, emoji);
+              Navigator.pop(context);
+            },
+          );
+        }).toList(),
+        cancelButton: CupertinoActionSheetAction(
+          child: const Text('Cancel', style: TextStyle(color: CupertinoColors.destructiveRed)),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Mood History',
-            style: GoogleFonts.poppins(
-              color: CupertinoColors.white,
-              fontWeight: FontWeight.w400,
-          fontSize: 20,)
-      ),
+        middle: Text(
+          'Mood History',
+          style: GoogleFonts.poppins(
+            color: CupertinoColors.white,
+            fontWeight: FontWeight.w400,
+            fontSize: 20,
+          ),
+        ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back,
-              color: CupertinoColors.white),
+          child: const Icon(CupertinoIcons.back, color: CupertinoColors.white),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: widget.backgroundColor,
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.chart_bar_alt_fill,
-              color: CupertinoColors.white),
-          onPressed: () => Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (_) => MoodAnalyticsScreen(
-                email: widget.email,
-                backgroundColor: widget.backgroundColor,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(CupertinoIcons.chart_bar_alt_fill, color: CupertinoColors.white),
+              onPressed: () => Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (_) => MoodAnalyticsScreen(
+                    email: widget.email,
+                    backgroundColor: widget.backgroundColor,
+                  ),
+                ),
               ),
             ),
-          ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(CupertinoIcons.delete, color: CupertinoColors.white),
+              onPressed: _showClearConfirmationDialog,
+            ),
+          ],
         ),
       ),
       child: SafeArea(
         child: CustomScrollView(
           slivers: [
+            // Mood Calendar Section
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverToBoxAdapter(
@@ -134,15 +210,18 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                       }
 
                       final entries = snapshot.data!.docs
-                          .map((doc) => MoodEntry.fromMap(
-                          doc.data() as Map<String, dynamic>))
+                          .map((doc) => MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
                           .toList();
 
                       return MoodCalendar(
                         currentMonth: _currentMonth,
                         moodEntries: entries,
                         onMonthChanged: _handleMonthChange,
-                        onDayPressed: (date) => _showEmojiPicker(context, date),
+                        onDayPressed: (date) {
+                          if (!date.isAfter(DateTime.now())) {
+                            _showEmojiPicker(context, date);
+                          }
+                        },
                         primaryColor: widget.backgroundColor,
                       );
                     },
@@ -150,28 +229,30 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                 ),
               ),
             ),
+
+            // Divider
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Divider(
-                  height: 1,
-                  color: CupertinoColors.systemGrey4,
-                  indent: 24,
-                  endIndent: 24,
+                  color: CupertinoColors.systemGrey2,
+                  thickness: 1,
                 ),
               ),
             ),
+
+            // Mental Health Tips Section
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _buildTipCard(
-                      _mentalHealthTips[index]['title']!,
-                      _mentalHealthTips[index]['description']!,
-                    ),
-                  ),
+                      (context, index) {
+                    final tip = _mentalHealthTips[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildTipCard(tip['title']!, tip['description']!),
+                    );
+                  },
                   childCount: _mentalHealthTips.length,
                 ),
               ),
@@ -182,116 +263,58 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
     );
   }
 
+  // List of Mental Health Tips
   final List<Map<String, String>> _mentalHealthTips = [
     {
+      'title': 'Practice Mindfulness',
+      'description': 'Take deep breaths and focus on the present moment to reduce stress.',
+    },
+    {
       'title': 'Stay Active',
-      'description': 'Regular physical activity helps reduce stress and improve mood.',
+      'description': 'Engage in regular physical activity to boost your mood and energy levels.',
     },
     {
-      'title': 'Balanced Diet',
-      'description': 'Nourish your body and mind with healthy meals.',
+      'title': 'Get Enough Sleep',
+      'description': 'Prioritize a healthy sleep routine to improve mental clarity and emotional stability.',
     },
     {
-      'title': 'Quality Sleep',
-      'description': 'Adequate rest is crucial for emotional well-being.',
+      'title': 'Stay Connected',
+      'description': 'Reach out to friends and family for support and companionship.',
     },
     {
-      'title': 'Mindfulness',
-      'description': 'Practice meditation to stay grounded.',
-    },
-    {
-      'title': 'Social Connection',
-      'description': 'Maintain strong relationships for emotional support.',
+      'title': 'Limit Screen Time',
+      'description': 'Reduce screen time before bed to enhance sleep quality and mental well-being.',
     },
   ];
 
-  // Update the _buildTipCard widget
+  // Build a Tip Card
   Widget _buildTipCard(String title, String description) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 1),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.black45,
+        color: CupertinoColors.darkBackgroundGray,
         borderRadius: BorderRadius.circular(12),
-        // Remove boxShadow and use border instead
-        border: Border.all(
-          color: CupertinoColors.black,
-          width: 0.2,
-        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 40,
-              height: 55,
-              decoration: BoxDecoration(
-                color: widget.backgroundColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: Icon(CupertinoIcons.bell_circle_fill,
-                  size: 20,
-                  color: widget.backgroundColor
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.none
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(title,
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                        color: widget.backgroundColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        height: 1 // Add line height
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(description,
-                    style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: CupertinoColors.inactiveGray,
-                        fontSize: 14,
-                        height: 1.3 // Add line height
-                    ),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: GoogleFonts.poppins(fontSize: 14,
+                decoration: TextDecoration.none,
+                color: CupertinoColors.systemGrey,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showEmojiPicker(BuildContext context, DateTime date) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => CupertinoActionSheet(
-        title: const Text('Select Your Mood'),
-        actions: ['😢', '😞', '😐', '😊', '😁','🚫'].map((emoji) {
-          return CupertinoActionSheetAction(
-            child: Text(emoji, style: const TextStyle(fontSize: 32)),
-            onPressed: () {
-              _saveMoodEntry(date, emoji);
-              Navigator.pop(context);
-            },
-          );
-        }).toList(),
-        cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel',
-              style: TextStyle(color: CupertinoColors.destructiveRed)),
-          onPressed: () => Navigator.pop(context),
-        ),
+          ),
+        ],
       ),
     );
   }

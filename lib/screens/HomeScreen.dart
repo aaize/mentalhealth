@@ -358,7 +358,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(0),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
@@ -513,5 +513,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
