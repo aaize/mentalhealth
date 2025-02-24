@@ -65,43 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _pickAndUploadImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-        _isUploading = true;
-      });
-
-      try {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${_image!.path.split('/').last}';
-        final fileKey = await Supabase.instance.client.storage.from('mentalhealth').upload(fileName, _image!);
-        final publicUrl = Supabase.instance.client.storage.from('mentalhealth').getPublicUrl(fileName);
-
-        setState(() {
-          imageUrl = publicUrl;
-        });
-
-        await FirebaseFirestore.instance.collection('ProfileDetails').doc(widget.email).update({
-          'imageUrl': imageUrl,
-          'lastUpdated': FieldValue.serverTimestamp(),
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile image uploaded successfully!')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error uploading image: $e')),
-        );
-      } finally {
-        setState(() {
-          _isUploading = false;
-        });
-      }
-    }
-  }
-
   void _showEditPopup() {
     TextEditingController _nameController = TextEditingController();
 
@@ -110,14 +73,16 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context) {
         return CupertinoAlertDialog(
           title: Text("Edit Display Name"),
-          content: Column(
-            children: [
-              CupertinoTextField(
-                controller: _nameController,
-                placeholder: "Enter new display name",
-                padding: EdgeInsets.all(12),
-              ),
-            ],
+          content: CupertinoTextField(
+            controller: _nameController,
+            placeholder: "Enter new display name",
+            placeholderStyle: TextStyle(color: CupertinoColors.systemGrey2), // White-grey placeholder
+            style: TextStyle(color: CupertinoColors.systemGrey6), // White-grey text
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: CupertinoColors.systemGrey.withOpacity(0.2), // Slight background tint
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
           actions: [
             CupertinoDialogAction(
@@ -129,7 +94,10 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 String newName = _nameController.text.trim();
                 if (newName.isNotEmpty) {
-                  await FirebaseFirestore.instance.collection('ProfileDetails').doc(widget.email).update({'displayName': newName});
+                  await FirebaseFirestore.instance
+                      .collection('ProfileDetails')
+                      .doc(widget.email)
+                      .update({'displayName': newName});
                   setState(() {
                     displayName = newName;
                   });
@@ -144,88 +112,105 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _showImagePickerActionSheet() {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) {
-        return CupertinoActionSheet(
-          title: Text("Select Image"),
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.pop(context);
-                _pickAndUploadImage();
-              },
-              child: Text("Choose from Gallery"),
-            ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            isDefaultAction: true,
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-        );
-      },
-    );
+
+  void _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          "Your Profile",
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: Icon(CupertinoIcons.pencil),
-          onPressed: _showEditPopup,
+        backgroundColor: widget.backgroundColor,
+        middle: Text("Profile", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: CupertinoColors.white)),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 200),
+            _buildProfileHeader(),
+            _buildStatsSection(),
+            _buildActionButtons(),
+          ],
         ),
       ),
-      child: Center(
-        child: isLoading
-            ? CupertinoActivityIndicator(radius: 15)
-            : Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: _showImagePickerActionSheet,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: imageUrl.isNotEmpty
-                      ? Image.network(imageUrl, width: 100, height: 100, fit: BoxFit.cover)
-                      : Icon(CupertinoIcons.camera, size: 100, color: CupertinoColors.systemGrey),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                displayName,
-                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                widget.email,
-                style: GoogleFonts.poppins(fontSize: 18, color: CupertinoColors.systemGrey),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Last updated: $lastUpdated',
-                style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey2),
-              ),
-              SizedBox(height: 40),
-              CupertinoButton.filled(
-                onPressed: _isUploading ? null : _pickAndUploadImage,
-                child: _isUploading
-                    ? CupertinoActivityIndicator()
-                    : Text(
-                  'Upload Profile Picture',
-                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+    );
+  }
+
+  Widget _buildProfileHeader() {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {},
+          child: CircleAvatar(
+            radius: 60,
+            backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+            child: imageUrl.isEmpty ? Icon(CupertinoIcons.person_fill, size: 60, color: CupertinoColors.systemGrey) : null,
           ),
+        ),
+        SizedBox(height: 10),
+        Text(displayName, style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold)),
+        Text(widget.email, style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey)),
+      ],
+    );
+  }
+
+  Widget _buildStatsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatItem("", ""),
+          _buildStatItem("", ""),
+          _buildStatItem("", ""),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String label, String count) {
+    return Column(
+      children: [
+        Text(count, style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(label, style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey)),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Column(
+        children: [
+          _buildButton(CupertinoIcons.pencil, "Edit Name", _showEditPopup),
+          SizedBox(height: 10),
+          _buildButton(CupertinoIcons.power, "Log Out", _logout),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton(IconData icon, String text, VoidCallback onPressed) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: onPressed,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemBackground,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [BoxShadow(color: CupertinoColors.systemGrey.withOpacity(0.3), blurRadius: 5)],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: widget.backgroundColor),
+            SizedBox(width: 10),
+            Text(text, style: GoogleFonts.poppins(fontSize: 18)),
+          ],
         ),
       ),
     );
