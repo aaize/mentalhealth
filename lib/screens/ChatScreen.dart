@@ -1,11 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmergencyScreen extends StatefulWidget {
+  final Color backgroundColor;
+  const EmergencyScreen({Key? key,
+    required this.backgroundColor
+  }) : super(key: key);
   @override
   _EmergencyScreenState createState() => _EmergencyScreenState();
 }
+
+
 
 class _EmergencyScreenState extends State<EmergencyScreen> {
   String _currentMessage = "Select an option to get help";
@@ -88,10 +95,16 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Emergency Assistance'),
-        backgroundColor: Colors.redAccent,
-        elevation: 0,
+      appBar: CupertinoNavigationBar(
+        border: null,
+        backgroundColor: widget.backgroundColor,
+        middle: Text('Emergency',
+        style: GoogleFonts.roboto(
+          fontWeight: FontWeight.w400,
+          fontSize: 20,
+          color: Colors.white
+        ),),
+
       ),
       body: Column(
         children: [

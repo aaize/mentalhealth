@@ -504,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EmergencyScreen()),
+                    MaterialPageRoute(builder: (context) => EmergencyScreen(backgroundColor: backgroundColor,)),
                   );
                 },
               ),

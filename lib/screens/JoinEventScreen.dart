@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,7 +19,20 @@ class JoinEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:CupertinoNavigationBar(
+        middle: Text('Events',
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w400
+
+          ),
+        ),
+        border: null,
+        backgroundColor: backgroundColor,
+
+      ),
+      /*AppBar(
         centerTitle: true,
         title: Text(
           eventName,
@@ -29,7 +43,7 @@ class JoinEventScreen extends StatelessWidget {
 
         ),
         backgroundColor: backgroundColor,
-      ),
+      ),*/
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -53,10 +67,32 @@ class JoinEventScreen extends StatelessWidget {
                 color: Colors.grey[300],
               ),
             ),
-            Center(
-
-              child: Image.asset('lib/assets/harmony.png'),
+        Center(
+          child: Container(
+            padding: EdgeInsets.all(13),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+              border: Border.all(color: CupertinoColors.systemGrey, width: 1), // Border color and width
+              boxShadow: [
+                BoxShadow(
+                  color: CupertinoColors.systemGrey.withOpacity(0.3),
+                  blurRadius: 5,
+                  spreadRadius: 0,
+                ),
+              ],
             ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20), // Ensures the image follows the rounded shape
+              child: Image.asset(
+                'lib/assets/harmony.png',
+                fit: BoxFit.cover, // Ensures proper scaling
+              ),
+            ),
+          ),
+        ),
+
+
+            
 
             SizedBox(height: 16),
             Text(
