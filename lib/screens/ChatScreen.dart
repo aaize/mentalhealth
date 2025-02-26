@@ -104,6 +104,12 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
           fontSize: 20,
           color: Colors.white
         ),),
+        leading: IconButton(onPressed:(){
+          Navigator.pop(context);
+        },
+            icon: Icon(CupertinoIcons.back,
+            size: 23,),),
+
 
       ),
       body: Column(

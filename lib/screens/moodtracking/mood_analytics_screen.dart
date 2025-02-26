@@ -17,22 +17,20 @@ class MoodAnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
-        centerTitle: true,
-
-        title: Text(
+        border: null,
+        middle: Text(
           'Mood Analytics',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w400,
-          fontSize: 20,)
+          fontSize: 20,
+          color: Colors.white)
         ),
-        elevation: 14,
         leading: IconButton(
-            icon: Icon(CupertinoIcons.back), onPressed: () {
+            icon: Icon(CupertinoIcons.back,
+            size: 23,), onPressed: () {
               Navigator.pop(context);
         },),
-
-
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
