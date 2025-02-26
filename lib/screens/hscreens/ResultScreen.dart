@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentalhealth/screens/hscreens/ResultScreenParts/age_advice.dart';
+import 'package:mentalhealth/screens/hscreens/ResultScreenParts/nutrition_advice.dart';
+import 'package:mentalhealth/screens/hscreens/ResultScreenParts/work_stress_advice.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   final int totalScore;
   final Color backgroundColor;
   final List<int> responses;
@@ -21,11 +24,14 @@ class ResultScreen extends StatelessWidget {
     required this.workPressure,
   });
 
+  @override
+  _ResultScreenState createState() => _ResultScreenState();
+}
 
+class _ResultScreenState extends State<ResultScreen> {
   int _calculateMentalHealthScore() {
-    return (responses.reduce((a, b) => a + b) ~/ 4); // Integer division by 2
+    return (widget.responses.reduce((a, b) => a + b) ~/ 4);
   }
-
 
   int _ageScore(String range) {
     const scores = {'18-25': 0, '26-35': 1, '36-45': 2, '46-55': 3, '56+': 4};
@@ -42,7 +48,7 @@ class ResultScreen extends StatelessWidget {
     return scores[pressure] ?? 0;
   }
 
-  Widget _buildSectionHeader(String title, BuildContext context) {
+  Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Text(
@@ -51,24 +57,17 @@ class ResultScreen extends StatelessWidget {
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Colors.white60,
-          decoration: TextDecoration.none
         ),
-
       ),
-
     );
-    Divider();
   }
 
-
-  Widget _buildRecommendationCard(String title, String content, IconData icon, BuildContext context) {
+  Widget _buildRecommendationCard(String title, String content, IconData icon, Widget screen) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(
-            builder: (_) => TipDetailsScreen(title: title, content: content),
-          ),
+          CupertinoPageRoute(builder: (_) => screen),
         );
       },
       child: Container(
@@ -85,10 +84,13 @@ class ResultScreen extends StatelessWidget {
           ],
         ),
         child: CupertinoListTile(
-          leading: Icon(icon, color: backgroundColor, size: 29),
+          leading: Icon(icon, color: widget.backgroundColor, size: 29),
           title: Text(
             title,
-            style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16, color: backgroundColor),
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                color: widget.backgroundColor),
           ),
           subtitle: Text(
             content,
@@ -98,11 +100,9 @@ class ResultScreen extends StatelessWidget {
         ),
       ),
     );
-    Divider();
   }
 
-
-  Widget _buildAgeRecommendations(BuildContext context) {
+  Widget _buildAgeRecommendations() {
     final recommendations = <String, String>{
       '18-25': '• Establish healthy sleep patterns\n• Regular physical activity 4-5x/week\n• Mindfulness practices\n• Social connection maintenance',
       '26-35': '• Stress management techniques\n• Balanced work-life routine\n• Annual health checkups\n• Strength training 3x/week',
@@ -112,16 +112,16 @@ class ResultScreen extends StatelessWidget {
     };
 
     return _buildRecommendationCard(
-      'Age-Specific Advice ($ageRange)',
-      recommendations[ageRange] ?? '• Maintain regular health checkups\n• Stay physically active\n• Balanced nutrition\n• Social engagement',
+      'Age-Specific Advice (${widget.ageRange})',
+      recommendations[widget.ageRange] ?? '• Maintain regular health checkups\n• Stay physically active\n• Balanced nutrition\n• Social engagement',
       CupertinoIcons.heart_circle,
-      context,
+      AgeAdviceScreen(ageRange: widget.ageRange, content: recommendations[widget.ageRange] ?? ''),
     );
   }
 
-  Widget _buildNutritionAdvice(BuildContext context) {
+  Widget _buildNutritionAdvice() {
     String content;
-    switch (meals) {
+    switch (widget.meals) {
       case '1':
         content = '⚠️ Consider increasing meal frequency:\n• Add nutrient-dense snacks\n• Focus on protein intake\n• Stay hydrated throughout the day';
         break;
@@ -135,14 +135,14 @@ class ResultScreen extends StatelessWidget {
         content = '✓ Adequate frequency\n• Mindful eating practices\n• Avoid over-snacking\n• Balance macros';
     }
     return _buildRecommendationCard(
-      'Nutrition Guidance ($meals meals)',
+      'Nutrition Guidance (${widget.meals} meals)',
       content,
       CupertinoIcons.leaf_arrow_circlepath,
-      context,
+      NutritionAdviceScreen(content: content),
     );
   }
 
-  Widget _buildWorkStressAdvice(BuildContext context) {
+  Widget _buildWorkStressAdvice() {
     final advice = {
       'Low': '• Maintain work-life balance\n• Skill development\n• Proactive stress management',
       'Moderate': '• Regular breaks\n• Time management\n• Relaxation techniques',
@@ -150,14 +150,14 @@ class ResultScreen extends StatelessWidget {
     };
 
     return _buildRecommendationCard(
-      'Work Pressure Management ($workPressure)',
-      advice[workPressure] ?? '• Regular stress assessments\n• Healthy coping mechanisms\n• Workload prioritization',
+      'Work Pressure Management (${widget.workPressure})',
+      advice[widget.workPressure] ?? '• Regular stress assessments\n• Healthy coping mechanisms\n• Workload prioritization',
       CupertinoIcons.briefcase,
-      context,
+      WorkStressAdviceScreen(content: advice[widget.workPressure] ?? ''),
     );
   }
 
-  Widget _buildProfessionalCard(Professional professional, BuildContext context) {
+  Widget _buildProfessionalCard(Professional professional) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
@@ -169,17 +169,16 @@ class ResultScreen extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: backgroundColor.withOpacity(0.1),
+            color: widget.backgroundColor.withOpacity(0.1),
             shape: BoxShape.circle,
-
           ),
-          child: Icon(CupertinoIcons.person_fill, color: backgroundColor),
+          child: Icon(CupertinoIcons.person_fill, color: widget.backgroundColor),
         ),
         title: Text(
           professional.name,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w500,
-          color: CupertinoColors.opaqueSeparator),
-
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              color: CupertinoColors.opaqueSeparator),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +195,6 @@ class ResultScreen extends StatelessWidget {
             ),
           ],
         ),
-
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Text('Book', style: TextStyle(color: CupertinoColors.systemBlue)),
@@ -205,6 +203,7 @@ class ResultScreen extends StatelessWidget {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final professionals = [
@@ -226,21 +225,18 @@ class ResultScreen extends StatelessWidget {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: widget.backgroundColor,
         middle: Text(
           'Health Summary',
           style: GoogleFonts.poppins(
-            color: CupertinoColors.white,
-            fontWeight: FontWeight.w500,
-          ),
-
+              color: CupertinoColors.white,
+              fontWeight: FontWeight.w500),
         ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(CupertinoIcons.back, color: CupertinoColors.white),
           onPressed: () => Navigator.pop(context),
         ),
-
       ),
       child: SafeArea(
         child: ListView(
@@ -254,7 +250,7 @@ class ResultScreen extends StatelessWidget {
                 CupertinoListTile(
                   title: Text('Overall Score', style: GoogleFonts.poppins(color: Colors.blueGrey)),
                   additionalInfo: Text(
-                    totalScore.toString(),
+                    widget.totalScore.toString(),
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
                       color: CupertinoColors.opaqueSeparator,
@@ -264,20 +260,20 @@ class ResultScreen extends StatelessWidget {
                 ),
                 CupertinoListTile(
                   title: Text('Age Group', style: GoogleFonts.poppins(color: Colors.blueGrey)),
-                  additionalInfo: Text(ageRange),
+                  additionalInfo: Text(widget.ageRange),
                 ),
                 CupertinoListTile(
                   title: Text('Daily Meals', style: GoogleFonts.poppins(color: Colors.blueGrey)),
-                  additionalInfo: Text(meals),
+                  additionalInfo: Text(widget.meals),
                 ),
                 CupertinoListTile(
                   title: Text('Work Stress', style: GoogleFonts.poppins(color: Colors.blueGrey)),
-                  additionalInfo: Text(workPressure),
+                  additionalInfo: Text(widget.workPressure),
                 ),
               ],
             ),
 
-            _buildSectionHeader('Key Areas of Concern', context),
+            _buildSectionHeader('Key Areas of Concern'),
 
             Container(
               height: 220,
@@ -295,36 +291,29 @@ class ResultScreen extends StatelessWidget {
                   BarSeries(
                     dataSource: [
                       MapEntry('Mental\nHealth', _calculateMentalHealthScore()),
-                      //MapEntry('Age\nFactor', _ageScore(ageRange)),
-                      MapEntry('Nutrition', _mealScore(meals)),
-                      MapEntry('Work\nStress', _workScore(workPressure)),
+                      MapEntry('Nutrition', _mealScore(widget.meals)),
+                      MapEntry('Work\nStress', _workScore(widget.workPressure)),
                     ],
                     xValueMapper: (entry, _) => entry.key,
                     yValueMapper: (entry, _) => entry.value,
-                    color: backgroundColor,
+                    color: widget.backgroundColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ],
               ),
             ),
-            Divider(),
-            _buildAgeRecommendations(context),
-            _buildNutritionAdvice(context),
-            _buildWorkStressAdvice(context),
-            Divider(),
 
-            _buildSectionHeader('Recommended Professionals', context),
+            _buildAgeRecommendations(),
+            _buildNutritionAdvice(),
+            _buildWorkStressAdvice(),
 
+            _buildSectionHeader('Recommended Professionals'),
 
-            ...professionals.map((professional) => _buildProfessionalCard(professional, context)).toList(),
+            ...professionals.map((professional) => _buildProfessionalCard(professional)).toList(),
           ],
-
-        )
-
+        ),
       ),
-
     );
-
   }
 }
 
@@ -343,35 +332,3 @@ class Professional {
     required this.consultationFee,
   });
 }
-  class TipDetailsScreen extends StatelessWidget {
-  final String title;
-  final String content;
-
-  const TipDetailsScreen({Key? key, required this.title, required this.content}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-  return CupertinoPageScaffold(
-  navigationBar: CupertinoNavigationBar(
-  middle: Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
-  leading: CupertinoButton(
-  padding: EdgeInsets.zero,
-  child: Icon(CupertinoIcons.back, color: CupertinoColors.activeBlue),
-  onPressed: () => Navigator.pop(context),
-  ),
-  ),
-  child: SafeArea(
-  child: Padding(
-  padding: const EdgeInsets.all(16.0),
-  child: SingleChildScrollView(
-  child: Text(
-  content,
-  style: GoogleFonts.poppins(fontSize: 16, height: 1.5, color: CupertinoColors.label),
-  ),
-  ),
-  ),
-  ),
-  );
-  }
-  }
-
