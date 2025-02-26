@@ -98,6 +98,7 @@ class ResultScreen extends StatelessWidget {
         ),
       ),
     );
+    Divider();
   }
 
 
@@ -195,6 +196,7 @@ class ResultScreen extends StatelessWidget {
             ),
           ],
         ),
+
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Text('Book', style: TextStyle(color: CupertinoColors.systemBlue)),
@@ -203,7 +205,6 @@ class ResultScreen extends StatelessWidget {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final professionals = [
@@ -232,17 +233,14 @@ class ResultScreen extends StatelessWidget {
             color: CupertinoColors.white,
             fontWeight: FontWeight.w500,
           ),
+
         ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(CupertinoIcons.back, color: CupertinoColors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.share, color: CupertinoColors.white),
-          onPressed: () {/* Implement share */},
-        ),
+
       ),
       child: SafeArea(
         child: ListView(
@@ -281,7 +279,6 @@ class ResultScreen extends StatelessWidget {
 
             _buildSectionHeader('Key Areas of Concern', context),
 
-
             Container(
               height: 220,
               margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -310,19 +307,24 @@ class ResultScreen extends StatelessWidget {
                 ],
               ),
             ),
-
+            Divider(),
             _buildAgeRecommendations(context),
             _buildNutritionAdvice(context),
             _buildWorkStressAdvice(context),
+            Divider(),
 
             _buildSectionHeader('Recommended Professionals', context),
 
+
             ...professionals.map((professional) => _buildProfessionalCard(professional, context)).toList(),
           ],
+
         )
 
       ),
+
     );
+
   }
 }
 
