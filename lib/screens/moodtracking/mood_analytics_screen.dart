@@ -60,7 +60,7 @@ class MoodAnalyticsScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: MoodChart(moodEntries: moodEntries),
+                      child: MoodChart(moodEntries: moodEntries, backgroundColor: backgroundColor,),
                     ),
                   ),
                 ),
@@ -175,7 +175,8 @@ class MoodAnalyticsScreen extends StatelessWidget {
             margin: EdgeInsets.all(2),
             child: ListTile(
               hoverColor: backgroundColor,
-              leading: Icon(CupertinoIcons.person_fill, color: Colors.deepPurple),
+              leading: Icon(CupertinoIcons.person_fill, color:backgroundColor,
+              size: 50,),
               title: Text(
                 professional['name']!,
                 style: TextStyle(fontWeight: FontWeight.bold),
