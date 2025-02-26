@@ -138,10 +138,16 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
           color: Colors.white,
           fontWeight: FontWeight.w400),
         ),
+        leading: CupertinoButton(onPressed: () {
+            Navigator.pop(context);
+        },
+        child: Icon(CupertinoIcons.back),
+        sizeStyle: CupertinoButtonSize.medium,),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(_isSearching ? CupertinoIcons.xmark : CupertinoIcons.search),
           onPressed: () => setState(() => _isSearching = !_isSearching),
+          sizeStyle: CupertinoButtonSize.small,
         ),
       ),
       child: SafeArea(

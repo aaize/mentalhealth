@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: widget.backgroundColor,
-        middle: Text("Profile", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: CupertinoColors.white)),
+        middle: Text("Profile", style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w400, color: CupertinoColors.white)),
       ),
       child: SafeArea(
         child: Column(

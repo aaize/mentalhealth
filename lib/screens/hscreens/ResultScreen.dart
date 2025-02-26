@@ -21,6 +21,7 @@ class ResultScreen extends StatelessWidget {
     required this.workPressure,
   });
 
+
   int _calculateMentalHealthScore() {
     return (responses.reduce((a, b) => a + b) ~/ 4); // Integer division by 2
   }
@@ -61,35 +62,44 @@ class ResultScreen extends StatelessWidget {
 
 
   Widget _buildRecommendationCard(String title, String content, IconData icon, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: CupertinoColors.systemGrey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (_) => TipDetailsScreen(title: title, content: content),
           ),
-        ],
-      ),
-      child: CupertinoListTile(
-        leading: Icon(icon, color: backgroundColor, size: 29),
-        title: Text(
-          title,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16,
-          color: backgroundColor),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: CupertinoColors.systemGrey.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        subtitle: Text(
-          content,
-          style: GoogleFonts.poppins(fontSize: 14, height: 1.4,
-          color: Colors.grey),
+        child: CupertinoListTile(
+          leading: Icon(icon, color: backgroundColor, size: 29),
+          title: Text(
+            title,
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16, color: backgroundColor),
+          ),
+          subtitle: Text(
+            content,
+            style: GoogleFonts.poppins(fontSize: 14, height: 1.4, color: Colors.grey),
+          ),
+          trailing: const Icon(CupertinoIcons.chevron_forward, size: 18),
         ),
-        trailing: const Icon(CupertinoIcons.chevron_forward, size: 18),
       ),
     );
   }
+
 
   Widget _buildAgeRecommendations(BuildContext context) {
     final recommendations = <String, String>{
@@ -331,3 +341,35 @@ class Professional {
     required this.consultationFee,
   });
 }
+  class TipDetailsScreen extends StatelessWidget {
+  final String title;
+  final String content;
+
+  const TipDetailsScreen({Key? key, required this.title, required this.content}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+  return CupertinoPageScaffold(
+  navigationBar: CupertinoNavigationBar(
+  middle: Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+  leading: CupertinoButton(
+  padding: EdgeInsets.zero,
+  child: Icon(CupertinoIcons.back, color: CupertinoColors.activeBlue),
+  onPressed: () => Navigator.pop(context),
+  ),
+  ),
+  child: SafeArea(
+  child: Padding(
+  padding: const EdgeInsets.all(16.0),
+  child: SingleChildScrollView(
+  child: Text(
+  content,
+  style: GoogleFonts.poppins(fontSize: 16, height: 1.5, color: CupertinoColors.label),
+  ),
+  ),
+  ),
+  ),
+  );
+  }
+  }
+

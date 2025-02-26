@@ -193,9 +193,11 @@ class _HomeScreenState extends State<HomeScreen> {
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: openEmojiSelection,
+          sizeStyle: CupertinoButtonSize.small,
           child: Text(
             selectedEmoji,
             style: TextStyle(fontSize: 28, color: Colors.white),
+
           ),
         ),
       ),
