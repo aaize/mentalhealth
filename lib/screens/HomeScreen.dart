@@ -288,17 +288,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: BouncingScrollPhysics(), // iOS-style smooth scrolling
                 children: [
                   _imageCard(
-                      'lib/assets/articlesonmental.png',
+                      'lib/assets/aomh.png',
                       'Articles on Mental Health',
                       ArticlesScreen(backgroundColor: backgroundColor,)
                   ),
                   _imageCard(
-                      'lib/assets/mentalhealthvideos.jpg',
+                      'lib/assets/htimh.jpg',
                       'Mental Health Videos',
                       VideosScreen(backgroundColor: backgroundColor)
                   ),
                   _imageCard(
-                      'lib/assets/mentalhealthpodcast.jpeg',
+                      'lib/assets/mhp.jpg',
                       'Mental Health Podcasts',
                       PodcastScreen(backgroundColor: backgroundColor,)
                   ),

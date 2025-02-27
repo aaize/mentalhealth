@@ -98,10 +98,7 @@ flutter_icons:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - lib/assets/articlesonmental.png
-    - lib/assets/mentalhealthvideos.jpg
-    - lib/assets/mentalhealthpodcast.jpeg
-    - lib/assets/wellnessworkshop.png
+    - lib/assets/
     - lib/assets/Logo.png
     - lib/assets/hscreen/article1.webp
     - lib/assets/hscreen/article2.jpeg
