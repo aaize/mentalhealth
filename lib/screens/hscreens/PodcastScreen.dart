@@ -1,62 +1,98 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class PodcastScreen extends StatelessWidget {
   final Color backgroundColor;
-  PodcastScreen({
-    Key? key,
-    required this.backgroundColor,
-  }) : super(key: key);
+
+  PodcastScreen({Key? key, required this.backgroundColor}) : super(key: key);
 
   final List<Map<String, String>> podcasts = [
     {
-      "title": "Overcoming Anxiety",
-      "host": "Dr. Smith",
-      "duration": "20 min",
-      "audioUrl": "https://example.com/audio1.mp3"
+      "title": "The Hilarious World of Depression",
+      "host": "John Moe",
+      "duration": "45 min",
+      "audioUrl": "https://www.hilariousworld.org/"
     },
     {
-      "title": "The Power of Positive Thinking",
-      "host": "Mental Wellness Podcast",
+      "title": "Therapy Chat",
+      "host": "Laura Reagan, LCSW-C",
+      "duration": "45 min",
+      "audioUrl": "https://podcasts.apple.com/us/podcast/therapy-chat/id1033011989"
+    },
+    {
+      "title": "The Happiness Lab",
+      "host": "Dr. Laurie Santos",
+      "duration": "40 min",
+      "audioUrl": "https://www.happinesslab.fm/"
+    },
+    {
+      "title": "Unlocking Us",
+      "host": "Brené Brown",
+      "duration": "50 min",
+      "audioUrl": "https://brenebrown.com/podcast/introducing-unlocking-us/"
+    },
+    {
+      "title": "We Can Do Hard Things",
+      "host": "Glennon Doyle",
+      "duration": "60 min",
+      "audioUrl": "https://podcasts.apple.com/us/podcast/we-can-do-hard-things/id1564530722"
+    },
+    {
+      "title": "Where Should We Begin?",
+      "host": "Esther Perel",
+      "duration": "50 min",
+      "audioUrl": "https://podcasts.apple.com/us/podcast/where-should-we-begin-with-esther-perel/id1237931798"
+    },
+    {
+      "title": "The Mental Illness Happy Hour",
+      "host": "Paul Gilmartin",
+      "duration": "90 min",
+      "audioUrl": "https://mentalpod.com/"
+    },
+    {
+      "title": "10% Happier with Dan Harris",
+      "host": "Dan Harris",
+      "duration": "60 min",
+      "audioUrl": "https://www.tenpercent.com/podcast"
+    },
+    {
+      "title": "On Purpose with Jay Shetty",
+      "host": "Jay Shetty",
+      "duration": "60 min",
+      "audioUrl": "https://jayshetty.me/podcast/"
+    },
+    {
+      "title": "The Positive Psychology Podcast",
+      "host": "Kristen Truempy",
       "duration": "30 min",
-      "audioUrl": "https://example.com/audio2.mp3"
-    },
-    {
-      "title": "The Power of Mind",
-      "host": "Mental Wellness Podcast",
-      "duration": "30 min",
-      "audioUrl": "https://example.com/audio3.mp3"
-    },
-    {
-      "title": "Mindfulness Meditation",
-      "host": "Calm Minds",
-      "duration": "25 min",
-      "audioUrl": "https://example.com/audio4.mp3"
-    },
+      "audioUrl": "https://positivepsychologypodcast.com/"
+    }
   ];
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
           "Podcasts",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: backgroundColor,
-        centerTitle: true,
-        leading: IconButton(icon: Icon(CupertinoIcons.back,
-        ), onPressed: () {
-          Navigator.pop(context);
-        },
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Icon(CupertinoIcons.back),
         ),
       ),
-      body: ListView.builder(
+      child: ListView.builder(
         padding: EdgeInsets.all(10),
         itemCount: podcasts.length,
         itemBuilder: (context, index) {
           return Card(
-            key: Key('podcast_$index'), // Assigning a unique key
             elevation: 4,
             margin: EdgeInsets.symmetric(vertical: 8),
             shape: RoundedRectangleBorder(
@@ -70,13 +106,51 @@ class PodcastScreen extends StatelessWidget {
               subtitle: Text(
                 "Host: ${podcasts[index]["host"]!} • ${podcasts[index]["duration"]!}",
               ),
-              trailing: Icon(Icons.play_circle_fill, color: Colors.green),
+              trailing: Icon(CupertinoIcons.play_circle_fill, color: Colors.green),
               onTap: () {
-                // Play audio using audio plugin
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => PodcastPlayerScreen(
+                      url: podcasts[index]["audioUrl"]!,
+                      title: podcasts[index]["title"]!,
+                    ),
+                  ),
+                );
               },
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class PodcastPlayerScreen extends StatelessWidget {
+  final String url;
+  final String title;
+
+  PodcastPlayerScreen({required this.url, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final WebViewController controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
+
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(title),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Icon(CupertinoIcons.back),
+        ),
+      ),
+      child: SafeArea(
+        child: WebViewWidget(controller: controller),
       ),
     );
   }
