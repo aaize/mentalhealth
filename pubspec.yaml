@@ -85,6 +85,7 @@ dev_dependencies:
   webview_flutter_web:
   chewie:
   youtube_player_flutter:
+  flutter_contacts:
 
 flutter_icons:
   android: true
