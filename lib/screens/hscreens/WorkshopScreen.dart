@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class WorkshopScreen extends StatelessWidget {
+class WorkshopScreen extends StatefulWidget {
   final Color backgroundColor;
 
   WorkshopScreen({Key? key, required this.backgroundColor}) : super(key: key);
 
+  @override
+  _WorkshopScreenState createState() => _WorkshopScreenState();
+}
+
+class _WorkshopScreenState extends State<WorkshopScreen> {
   final List<Map<String, String>> workshops = [
     {
       "title": "Mindfulness Meditation",
@@ -19,64 +24,157 @@ class WorkshopScreen extends StatelessWidget {
       "time": "4:00 PM - 5:30 PM",
       "location": "Community Center"
     },
+    {
+      "title": "Yoga for Beginners",
+      "date": "March 20, 2025",
+      "time": "6:00 PM - 7:30 PM",
+      "location": "Online (Zoom)"
+    },
+    {
+      "title": "Healthy Eating Habits",
+      "date": "March 25, 2025",
+      "time": "5:30 PM - 7:00 PM",
+      "location": "Online (Zoom)"
+    },
   ];
+
+  // Set to keep track of registered workshops
+  final Set<String> registeredWorkshops = {};
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: backgroundColor,
-        middle: Text(
-          "Wellness Workshops",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.back),
-        ),
+    return CupertinoTheme(
+      data: CupertinoThemeData(
+        brightness: Brightness.dark,
+        primaryColor: CupertinoColors.systemBlue,
       ),
-      child: SafeArea(
-        child: ListView.builder(
-          padding: EdgeInsets.all(10),
-          itemCount: workshops.length,
-          itemBuilder: (context, index) {
-            final workshop = workshops[index];
-            return Card(
-              elevation: 4,
-              margin: EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: ListTile(
-                title: Text(
-                  workshop["title"]!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "📅 ${workshop["date"]!} • 🕒 ${workshop["time"]!}\n📍 ${workshop["location"]!}",
-                ),
-                trailing: CupertinoButton(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  color: CupertinoColors.activeBlue,
-                  child: Text(
-                    "Register",
-                    style: TextStyle(color: CupertinoColors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => WorkshopRegistrationScreen(
-                          workshop: workshop,
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          backgroundColor: widget.backgroundColor,
+          middle: Text(
+            "Wellness Workshops",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => Navigator.pop(context),
+            child: Icon(CupertinoIcons.back),
+          ),
+        ),
+        child: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [widget.backgroundColor, Colors.black],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: ListView.builder(
+              padding: EdgeInsets.all(10),
+              itemCount: workshops.length,
+              itemBuilder: (context, index) {
+                final workshop = workshops[index];
+                final isRegistered =
+                registeredWorkshops.contains(workshop["title"]);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Material(
+                    color: Colors.grey[900],
+                    elevation: 4,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        title: Text(
+                          workshop["title"]!,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(CupertinoIcons.calendar,
+                                      size: 16, color: Colors.grey),
+                                  SizedBox(width: 4),
+                                  Text(workshop["date"]!,
+                                      style: TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(CupertinoIcons.clock,
+                                      size: 16, color: Colors.grey),
+                                  SizedBox(width: 4),
+                                  Text(workshop["time"]!,
+                                      style: TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(CupertinoIcons.location,
+                                      size: 16, color: Colors.grey),
+                                  SizedBox(width: 4),
+                                  Text(workshop["location"]!,
+                                      style: TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        trailing: CupertinoButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          color: isRegistered
+                              ? CupertinoColors.inactiveGray
+                              : CupertinoColors.activeBlue,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Text(
+                            isRegistered ? "Registered" : "Register",
+                            style: TextStyle(
+                              color: CupertinoColors.white,
+                            ),
+                          ),
+                          onPressed: isRegistered
+                              ? null
+                              : () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) =>
+                                    WorkshopRegistrationScreen(
+                                      workshop: workshop,
+                                      onRegister: () {
+                                        setState(() {
+                                          registeredWorkshops
+                                              .add(workshop["title"]!);
+                                        });
+                                      },
+                                    ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -85,8 +183,10 @@ class WorkshopScreen extends StatelessWidget {
 
 class WorkshopRegistrationScreen extends StatefulWidget {
   final Map<String, String> workshop;
+  final VoidCallback onRegister;
 
-  WorkshopRegistrationScreen({Key? key, required this.workshop})
+  WorkshopRegistrationScreen(
+      {Key? key, required this.workshop, required this.onRegister})
       : super(key: key);
 
   @override
@@ -100,6 +200,42 @@ class _WorkshopRegistrationScreenState
   String _name = "";
   String _email = "";
   String _phone = "";
+  bool _isSubmitting = false;
+
+  void _submitRegistration() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Simulate a network call / registration process
+      setState(() {
+        _isSubmitting = true;
+      });
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      widget.onRegister();
+
+      showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+          title: Text("Registration Successful"),
+    content: Text(
+    "Thank you, $_name, for registering for ${widget.workshop["title"]!}."),
+    actions: [
+      CupertinoDialogAction(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context); // Close dialog
+          Navigator.pop(context); // Go back to workshop screen
+        },
+      ),
+    ],
+          ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,11 +259,11 @@ class _WorkshopRegistrationScreenState
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Text("Date: ${widget.workshop["date"]!}",
+              Text("📅 Date: ${widget.workshop["date"]!}",
                   style: TextStyle(fontSize: 16)),
-              Text("Time: ${widget.workshop["time"]!}",
+              Text("🕒 Time: ${widget.workshop["time"]!}",
                   style: TextStyle(fontSize: 16)),
-              Text("Location: ${widget.workshop["location"]!}",
+              Text("📍 Location: ${widget.workshop["location"]!}",
                   style: TextStyle(fontSize: 16)),
               SizedBox(height: 20),
               Form(
@@ -168,34 +304,14 @@ class _WorkshopRegistrationScreenState
                     ),
                     SizedBox(height: 20),
                     CupertinoButton.filled(
-                      child: Text("Submit Registration"),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // You can implement actual registration logic here.
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (context) => CupertinoAlertDialog(
-                              title: Text("Registration Successful"),
-                              content: Text(
-                                  "Thank you, $_name, for registering for ${widget.workshop["title"]!}."),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    Navigator.pop(context); // close dialog
-                                    Navigator.pop(context); // go back
-                                  },
-                                )
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    )
+                      child: _isSubmitting
+                          ? CupertinoActivityIndicator()
+                          : Text("Submit Registration"),
+                      onPressed: _isSubmitting ? null : _submitRegistration,
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -203,3 +319,4 @@ class _WorkshopRegistrationScreenState
     );
   }
 }
+
