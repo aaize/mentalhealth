@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WorkshopScreen extends StatefulWidget {
   final Color backgroundColor;
@@ -53,8 +54,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           backgroundColor: widget.backgroundColor,
           middle: Text(
             "Wellness Workshops",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+            ),
           ),
+
           leading: CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: () => Navigator.pop(context),
@@ -64,11 +68,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         child: SafeArea(
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [widget.backgroundColor, Colors.black],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+
             ),
             child: ListView.builder(
               padding: EdgeInsets.all(10),
@@ -157,6 +157,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 builder: (context) =>
                                     WorkshopRegistrationScreen(
                                       workshop: workshop,
+                                      backgroundColor: widget.backgroundColor,
                                       onRegister: () {
                                         setState(() {
                                           registeredWorkshops
@@ -184,9 +185,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 class WorkshopRegistrationScreen extends StatefulWidget {
   final Map<String, String> workshop;
   final VoidCallback onRegister;
+  final Color backgroundColor;
 
   WorkshopRegistrationScreen(
-      {Key? key, required this.workshop, required this.onRegister})
+      {Key? key, required this.workshop, required this.onRegister,required this.backgroundColor})
       : super(key: key);
 
   @override
@@ -242,6 +244,8 @@ class _WorkshopRegistrationScreenState
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text("Register for Workshop"),
+        border: null,
+        backgroundColor: widget.backgroundColor,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => Navigator.pop(context),
@@ -260,6 +264,7 @@ class _WorkshopRegistrationScreenState
               ),
               SizedBox(height: 10),
               Text("📅 Date: ${widget.workshop["date"]!}",
+
                   style: TextStyle(fontSize: 16)),
               Text("🕒 Time: ${widget.workshop["time"]!}",
                   style: TextStyle(fontSize: 16)),
