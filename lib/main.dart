@@ -4,8 +4,6 @@ import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/splash.dart';
 import 'package:mentalhealth/screens/HomeScreen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
