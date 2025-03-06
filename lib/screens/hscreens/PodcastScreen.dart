@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class PodcastScreen extends StatelessWidget {
+class PodcastScreen extends StatefulWidget {
   final Color backgroundColor;
 
   PodcastScreen({Key? key, required this.backgroundColor}) : super(key: key);
 
+  @override
+  _PodcastScreenState createState() => _PodcastScreenState();
+}
+
+class _PodcastScreenState extends State<PodcastScreen> {
   final List<Map<String, String>> podcasts = [
     {
       "title": "The Hilarious World of Depression",
@@ -70,16 +76,19 @@ class PodcastScreen extends StatelessWidget {
     }
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        border: null,
+        backgroundColor: widget.backgroundColor,
         middle: Text(
           "Podcasts",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: backgroundColor,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () {
@@ -114,6 +123,7 @@ class PodcastScreen extends StatelessWidget {
                     builder: (context) => PodcastPlayerScreen(
                       url: podcasts[index]["audioUrl"]!,
                       title: podcasts[index]["title"]!,
+                      backgroundColor: widget.backgroundColor,
                     ),
                   ),
                 );
@@ -126,21 +136,34 @@ class PodcastScreen extends StatelessWidget {
   }
 }
 
-class PodcastPlayerScreen extends StatelessWidget {
+class PodcastPlayerScreen extends StatefulWidget {
   final String url;
   final String title;
+  final Color backgroundColor;
 
-  PodcastPlayerScreen({required this.url, required this.title});
+  PodcastPlayerScreen({required this.url, required this.title, required this.backgroundColor});
+
+  @override
+  _PodcastPlayerScreenState createState() => _PodcastPlayerScreenState();
+}
+
+class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.url));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final WebViewController controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(url));
-
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(title),
+        middle: Text(widget.title),
+        backgroundColor: widget.backgroundColor,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () {
@@ -150,7 +173,7 @@ class PodcastPlayerScreen extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: WebViewWidget(controller: controller),
+        child: WebViewWidget(controller: _controller),
       ),
     );
   }
