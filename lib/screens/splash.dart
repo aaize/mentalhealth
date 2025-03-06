@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -32,30 +33,23 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     // Check login status after the animation ends
-    _controller.addStatusListener((status) {
+    _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        Navigator.of(context).pushReplacement(
+        final userEmail = await SessionManager.getUserEmail();
+        if (userEmail != null) {
+          // User is logged in, navigate to HomeScreen
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => HomeScreen(userEmail: userEmail)),
+          );
+        } else {
+          // User is not logged in, navigate to LoginScreen
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => LoginScreen()),
-        );
-
+          );
+        }
       }
     });
   }
-
-  /*Future<void> checkLoginStatus() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    await Future.delayed(Duration(seconds: 1));
-
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => HomeScreen()),
-      );
-    } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
-    }
-  }*/
 
   @override
   void dispose() {
@@ -103,5 +97,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         ),
       ),
     );
+  }
+}
+
+class SessionManager {
+  static const String _userEmailKey = 'userEmail';
+
+  // Save user email after login
+  static Future<void> saveUserEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userEmailKey, email);
+  }
+
+  // Get saved user email for auto-login
+  static Future<String?> getUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userEmailKey);
+  }
+
+  // Clear user email on logout
+  static Future<void> clearUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userEmailKey);
   }
 }
