@@ -7,6 +7,10 @@ import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/LoginScreen.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/ProfilePage.dart';
+import '../widgets/DailyAffirmationCard.dart';
+import '../widgets/MoodTrackerSummary.dart';
+import '../widgets/ProgressTracker.dart';
+import '../widgets/QuickAccessButtons.dart';
 import 'hscreens/ArticlesScreen.dart';
 import 'hscreens/PodcastScreen.dart';
 import 'hscreens/VideosScreen.dart';
@@ -215,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'Here to support you through your journey. Take a deep breath, you are not alone.',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 30),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -224,10 +228,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(builder: (_) => QuestionnaireScreen(backgroundColor: backgroundColor,)),
                   );
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue,
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
+
                 child: Text(
                   'Take Questionnaire',
                   style: GoogleFonts.poppins(
@@ -238,22 +244,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 30),
-            // Daily Affirmation Section
-            _dailyAffirmationCard(),
-            SizedBox(height: 30),
-            // Mood Tracker Summary
-            _moodTrackerSummary(),
-            SizedBox(height: 30),
-            // Progress Tracker
-            _progressTracker(),
-            SizedBox(height: 30),
-            // Quick Access Buttons
-            _quickAccessButtons(),
-            SizedBox(height: 30),
-            // Community Highlights
-            _communityHighlights(),
-            SizedBox(height: 30),
-            // Explore Resources Section
             Text(
               'Explore Resources',
               style: GoogleFonts.poppins(
@@ -262,7 +252,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: backgroundColor,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 30),
+
             Container(
               height: 205,
               child: PageView(
@@ -292,6 +283,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 30),
+            // Daily Affirmation Section
+            DailyAffirmationCard(backgroundColor: backgroundColor),
+
+
+            SizedBox(height: 30),
+            // Mood Tracker Summary
+            MoodTrackerSummary(email: widget.userEmail),
+
+            SizedBox(height: 30),
+            // Progress Tracker
+            ProgressTracker(),
+            SizedBox(height: 30),
+            // Quick Access Buttons
+            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
+            SizedBox(height: 30),
+            // Community Highlights
+            //CommunityHighlights(),
+
+            _communityHighlights(),
+            SizedBox(height: 30),
+            // Explore Resources Section
+
+            SizedBox(height: 10),
+
             SizedBox(height: 30),
             // Upcoming Events or Support Groups
             Text(
@@ -329,36 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Daily Affirmation Card
-  Widget _dailyAffirmationCard() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Daily Affirmation',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: backgroundColor,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '"You are stronger than you think, and today is a new opportunity to grow."',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   // Mood Tracker Summary
   Widget _moodTrackerSummary() {
@@ -380,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              'Your mood over the past 7 days: 😊 😢 😊 😎 😊 😢 😊',
+              'Your mood over the past 7 days:                       s \n😊 😢 😊 😎 😊 😢 😊',
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -665,3 +652,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+

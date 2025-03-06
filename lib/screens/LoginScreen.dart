@@ -3,25 +3,42 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 import 'HomeScreen.dart';
 import 'SignUpScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+
+  // Check for saved user email on app startup
+  final userEmail = await SessionManager.getUserEmail();
+  runApp(MaterialApp(
+    title: 'Custom Login Demo',
+    theme: ThemeData.dark(),
+    home: userEmail != null ? HomeScreen(userEmail: userEmail) : LoginScreen(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SessionManager {
+  static const String _userEmailKey = 'userEmail';
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Custom Login Demo',
-      theme: ThemeData.dark(),
-      home: const LoginScreen(),
-    );
+  // Save user email after login
+  static Future<void> saveUserEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userEmailKey, email);
+  }
+
+  // Get saved user email for auto-login
+  static Future<String?> getUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userEmailKey);
+  }
+
+  // Clear user email on logout
+  static Future<void> clearUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userEmailKey);
   }
 }
 
@@ -75,12 +92,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // (In production, compare hashed passwords)
         if (userDoc['password'] == password) {
           showToast("Login successful!");
+
+          // Save user email for auto-login
+          await SessionManager.saveUserEmail(email);
+
           // Navigate to the HomeScreen (pass user data if needed)
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => HomeScreen(userEmail: email)),
           );
-
         } else {
           showToast("Incorrect password");
         }
@@ -223,10 +243,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Text(
-
                   "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(
-
                     fontSize: 16,
                     color: Colors.deepPurple,
                     decoration: TextDecoration.none,
