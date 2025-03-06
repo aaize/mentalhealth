@@ -6,11 +6,13 @@ import 'package:url_launcher/url_launcher.dart';
 class AgeAdviceScreen extends StatelessWidget {
   final String ageRange;
   final String content;
+  final Color backgroundColor;
 
   const AgeAdviceScreen({
     Key? key,
     required this.ageRange,
     required this.content,
+    required this.backgroundColor
   }) : super(key: key);
 
   // Function to launch URLs
@@ -27,7 +29,18 @@ class AgeAdviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Age-Specific Advice ($ageRange)'),
+        backgroundColor: backgroundColor,
+        middle: Text('Age-Specific Advice ($ageRange)',
+        style: GoogleFonts.roboto(
+          fontWeight: FontWeight.w400,
+          color: CupertinoColors.white
+        ),),
+        leading: IconButton(icon: Icon(CupertinoIcons.back,
+            size: 23), onPressed: () {
+          Navigator.pop(context);
+        },
+        ),
+
       ),
       child: SafeArea(
         child: ListView(

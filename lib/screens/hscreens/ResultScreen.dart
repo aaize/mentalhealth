@@ -115,7 +115,7 @@ class _ResultScreenState extends State<ResultScreen> {
       'Age-Specific Advice (${widget.ageRange})',
       recommendations[widget.ageRange] ?? '• Maintain regular health checkups\n• Stay physically active\n• Balanced nutrition\n• Social engagement',
       CupertinoIcons.heart_circle,
-      AgeAdviceScreen(ageRange: widget.ageRange, content: recommendations[widget.ageRange] ?? ''),
+      AgeAdviceScreen(ageRange: widget.ageRange, content: recommendations[widget.ageRange] ?? '', backgroundColor: widget.backgroundColor,),
     );
   }
 

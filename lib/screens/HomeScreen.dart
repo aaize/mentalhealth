@@ -12,6 +12,7 @@ import 'hscreens/PodcastScreen.dart';
 import 'hscreens/VideosScreen.dart';
 import 'hscreens/WorkshopScreen.dart';
 import 'package:mentalhealth/screens/hscreens/QuestionnaireScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   final String userEmail; // The email of the logged-in user
   const HomeScreen({Key? key, required this.userEmail}) : super(key: key);
@@ -24,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedEmoji = '😊'; // Default emoji
   Color backgroundColor = Color(0xFF6A5ACD);
   final PageController _pageController = PageController(viewportFraction: 0.9);
-// Default color
 
   @override
   void initState() {
@@ -102,11 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             _buildActionSheetItem('Mood Tracker',
                 CupertinoIcons.heart, () {
-              _navigateTo(MoodHistoryScreen(
-                email: widget.userEmail,
-                backgroundColor: backgroundColor,
-              ));
-            }),
+                  _navigateTo(MoodHistoryScreen(
+                    email: widget.userEmail,
+                    backgroundColor: backgroundColor,
+                  ));
+                }),
             _buildActionSheetItem('Profile', CupertinoIcons.person, () {
               _navigateTo(ProfilePage(
                 email: widget.userEmail,
@@ -132,7 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// Function to build each action item with white icons and text
   Widget _buildActionSheetItem(String title, IconData icon, VoidCallback onTap) {
     return CupertinoActionSheetAction(
       onPressed: onTap,
@@ -146,9 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
-
 
   void _navigateTo(Widget screen) {
     Navigator.push(context, CupertinoPageRoute(builder: (_) => screen));
@@ -197,7 +193,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             selectedEmoji,
             style: TextStyle(fontSize: 28, color: Colors.white),
-
           ),
         ),
       ),
@@ -243,35 +238,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 30),
-            // Emotional Check-In Section
-            /*Text(
-              'How are you feeling today?',
-              style: GoogleFonts.poppins(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: backgroundColor,
-              ),
-            ),
-            SizedBox(height: 10),
-          Center(
-            child: CupertinoButton(
-              onPressed: openEmojiSelection,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-              color: backgroundColor, // iOS-style filled button
-              borderRadius: BorderRadius.circular(20), // Rounded corners
-              child: Text(
-                'Select..',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),*/
-
-          SizedBox(height: 0),
-            // Image Gallery Section (example)
+            // Daily Affirmation Section
+            _dailyAffirmationCard(),
+            SizedBox(height: 30),
+            // Mood Tracker Summary
+            _moodTrackerSummary(),
+            SizedBox(height: 30),
+            // Progress Tracker
+            _progressTracker(),
+            SizedBox(height: 30),
+            // Quick Access Buttons
+            _quickAccessButtons(),
+            SizedBox(height: 30),
+            // Community Highlights
+            _communityHighlights(),
+            SizedBox(height: 30),
+            // Explore Resources Section
             Text(
               'Explore Resources',
               style: GoogleFonts.poppins(
@@ -310,8 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
-
             SizedBox(height: 30),
             // Upcoming Events or Support Groups
             Text(
@@ -348,7 +328,181 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Image Card Widget
+  // Daily Affirmation Card
+  Widget _dailyAffirmationCard() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Daily Affirmation',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: backgroundColor,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '"You are stronger than you think, and today is a new opportunity to grow."',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Mood Tracker Summary
+  Widget _moodTrackerSummary() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Mood Tracker Summary',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: backgroundColor,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Your mood over the past 7 days: 😊 😢 😊 😎 😊 😢 😊',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Progress Tracker
+  Widget _progressTracker() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Your Progress',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: backgroundColor,
+              ),
+            ),
+            SizedBox(height: 10),
+            LinearProgressIndicator(
+              value: 0.7, // Example progress
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(backgroundColor),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '70% of your weekly goals completed',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Quick Access Buttons
+  Widget _quickAccessButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _quickAccessButton('Journal', CupertinoIcons.pencil, () {
+          // Navigate to Journal Screen
+        }),
+        _quickAccessButton('Meditate', CupertinoIcons.moon, () {
+          // Navigate to Meditation Screen
+        }),
+        _quickAccessButton('Chat', CupertinoIcons.chat_bubble, () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => EmergencyScreen(backgroundColor: backgroundColor,)),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _quickAccessButton(String label, IconData icon, VoidCallback onPressed) {
+    return CupertinoButton(
+      onPressed: onPressed,
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          Icon(icon, size: 36, color: backgroundColor),
+          SizedBox(height: 8),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: backgroundColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Community Highlights
+  Widget _communityHighlights() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Community Highlights',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: backgroundColor,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '"This community has been a lifesaver for me. Thank you all for your support!" - User123',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // Image Card Widget with Navigation
   Widget _imageCard(String imagePath, String title, Widget destinationScreen) {
     return CupertinoButton(
@@ -364,43 +518,40 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [ // Adds iOS-style soft shadow
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [ // Adds iOS-style soft shadow
               BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10,
-                spreadRadius: 2,
-                offset: Offset(0, 4),
-              ),
-            ],
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.cover,
-            ),
+              color: Colors.black26,
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: Offset(0, 4),
+              )],
+          image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(15),
           ),
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
       ),
+    ),
+    ),
     );
   }
-
-
 
   // Event Card Widget
   Widget _eventCard(String eventName, String eventTime, String eventDescription) {
@@ -417,7 +568,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         );
-
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -472,7 +622,6 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-
             SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
