@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/ChatScreen.dart';
 import 'package:mentalhealth/screens/JoinEventScreen.dart';
 import 'package:mentalhealth/screens/LoginScreen.dart';
+import 'package:mentalhealth/screens/hscreens/Prof.dart';
 import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/screens/ProfilePage.dart';
 import '../widgets/DailyAffirmationCard.dart';
@@ -16,7 +17,7 @@ import 'hscreens/PodcastScreen.dart';
 import 'hscreens/VideosScreen.dart';
 import 'hscreens/WorkshopScreen.dart';
 import 'package:mentalhealth/screens/hscreens/QuestionnaireScreen.dart';
-
+import 'package:mentalhealth/screens/hscreens/Prof.dart';
 class HomeScreen extends StatefulWidget {
   final String userEmail; // The email of the logged-in user
   const HomeScreen({Key? key, required this.userEmail}) : super(key: key);
@@ -171,9 +172,17 @@ class _HomeScreenState extends State<HomeScreen> {
         brightness: Brightness.dark, // For light status bar icons
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: _showProfileMenu,
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ProfileScreen(backgroundColor: backgroundColor, userEmail: widget.userEmail,), // Replace with your screen widget
+              ),
+            );
+          },
           child: Icon(CupertinoIcons.bars, color: Colors.white),
         ),
+
         middle: RichText(
           text: TextSpan(
             style: GoogleFonts.gabarito(

@@ -50,46 +50,39 @@ class MoodCalendar extends StatelessWidget {
               final emoji = entriesMap[DateFormat('yyyy-MM-dd').format(date)];
 
               return CupertinoButton(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.all(0), // Ensure no extra padding
                 onPressed: () => onDayPressed(date),
                 child: Container(
-                  margin: const EdgeInsets.all(1),
+                  margin: const EdgeInsets.all(5), // Increased margin for better spacing
+                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8), // Add padding to increase highlight area
                   decoration: BoxDecoration(
-                    color: _isToday(date)
-                        ? primaryColor.withOpacity(0.3)
-                        : null,
-                    borderRadius: BorderRadius.circular(8),
+                    color: _isToday(date) ? primaryColor.withOpacity(0.4) : null, // Make highlight broader
+                    borderRadius: BorderRadius.circular(12), // Increase for rounded effect
                   ),
-                  child: SizedBox(
-                    height: 60,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        day.toString(),
+                        style: TextStyle(
+                          fontSize: 16, // Increase font size for better visibility
+                          fontWeight: FontWeight.bold,
+                          color: _isToday(date) ? primaryColor : CupertinoColors.label,
+                        ),
+                      ),
+                      if (emoji != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4), // Adjust spacing
                           child: Text(
-                            day.toString(),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _isToday(date)
-                                  ? primaryColor
-                                  : CupertinoColors.label,
-                            ),
+                            emoji,
+                            style: const TextStyle(fontSize: 20), // Increase emoji size
                           ),
                         ),
-                        if (emoji != null)
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 2),
-                              child: Text(emoji,
-                                  style: const TextStyle(fontSize: 16)),
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               );
+
             },
           ),
         ],
