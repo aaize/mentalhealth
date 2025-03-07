@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class ProgressTracker extends StatefulWidget {
   @override
   _ProgressTrackerState createState() => _ProgressTrackerState();
@@ -97,7 +97,12 @@ class _ProgressTrackerState extends State<ProgressTracker> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("Your Tasks"),
+          title: Text("Your Tasks",
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+
+          ),),
           content: StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance.collection('progress').doc(
                 userEmail).snapshots(),
@@ -117,7 +122,11 @@ class _ProgressTrackerState extends State<ProgressTracker> {
               return Column(
                 children: sortedTasks.map((taskId) {
                   return CupertinoListTile(
-                    title: Text(taskId),
+                    title: Text(taskId,
+                    style: GoogleFonts.roboto(
+                      color: CupertinoColors.link,
+                      fontWeight: FontWeight.bold
+                    ),),
                     trailing: CupertinoSwitch(
                       value: data[taskId] == true,
                       onChanged: (bool value) {

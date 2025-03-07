@@ -285,8 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
             // Daily Affirmation Section
-            DailyAffirmationCard(backgroundColor: backgroundColor),
 
+            DailyAffirmationCard(backgroundColor: backgroundColor),
+            SizedBox(height: 30),
+            _communityHighlights(),
 
             SizedBox(height: 30),
             // Mood Tracker Summary
@@ -295,20 +297,18 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 30),
             // Progress Tracker
             ProgressTracker(),
-            SizedBox(height: 30),
             // Quick Access Buttons
-            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
             SizedBox(height: 30),
             // Community Highlights
             //CommunityHighlights(),
 
-            _communityHighlights(),
             SizedBox(height: 30),
             // Explore Resources Section
-
+            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
             SizedBox(height: 10),
 
             SizedBox(height: 30),
+
             // Upcoming Events or Support Groups
             Text(
               'Upcoming Peer Support Groups',
@@ -321,9 +321,17 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 10),
             _eventCard('Harmony Helpers', 'Thursday October 10 at 10AM - 2PM', '''A supportive community gathering to discuss mental health topics.
                 \n Shared Experiences: Engaging with others facing similar challenges fosters a sense of belonging and reduces feelings of isolation.
-                \n Emotional Support: Regular interactions in a supportive environment can alleviate stress and promote emotional well-being.'''),
+                \n Emotional Support: Regular interactions in a supportive environment can alleviate stress and promote emotional well-being.''',
+                  "lib/assets/harmony.png"
+                  ),
             SizedBox(height: 20),
-            _eventCard('Anxiety Support Circle', 'Every Friday at 3 PM', 'A supportive community gathering to discuss mental health topics.'),
+            _eventCard(
+                'Anxiety Support Circle',
+                'Every Friday at 3 PM',
+                'Join a compassionate and understanding community where you can openly share your thoughts and feelings. Guided by mental health professionals, this support circle offers practical coping techniques, mindfulness exercises, and a safe space to connect with others who truly understand your journey.\n\n📌 More details: [www.mhpsupportcircle.com](#)\n🌐 Join via Web: [www.mhpsupportcircle.com/join](#)\n🎥 Zoom Meeting: [www.zoom.com/mhp-circle](#)\n🔗 Resources & Articles: [www.mhpsupportcircle.com/resources](#)',
+                "lib/assets/mhp.jpg"
+            ),
+
             SizedBox(height: 30),
             // Emergency Contacts Section
             Text(
@@ -368,44 +376,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 10),
             Text(
               'Your mood over the past 7 days:                       s \n😊 😢 😊 😎 😊 😢 😊',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Progress Tracker
-  Widget _progressTracker() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your Progress',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: backgroundColor,
-              ),
-            ),
-            SizedBox(height: 10),
-            LinearProgressIndicator(
-              value: 0.7, // Example progress
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(backgroundColor),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '70% of your weekly goals completed',
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -541,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Event Card Widget
-  Widget _eventCard(String eventName, String eventTime, String eventDescription) {
+  Widget _eventCard(String eventName, String eventTime, String eventDescription, String imagePath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -551,8 +521,8 @@ class _HomeScreenState extends State<HomeScreen> {
               eventName: eventName,
               eventTime: eventTime,
               eventDescription: eventDescription,
-              backgroundColor: backgroundColor, // Pass the backgroundColor here
-            ),
+              backgroundColor: backgroundColor,
+              eventImage: imagePath),
           ),
         );
       },

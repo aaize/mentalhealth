@@ -1,126 +1,132 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
 
-class JoinEventScreen extends StatelessWidget {
+class JoinEventScreen extends StatefulWidget {
   final String eventName;
   final String eventTime;
   final String eventDescription;
-  final Color backgroundColor;
+  final String eventImage;
 
   const JoinEventScreen({
     Key? key,
     required this.eventName,
     required this.eventTime,
     required this.eventDescription,
-    required this.backgroundColor,
+    required this.eventImage, required Color backgroundColor,
   }) : super(key: key);
+
+  @override
+  _JoinEventScreenState createState() => _JoinEventScreenState();
+}
+
+class _JoinEventScreenState extends State<JoinEventScreen> {
+  bool hasJoined = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:CupertinoNavigationBar(
-        middle: Text('Events',
+      backgroundColor: Colors.black, // Modern dark theme
+      appBar: CupertinoNavigationBar(
+        middle: Text(
+          "Events",
           style: GoogleFonts.roboto(
             color: Colors.white,
             fontSize: 20,
-            fontWeight: FontWeight.w400
-
+            fontWeight: FontWeight.w400,
           ),
         ),
-        border: null,
-        backgroundColor: backgroundColor,
-
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Icon(CupertinoIcons.back, size: 23, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
-      /*AppBar(
-        centerTitle: true,
-        title: Text(
-          eventName,
-
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold
-          ),
-
-        ),
-        backgroundColor: backgroundColor,
-      ),*/
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            Text(
-              eventName,
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: backgroundColor,
-              ),
-
-            ),
-            SizedBox(height: 8),
-            Text(
-              eventTime,
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.grey[300],
-              ),
-            ),
-        Center(
-          child: Container(
-            padding: EdgeInsets.all(13),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), // Rounded corners
-              border: Border.all(color: CupertinoColors.systemGrey, width: 1), // Border color and width
-              boxShadow: [
-                BoxShadow(
-                  color: CupertinoColors.systemGrey.withOpacity(0.3),
-                  blurRadius: 5,
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20), // Ensures the image follows the rounded shape
+            // Event Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10), // Half of the previous
               child: Image.asset(
-                'lib/assets/harmony.png',
-                fit: BoxFit.cover, // Ensures proper scaling
+                widget.eventImage,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
               ),
             ),
-          ),
-        ),
+            SizedBox(height: 20),
 
-
-            
-
-            SizedBox(height: 16),
+            // Event Name
             Text(
-              eventDescription,
+              widget.eventName,
               style: GoogleFonts.poppins(
-                fontSize: 16,
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 8),
+
+            // Event Time
+            Text(
+              widget.eventTime,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey[400],
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Event Description
+            Text(
+              "About the Event",
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.purpleAccent,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              widget.eventDescription,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.white,
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Event Links
+            _buildLink("More details", "www.mhpsupportcircle.com/details", Icons.info),
+            _buildLink("Join via Web", "www.mhpsupportcircle.com/join", Icons.link),
+            _buildLink("Zoom Meeting", "www.zoom.com/mhp-circle", Icons.video_call),
+            _buildLink("Resources & Articles", "www.mhpsupportcircle.com/resources", Icons.book),
+            SizedBox(height: 30),
+
+            // Join Event Button
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Implement join event functionality here
-                },
+                onPressed: hasJoined ? null : _joinEvent,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: backgroundColor,
-                  padding: EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 25),
+                  backgroundColor: hasJoined ? Colors.grey : Colors.deepPurpleAccent,
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 40),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
-                  'Join Event',
+                  hasJoined ? "Joined" : "Join Event",
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -129,5 +135,59 @@ class JoinEventScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Function to handle event joining
+  void _joinEvent() {
+    setState(() {
+      hasJoined = true;
+    });
+
+    Fluttertoast.showToast(
+      msg: "You have successfully joined the event!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.deepPurpleAccent,
+      textColor: Colors.white,
+    );
+  }
+
+  // Function to build event links
+  Widget _buildLink(String title, String fullUrl, IconData icon) {
+    return GestureDetector(
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: fullUrl));
+        Fluttertoast.showToast(
+          msg: "Copied: $fullUrl",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.blueAccent, size: 18),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                "$title: ${_truncateUrl(fullUrl)}",
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Function to truncate long URLs
+  String _truncateUrl(String url, {int maxLength = 30}) {
+    return url.length > maxLength ? "${url.substring(0, maxLength)}..." : url;
   }
 }
