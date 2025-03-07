@@ -6,8 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MoodTrackerSummary extends StatelessWidget {
   final String email;
+  final Color backgroundColor;
 
-  const MoodTrackerSummary({required this.email});
+  const MoodTrackerSummary({required this.email,
+  required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class MoodTrackerSummary extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue, // Replace with your theme color
+                color: backgroundColor, // Replace with your theme color
               ),
             ),
             SizedBox(height: 10),

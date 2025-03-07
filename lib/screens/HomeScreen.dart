@@ -301,11 +301,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             SizedBox(height: 30),
             // Mood Tracker Summary
-            MoodTrackerSummary(email: widget.userEmail),
+            MoodTrackerSummary(email: widget.userEmail,backgroundColor: backgroundColor,),
 
             SizedBox(height: 30),
             // Progress Tracker
-            ProgressTracker(),
+            ProgressTracker(backgroundColor: backgroundColor,),
             // Quick Access Buttons
             SizedBox(height: 30),
             // Community Highlights

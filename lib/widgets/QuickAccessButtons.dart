@@ -18,7 +18,7 @@ class QuickAccessButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildButton('Journal', CupertinoIcons.pencil, () {
-          Navigator.push(context, CupertinoPageRoute(builder: (_) => JournalScreen(userEmail: userEmail)));
+          Navigator.push(context, CupertinoPageRoute(builder: (_) => JournalScreen(userEmail: userEmail,backgroundColor: backgroundColor,)));
         }),
         _buildButton('Meditate', CupertinoIcons.moon, () {
           Navigator.push(context, CupertinoPageRoute(builder: (_) => MeditationScreen()));
@@ -56,8 +56,10 @@ class QuickAccessButtons extends StatelessWidget {
 
 class JournalScreen extends StatefulWidget {
   final String userEmail; // Add this parameter
+  final Color backgroundColor;
 
-  const JournalScreen({required this.userEmail}); // Update constructor
+  const JournalScreen({required this.userEmail,
+  required this.backgroundColor}); // Update constructor
 
   @override
   _JournalScreenState createState() => _JournalScreenState();
@@ -241,7 +243,16 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Journal"),
+        middle: Text("Journal",
+        style: GoogleFonts.roboto(
+          fontWeight: FontWeight.w400,
+          color: CupertinoColors.white
+        ),),
+        leading: IconButton(icon: Icon(CupertinoIcons.back,
+        size: 23,), onPressed: () {
+          Navigator.pop(context);
+        },),
+        backgroundColor: widget.backgroundColor,
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(CupertinoIcons.search),
@@ -292,19 +303,36 @@ class _JournalScreenState extends State<JournalScreen> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  CupertinoButton.filled(
-                    borderRadius: BorderRadius.circular(24),
-                    padding: EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(CupertinoIcons.bookmark, size: 20),
-                        SizedBox(width: 8),
-                        Text("Save Entry", style: TextStyle(fontSize: 16)),
-                      ],
+                  Container(
+                    decoration: BoxDecoration(
+                      color: widget.backgroundColor, // Set background color
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                    onPressed: _addJournalEntry,
+                    child: CupertinoButton(
+                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+                      onPressed: _addJournalEntry,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            CupertinoIcons.book_circle_fill,
+                            size: 25,
+                            color: CupertinoColors.white,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "Save Entry",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: CupertinoColors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+
                 ],
               ),
             ),
