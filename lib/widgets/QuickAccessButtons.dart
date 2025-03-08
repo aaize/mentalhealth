@@ -285,6 +285,7 @@ class _JournalScreenState extends State<JournalScreen> {
                     children: [
                       Expanded(
                         child: CupertinoTextField(
+                          // thoughts area
                           controller: _journalController,
                           placeholder: "Write your thoughts...",
                           padding: EdgeInsets.all(16),
