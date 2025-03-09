@@ -97,7 +97,7 @@ class _JournalScreenState extends State<JournalScreen> {
       });
 
       _journalController.clear();
-      _showToast('Entry saved successfully!', CupertinoColors.activeGreen);
+      _showToast('Entry saved successfully!!', CupertinoColors.activeGreen);
     } catch (e) {
       _showToast('Failed to save entry', CupertinoColors.destructiveRed);
     }
