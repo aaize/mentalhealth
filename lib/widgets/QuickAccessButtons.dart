@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentalhealth/widgets/screens/MeditationScreen.dart';
 class QuickAccessButtons extends StatelessWidget {
   final Color backgroundColor;
   final String userEmail; // Add this parameter
@@ -21,7 +22,7 @@ class QuickAccessButtons extends StatelessWidget {
           Navigator.push(context, CupertinoPageRoute(builder: (_) => JournalScreen(userEmail: userEmail,backgroundColor: backgroundColor,)));
         }),
         _buildButton('Meditate', CupertinoIcons.moon, () {
-          Navigator.push(context, CupertinoPageRoute(builder: (_) => MeditationScreen()));
+          Navigator.push(context, CupertinoPageRoute(builder: (_) => MeditationScreen(backgroundColor: backgroundColor,)));
         }),
         _buildButton('Chat', CupertinoIcons.chat_bubble, () {
           Navigator.push(context, CupertinoPageRoute(builder: (_) => ChatScreen()));
@@ -129,27 +130,38 @@ class _JournalScreenState extends State<JournalScreen> {
   void _showMoodPicker() {
     showCupertinoModalPopup(
       context: context,
-      builder: (context) => CupertinoActionSheet(
-        title: const Text('Select Mood'),
-        actions: _moodOptions.map((mood) => CupertinoActionSheetAction(
-          child: Text(mood, style: TextStyle(fontSize: 32)),
-          onPressed: () {
-            setState(() => _selectedMood = mood);
-            Navigator.pop(context);
-          },
-        )).toList(),
-        cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel'),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      builder: (context) =>
+          CupertinoActionSheet(
+            title: const Text('Select Mood'),
+            actions: _moodOptions.map((mood) =>
+                CupertinoActionSheetAction(
+                  child: Text(mood, style: TextStyle(fontSize: 32)),
+                  onPressed: () {
+                    setState(() => _selectedMood = mood);
+                    Navigator.pop(context);
+                  },
+                )).toList(),
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
     );
   }
 
   Widget _buildJournalEntry(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    final date = DateFormat('MMM dd, yyyy - hh:mm a').format(
-        (data['timestamp'] as Timestamp).toDate());
+    final data = doc.data() as Map<String, dynamic>?;
+
+    // Ensure data is not null
+    if (data == null) {
+      return SizedBox.shrink(); // Return an empty widget if data is null
+    }
+
+    // Handle null timestamp safely
+    Timestamp? timestamp = data['timestamp'] as Timestamp?;
+    String formattedDate = timestamp != null
+        ? DateFormat('MMM dd, yyyy - hh:mm a').format(timestamp.toDate())
+        : 'Unknown Date'; // ✅ Provides a fallback value
 
     return Dismissible(
       key: Key(doc.id),
@@ -162,12 +174,14 @@ class _JournalScreenState extends State<JournalScreen> {
       ),
       onDismissed: (direction) => _deleteEntry(doc.id),
       child: CupertinoButton(
-        onPressed: () => _showEntryDialog(data['content'], doc.id),
+        onPressed: () => _showEntryDialog(data['content'] ?? '', doc.id),
         padding: EdgeInsets.zero,
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            color: CupertinoTheme.of(context).brightness == Brightness.dark
+            color: CupertinoTheme
+                .of(context)
+                .brightness == Brightness.dark
                 ? CupertinoColors.darkBackgroundGray
                 : CupertinoColors.extraLightBackgroundGray,
             borderRadius: BorderRadius.circular(12),
@@ -179,23 +193,29 @@ class _JournalScreenState extends State<JournalScreen> {
               children: [
                 Row(
                   children: [
-                    Text(_moodOptions.contains(data['mood'])
-                        ? data['mood']
-                        : '😊',
-                        style: TextStyle(fontSize: 24)),
+                    Text(
+                      _moodOptions.contains(data['mood']) ? data['mood'] : '😊',
+                      style: TextStyle(fontSize: 24),
+                    ),
                     SizedBox(width: 10),
-                    Text(date,
-                        style: TextStyle(
-                            color: CupertinoColors.systemGrey,
-                            fontSize: 14)),
+                    Text(
+                      formattedDate, // ✅ Uses safe date formatting
+                      style: TextStyle(
+                        color: CupertinoColors.systemGrey,
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 12),
-                Text(data['content'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 1.4,
-                    )),
+                Text(
+                  data['content'] ?? 'No content available.',
+                  // ✅ Prevents null errors
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.4,
+                  ),
+                ),
               ],
             ),
           ),
@@ -204,40 +224,44 @@ class _JournalScreenState extends State<JournalScreen> {
     );
   }
 
+
   void _showEntryDialog(String content, String entryId) {
     final editController = TextEditingController(text: content);
     showCupertinoDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Text('Edit Entry'),
-        content: CupertinoTextField(
-          controller: editController,
-          style: TextStyle(color: CupertinoColors.systemGrey),
-          maxLines: 5,
-          placeholder: 'Edit your entry...',
-        ),
-        actions: [
-          CupertinoDialogAction(
-            child: Text('Cancel',
-            style: TextStyle(color: CupertinoColors.white),),
-            onPressed: () => Navigator.pop(context),
+      builder: (context) =>
+          CupertinoAlertDialog(
+            title: Text('Edit Entry'),
+            content: CupertinoTextField(
+              controller: editController,
+              style: TextStyle(color: CupertinoColors.systemGrey),
+              maxLines: 5,
+              placeholder: 'Edit your entry...',
+            ),
+            actions: [
+              CupertinoDialogAction(
+                child: Text('Cancel',
+                  style: TextStyle(color: CupertinoColors.white),),
+                onPressed: () => Navigator.pop(context),
+              ),
+              CupertinoDialogAction(
+                child: Text('Save'),
+                onPressed: () async {
+                  if (editController.text
+                      .trim()
+                      .isNotEmpty) {
+                    await _firestore
+                        .collection('journals')
+                        .doc(widget.userEmail) // Use the passed userEmail
+                        .collection('entries')
+                        .doc(entryId)
+                        .update({'content': editController.text.trim()});
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ],
           ),
-          CupertinoDialogAction(
-            child: Text('Save'),
-            onPressed: () async {
-              if (editController.text.trim().isNotEmpty) {
-                await _firestore
-                    .collection('journals')
-                    .doc(widget.userEmail) // Use the passed userEmail
-                    .collection('entries')
-                    .doc(entryId)
-                    .update({'content': editController.text.trim()});
-                Navigator.pop(context);
-              }
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -245,40 +269,84 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Journal",
-        style: GoogleFonts.roboto(
-          fontWeight: FontWeight.w400,
-          color: CupertinoColors.white
-        ),),
-        leading: IconButton(icon: Icon(CupertinoIcons.back,
-        size: 23,), onPressed: () {
-          Navigator.pop(context);
-        },),
+        middle: Text(
+          "Journal",
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            color: CupertinoColors.white,
+          ),
+        ),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Icon(CupertinoIcons.back, size: 23),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: widget.backgroundColor,
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(CupertinoIcons.search),
-          onPressed: () => showCupertinoDialog(
-            context: context,
-            builder: (context) => CupertinoAlertDialog(
-              title: Text('Search Entries'),
-              content: CupertinoTextField(
-                placeholder: 'Search journal entries...',
-                onChanged: (value) => setState(() => _searchQuery = value),
+          onPressed: () =>
+              showCupertinoDialog(
+                context: context,
+                builder: (context) =>
+                    CupertinoAlertDialog(
+                      title: Text('Search Entries'),
+                      content: CupertinoTextField(
+                        placeholder: 'Search journal entries...',
+                        onChanged: (value) =>
+                            setState(() => _searchQuery = value),
+                      ),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: Text('Close'),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
               ),
-              actions: [
-                CupertinoDialogAction(
-                  child: Text('Close'),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
       child: SafeArea(
         child: Column(
           children: [
+            // Journal Entries Section
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _firestore
+                    .collection('journals')
+                    .doc(widget.userEmail)
+                    .collection('entries')
+                    .orderBy('timestamp', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CupertinoActivityIndicator());
+                  }
+
+                  final entries = snapshot.data!.docs.where((doc) {
+                    final content =
+                    (doc.data() as Map<String, dynamic>)['content']
+                        .toString()
+                        .toLowerCase();
+                    return content.contains(_searchQuery.toLowerCase());
+                  }).toList();
+
+                  if (entries.isEmpty) {
+                    return Center(child: Text('No entries found'));
+                  }
+
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) =>
+                        _buildJournalEntry(entries[index]),
+                  );
+                },
+              ),
+            ),
+            // Input & Save Section
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -287,7 +355,6 @@ class _JournalScreenState extends State<JournalScreen> {
                     children: [
                       Expanded(
                         child: CupertinoTextField(
-                          // thoughts area
                           controller: _journalController,
                           placeholder: "Write your thoughts...",
                           padding: EdgeInsets.all(16),
@@ -300,19 +367,22 @@ class _JournalScreenState extends State<JournalScreen> {
                       ),
                       CupertinoButton(
                         padding: EdgeInsets.only(left: 12),
-                        child: Text(_selectedMood, style: TextStyle(fontSize: 36)),
+                        child: Text(
+                            _selectedMood, style: TextStyle(fontSize: 36)),
                         onPressed: _showMoodPicker,
                       ),
                     ],
                   ),
                   SizedBox(height: 16),
                   Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: widget.backgroundColor, // Set background color
+                      color: widget.backgroundColor,
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: CupertinoButton(
-                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 32),
                       onPressed: _addJournalEntry,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -335,40 +405,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       ),
                     ),
                   ),
-
                 ],
-              ),
-            ),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('journals')
-                    .doc(widget.userEmail) // Use the passed userEmail
-                    .collection('entries')
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CupertinoActivityIndicator());
-                  }
-
-                  final entries = snapshot.data!.docs.where((doc) {
-                    final content = (doc.data() as Map<String, dynamic>)['content']
-                        .toString()
-                        .toLowerCase();
-                    return content.contains(_searchQuery.toLowerCase());
-                  }).toList();
-
-                  if (entries.isEmpty) {
-                    return Center(child: Text('No entries found'));
-                  }
-
-                  return ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: entries.length,
-                    itemBuilder: (context, index) => _buildJournalEntry(entries[index]),
-                  );
-                },
               ),
             ),
           ],
@@ -378,17 +415,8 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 }
 
-class MeditationScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(middle: Text("Meditation")),
-      child: Center(
-        child: Text("Meditation feature coming soon!"),
-      ),
-    );
-  }
-}
+
+
 
 class ChatScreen extends StatelessWidget {
   @override

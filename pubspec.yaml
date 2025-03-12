@@ -67,6 +67,8 @@ dev_dependencies:
   flutter_dotenv:
   geolocator:
   permission_handler:
+  audioplayers:
+  cached_network_image:
   #google_maps_flutter:
   location:
   flutter_launcher_icons:
