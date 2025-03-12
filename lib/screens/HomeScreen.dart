@@ -266,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 30),
 
             Container(
-              height: 222,
+              height: 221,
               child: PageView(
 
                 controller: _pageController,
