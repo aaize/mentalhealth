@@ -48,12 +48,19 @@ class AgeAdviceScreen extends StatelessWidget {
           children: [
             _buildSectionHeader('Advice for $ageRange'),
             _buildAdviceSection(content),
+            SizedBox(height: 20,),
             _buildSectionHeader('Tips for $ageRange'),
             _buildTipsSection(),
+            SizedBox(height: 20,),
+            Divider(),
             _buildSectionHeader('Recommended Articles'),
             _buildArticlesSection(context),
+            SizedBox(height: 20,),
+            Divider(),
             _buildSectionHeader('Exercises for $ageRange'),
             _buildExercisesSection(context),
+            SizedBox(height: 20,),
+            Divider(),
             _buildSectionHeader('Videos for $ageRange'),
             _buildVideosSection(context),
           ],
@@ -69,8 +76,9 @@ class AgeAdviceScreen extends StatelessWidget {
         title,
         style: GoogleFonts.poppins(
           fontSize: 20,
+          decoration: TextDecoration.none,
           fontWeight: FontWeight.w600,
-          color: CupertinoColors.label,
+          color: backgroundColor,
         ),
       ),
     );
@@ -92,7 +100,9 @@ class AgeAdviceScreen extends StatelessWidget {
       ),
       child: Text(
         content,
-        style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
+        style: GoogleFonts.roboto(fontSize: 16, height: 1.5,
+        color: Colors.green,
+        decoration: TextDecoration.none),
       ),
     );
   }
@@ -124,7 +134,11 @@ class AgeAdviceScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
             tip,
-            style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
+            style: GoogleFonts.roboto(fontSize: 16, height: 1.5,
+            color: Colors.green,
+                decoration: TextDecoration.none
+
+          ),
           ),
         )).toList(),
       ),
@@ -142,7 +156,8 @@ class AgeAdviceScreen extends StatelessWidget {
       children: articles.map((article) => CupertinoListTile(
         title: Text(
           article['title']!,
-          style: GoogleFonts.poppins(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16,
+          color: CupertinoColors.inactiveGray),
         ),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
@@ -171,7 +186,8 @@ class AgeAdviceScreen extends StatelessWidget {
       children: exercises.map((exercise) => CupertinoListTile(
         title: Text(
           exercise['name']!,
-          style: GoogleFonts.poppins(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16,
+          color: CupertinoColors.inactiveGray),
         ),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
@@ -196,7 +212,8 @@ class AgeAdviceScreen extends StatelessWidget {
       children: videos.map((video) => CupertinoListTile(
         title: Text(
           video['title']!,
-          style: GoogleFonts.poppins(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16,
+          color: CupertinoColors.inactiveGray),
         ),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
