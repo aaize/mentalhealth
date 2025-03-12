@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class QuickAccessButtons extends StatelessWidget {
   final Color backgroundColor;
   final String userEmail; // Add this parameter
@@ -212,12 +212,14 @@ class _JournalScreenState extends State<JournalScreen> {
         title: Text('Edit Entry'),
         content: CupertinoTextField(
           controller: editController,
+          style: TextStyle(color: CupertinoColors.systemGrey),
           maxLines: 5,
           placeholder: 'Edit your entry...',
         ),
         actions: [
           CupertinoDialogAction(
-            child: Text('Cancel'),
+            child: Text('Cancel',
+            style: TextStyle(color: CupertinoColors.white),),
             onPressed: () => Navigator.pop(context),
           ),
           CupertinoDialogAction(

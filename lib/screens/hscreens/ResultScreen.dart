@@ -57,6 +57,7 @@ class _ResultScreenState extends State<ResultScreen> {
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Colors.white60,
+          decoration: TextDecoration.none
         ),
       ),
     );
@@ -138,7 +139,7 @@ class _ResultScreenState extends State<ResultScreen> {
       'Nutrition Guidance (${widget.meals} meals)',
       content,
       CupertinoIcons.leaf_arrow_circlepath,
-      NutritionAdviceScreen(content: content),
+      NutritionAdviceScreen(content: content, backgroundColor: widget.backgroundColor,),
     );
   }
 
@@ -153,7 +154,7 @@ class _ResultScreenState extends State<ResultScreen> {
       'Work Pressure Management (${widget.workPressure})',
       advice[widget.workPressure] ?? '• Regular stress assessments\n• Healthy coping mechanisms\n• Workload prioritization',
       CupertinoIcons.briefcase,
-      WorkStressAdviceScreen(content: advice[widget.workPressure] ?? ''),
+      WorkStressAdviceScreen(content: advice[widget.workPressure] ?? '',backgroundColor: widget.backgroundColor,),
     );
   }
 
@@ -248,7 +249,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               children: [
                 CupertinoListTile(
-                  title: Text('Overall Score', style: GoogleFonts.poppins(color: Colors.blueGrey)),
+                  title: Text('Overall Score', style: GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(
                     widget.totalScore.toString(),
                     style: GoogleFonts.poppins(
@@ -259,15 +260,15 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ),
                 CupertinoListTile(
-                  title: Text('Age Group', style: GoogleFonts.poppins(color: Colors.blueGrey)),
+                  title: Text('Age Group', style: GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.ageRange),
                 ),
                 CupertinoListTile(
-                  title: Text('Daily Meals', style: GoogleFonts.poppins(color: Colors.blueGrey)),
+                  title: Text('Daily Meals', style: GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.meals),
                 ),
                 CupertinoListTile(
-                  title: Text('Work Stress', style: GoogleFonts.poppins(color: Colors.blueGrey)),
+                  title: Text('Work Stress', style: GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.workPressure),
                 ),
               ],
@@ -277,13 +278,13 @@ class _ResultScreenState extends State<ResultScreen> {
 
             Container(
               height: 220,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 7),
               child: SfCartesianChart(
-                plotAreaBorderWidth: 0,
+                plotAreaBorderWidth: 1,
                 primaryXAxis: CategoryAxis(
                   labelRotation: -45,
-                  majorGridLines: const MajorGridLines(width: 0),
-                  axisLine: const AxisLine(width: 0),
+                  majorGridLines: const MajorGridLines(width: 1),
+                  axisLine: const AxisLine(width: 1),
                   labelStyle: GoogleFonts.poppins(fontSize: 12),
                 ),
                 primaryYAxis: const NumericAxis(isVisible: false),
@@ -297,15 +298,18 @@ class _ResultScreenState extends State<ResultScreen> {
                     xValueMapper: (entry, _) => entry.key,
                     yValueMapper: (entry, _) => entry.value,
                     color: widget.backgroundColor,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 20,),
 
             _buildAgeRecommendations(),
             _buildNutritionAdvice(),
             _buildWorkStressAdvice(),
+            SizedBox(height: 20,),
+            Divider(),
 
             _buildSectionHeader('Recommended Professionals'),
 
