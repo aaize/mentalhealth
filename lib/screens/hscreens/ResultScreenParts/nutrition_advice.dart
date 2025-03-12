@@ -5,10 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NutritionAdviceScreen extends StatelessWidget {
   final String content;
+  final Color backgroundColor;
 
   const NutritionAdviceScreen({
     Key? key,
     required this.content,
+    required this.backgroundColor,
   }) : super(key: key);
 
   // Function to launch URLs
@@ -25,7 +27,14 @@ class NutritionAdviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Nutrition Advice'),
+        middle: Text('Nutrition Advice',
+        style: (GoogleFonts.roboto(color: CupertinoColors.white,
+        fontWeight: FontWeight.w400)),),
+        border: null,
+        backgroundColor: backgroundColor,
+        leading: IconButton(onPressed: () {
+          Navigator.pop(context);
+        }, icon: Icon(CupertinoIcons.back,size: 23,)),
       ),
       child: SafeArea(
         child: ListView(
@@ -33,10 +42,15 @@ class NutritionAdviceScreen extends StatelessWidget {
           children: [
             _buildSectionHeader('General Nutrition Advice'),
             _buildAdviceSection(content),
+            SizedBox(height: 20,),
+            Divider(),
             _buildSectionHeader('Recommended Articles'),
             _buildArticlesSection(context),
+            SizedBox(height: 20,),
+            Divider(),
             _buildSectionHeader('Informative Videos'),
             _buildVideosSection(context),
+            SizedBox(height: 20,),
           ],
         ),
       ),
@@ -48,10 +62,11 @@ class NutritionAdviceScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.roboto(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: CupertinoColors.label,
+          color: backgroundColor,
+          decoration: TextDecoration.none
         ),
       ),
     );
@@ -73,7 +88,8 @@ class NutritionAdviceScreen extends StatelessWidget {
       ),
       child: Text(
         content,
-        style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
+        style: GoogleFonts.poppins(fontSize: 16, height: 1.5,
+        color: Colors.green),
       ),
     );
   }
@@ -98,7 +114,8 @@ class NutritionAdviceScreen extends StatelessWidget {
       children: articles.map((article) => CupertinoListTile(
         title: Text(
           article['title']!,
-          style: GoogleFonts.poppins(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16,
+          color: CupertinoColors.inactiveGray),
         ),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
@@ -124,7 +141,8 @@ class NutritionAdviceScreen extends StatelessWidget {
       children: videos.map((video) => CupertinoListTile(
         title: Text(
           video['title']!,
-          style: GoogleFonts.poppins(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16,
+          color: CupertinoColors.inactiveGray),
         ),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
