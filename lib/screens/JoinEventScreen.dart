@@ -9,13 +9,15 @@ class JoinEventScreen extends StatefulWidget {
   final String eventTime;
   final String eventDescription;
   final String eventImage;
+  final Color backgroundColor;
 
   const JoinEventScreen({
     Key? key,
     required this.eventName,
     required this.eventTime,
     required this.eventDescription,
-    required this.eventImage, required Color backgroundColor,
+    required this.eventImage,
+    required this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,6 @@ class JoinEventScreen extends StatefulWidget {
 
 class _JoinEventScreenState extends State<JoinEventScreen> {
   bool hasJoined = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +44,7 @@ class _JoinEventScreenState extends State<JoinEventScreen> {
           child: Icon(CupertinoIcons.back, size: 23, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: widget.backgroundColor,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
