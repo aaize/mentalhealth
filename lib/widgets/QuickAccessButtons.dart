@@ -6,47 +6,125 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentalhealth/screens/moodtracking/mood_history_screen.dart';
 import 'package:mentalhealth/widgets/screens/MeditationScreen.dart';
 class QuickAccessButtons extends StatelessWidget {
   final Color backgroundColor;
-  final String userEmail; // Add this parameter
+  final String userEmail;
 
-  const QuickAccessButtons({required this.backgroundColor, required this.userEmail, Key? key}) : super(key: key);
+  const QuickAccessButtons({
+    required this.backgroundColor,
+    required this.userEmail,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildButton('Journal', CupertinoIcons.pencil, () {
-          Navigator.push(context, CupertinoPageRoute(builder: (_) => JournalScreen(userEmail: userEmail,backgroundColor: backgroundColor,)));
+        _buildCyberButton('  Journal  ', CupertinoIcons.pencil, () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (_) => JournalScreen(
+                userEmail: userEmail,
+                backgroundColor: backgroundColor,
+              ),
+            ),
+          );
         }),
-        _buildButton('Meditate', CupertinoIcons.moon, () {
-          Navigator.push(context, CupertinoPageRoute(builder: (_) => MeditationScreen(backgroundColor: backgroundColor,)));
+        const SizedBox(width: 13),
+        _buildCyberButton(' Meditate ', CupertinoIcons.moon_fill, () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (_) => MeditationScreen(
+                backgroundColor: backgroundColor,
+              ),
+            ),
+          );
         }),
-        _buildButton('Chat', CupertinoIcons.chat_bubble, () {
-          Navigator.push(context, CupertinoPageRoute(builder: (_) => ChatScreen()));
+        const SizedBox(width: 13),
+        _buildCyberButton('Your Mood', CupertinoIcons.graph_square_fill, () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (_) => MoodHistoryScreen(
+                email: userEmail,
+                backgroundColor: backgroundColor,
+              ),
+            ),
+          );
         }),
       ],
     );
   }
 
-  Widget _buildButton(String label, IconData icon, VoidCallback onPressed) {
-    return CupertinoButton(
-      onPressed: onPressed,
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          Icon(icon, size: 36, color: backgroundColor),
-          SizedBox(height: 8),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: backgroundColor,
+  Widget _buildCyberButton(String label, IconData icon, VoidCallback onPressed) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                backgroundColor.withOpacity(0.8),
+                backgroundColor.withOpacity(0.4),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: backgroundColor.withOpacity(0.3),
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1,
             ),
           ),
-        ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 36,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: backgroundColor.withOpacity(0.8),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      color: backgroundColor.withOpacity(0.5),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -268,6 +346,7 @@ class _JournalScreenState extends State<JournalScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: widget.backgroundColor,
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           "Journal",
@@ -381,6 +460,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: CupertinoButton(
+                      color: CupertinoColors.black,
                       padding: EdgeInsets.symmetric(
                           vertical: 14, horizontal: 32),
                       onPressed: _addJournalEntry,

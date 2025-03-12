@@ -98,6 +98,8 @@ class VideosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
+
       appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
         border: null,
@@ -167,7 +169,7 @@ class VideosScreen extends StatelessWidget {
                           Text(
                             video['title']!,
                             style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                               fontSize: 16,
                             ),
                           ),

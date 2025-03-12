@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/ChatScreen.dart';
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case '😡': return CupertinoColors.systemRed;
       case '😎': return CupertinoColors.systemGreen;
       case '😍': return CupertinoColors.systemPink;
+      case '⚡︎': return Color(0xFF6A5ACD);
       default: return CupertinoColors.systemPurple;
     }
   }
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Wrap(
               spacing: 20,
               runSpacing: 15,
-              children: ['😊','😢','😡','😎','😍','🤔','😴','☂️']
+              children: ['😊','😢','😡','😎','😍','🤔','😴','☂️','⚡︎']
                   .map((e) => CupertinoButton(
                 padding: EdgeInsets.zero,
                 child: Text(e, style: const TextStyle(fontSize: 36)),
@@ -264,10 +266,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 30),
 
             Container(
-              height: 205,
+              height: 222,
               child: PageView(
+
                 controller: _pageController,
-                physics: BouncingScrollPhysics(), // iOS-style smooth scrolling
+                physics: CarouselScrollPhysics(), // iOS-style smooth scrolling
+
                 children: [
                   _imageCard(
                       'lib/assets/aomh.png',
@@ -294,9 +298,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
             // Daily Affirmation Section
-
             DailyAffirmationCard(backgroundColor: backgroundColor),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
+            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
+            SizedBox(height: 20),
             _communityHighlights(),
 
             SizedBox(height: 30),
@@ -308,16 +313,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ProgressTracker(backgroundColor: backgroundColor,),
             // Quick Access Buttons
             SizedBox(height: 30),
-            // Community Highlights
-            //CommunityHighlights(),
-
-            SizedBox(height: 30),
-            // Explore Resources Section
-            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
-            SizedBox(height: 10),
-
-            SizedBox(height: 30),
-
             // Upcoming Events or Support Groups
             Text(
               'Upcoming Peer Support Groups',
@@ -404,10 +399,10 @@ class _HomeScreenState extends State<HomeScreen> {
         _quickAccessButton('Journal', CupertinoIcons.pencil, () {
           // Navigate to Journal Screen
         }),
-        _quickAccessButton('Meditate', CupertinoIcons.moon, () {
+        _quickAccessButton('Meditate', CupertinoIcons.moon_fill, () {
           // Navigate to Meditation Screen
         }),
-        _quickAccessButton('Chat', CupertinoIcons.chat_bubble, () {
+        _quickAccessButton('Chat', CupertinoIcons.chat_bubble_fill, () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => EmergencyScreen(backgroundColor: backgroundColor,)),
@@ -472,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Image Card Widget with Navigation
   Widget _imageCard(String imagePath, String title, Widget destinationScreen) {
     return CupertinoButton(
-      padding: EdgeInsets.zero, // Removes default button padding
+      padding: EdgeInsets.zero,// Removes default button padding
       onPressed: () {
         Navigator.push(
           context,
@@ -480,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(0),
+        borderRadius: BorderRadius.circular(10),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
@@ -501,8 +496,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.black54,
-            borderRadius: BorderRadius.circular(15),
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             title,
@@ -610,14 +605,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Spacer(),
             if (name == 'Suicide Prevention')
               IconButton(
-                icon: Icon(CupertinoIcons.phone_solid, color: Color(0xFF87CEFA)),
+                icon: Icon(CupertinoIcons.phone_solid, color: backgroundColor),
                 onPressed: () {
                   // Handle call action for Suicide Prevention
                 },
               ),
             if (name == 'Emergency')
               IconButton(
-                icon: Icon(CupertinoIcons.chat_bubble_fill, color: Color(0xFF87CEFA)),
+                icon: Icon(CupertinoIcons.chat_bubble_fill, color: backgroundColor),
                 onPressed: () {
                   Navigator.push(
                     context,

@@ -79,9 +79,10 @@ class _PodcastScreenState extends State<PodcastScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: widget.backgroundColor,
+
       navigationBar: CupertinoNavigationBar(
         border: null,
-        backgroundColor: widget.backgroundColor,
         middle: Text(
           "Podcasts",
           style: GoogleFonts.roboto(
@@ -110,7 +111,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
             child: ListTile(
               title: Text(
                 podcasts[index]["title"]!,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.w400),
               ),
               subtitle: Text(
                 "Host: ${podcasts[index]["host"]!} • ${podcasts[index]["duration"]!}",

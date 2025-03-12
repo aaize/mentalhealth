@@ -124,6 +124,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: widget.backgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: widget.backgroundColor,
         middle: _isSearching
@@ -193,7 +194,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                           Text(
                             article.title,
                             style: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 16,
-                            color: widget.backgroundColor),
+                            color: CupertinoColors.opaqueSeparator),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
