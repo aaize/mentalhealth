@@ -43,7 +43,7 @@ class SessionManager {
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Basic email format validation
     if (!RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       showToast("Please enter a valid email");
       setState(() => _isLoading = false);
@@ -135,8 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -169,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   hintText: "EMAIL",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -193,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   hintText: "PASSWORD",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -218,18 +217,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
                       : Text(
-                    "LOG IN",
-                    style: GoogleFonts.roboto(
-                      fontSize: 20,
-                      color: Colors.white,
-                      letterSpacing: 0.168,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                          "LOG IN",
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            color: Colors.white,
+                            letterSpacing: 0.168,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -237,11 +236,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _isLoading
                     ? null
                     : () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignUpScreen(),
-                  ),
-                ),
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScreen(),
+                          ),
+                        ),
                 child: Text(
                   "CREATE NEW ACCOUNT",
                   style: GoogleFonts.roboto(

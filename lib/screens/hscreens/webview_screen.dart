@@ -7,7 +7,8 @@ class WebViewScreen extends StatefulWidget {
   final String url;
   final Color backgroundColor;
 
-  WebViewScreen({required this.url,required this.backgroundColor});
+  const WebViewScreen(
+      {super.key, required this.url, required this.backgroundColor});
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -31,13 +32,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: CupertinoNavigationBar(
         backgroundColor: widget.backgroundColor,
         border: null,
-        middle: Text('Article',
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w400,
-          fontSize: 20,
-          color: Colors.white
-        ),),
-
+        middle: Text(
+          'Article',
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400, fontSize: 20, color: Colors.white),
+        ),
       ),
       body: WebViewWidget(controller: _controller),
     );

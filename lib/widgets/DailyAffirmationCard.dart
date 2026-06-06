@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class DailyAffirmationCard extends StatelessWidget {
   final Color backgroundColor;
 
-  const DailyAffirmationCard({required this.backgroundColor, Key? key}) : super(key: key);
+  const DailyAffirmationCard({required this.backgroundColor, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,14 @@ class DailyAffirmationCard extends StatelessWidget {
     return FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance
           .collection('affirmations')
-          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)))
-          .where('date', isLessThan: Timestamp.fromDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1)))
+          .where('date',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day)))
+          .where('date',
+              isLessThan: Timestamp.fromDate(DateTime(DateTime.now().year,
+                  DateTime.now().month, DateTime.now().day + 1)))
 // Querying by date
           .get(),
       builder: (context, snapshot) {

@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 class PodcastScreen extends StatefulWidget {
   final Color backgroundColor;
 
-  PodcastScreen({Key? key, required this.backgroundColor}) : super(key: key);
+  const PodcastScreen({super.key, required this.backgroundColor});
 
   @override
   _PodcastScreenState createState() => _PodcastScreenState();
@@ -24,7 +24,8 @@ class _PodcastScreenState extends State<PodcastScreen> {
       "title": "Therapy Chat",
       "host": "Laura Reagan, LCSW-C",
       "duration": "45 min",
-      "audioUrl": "https://podcasts.apple.com/us/podcast/therapy-chat/id1033011989"
+      "audioUrl":
+          "https://podcasts.apple.com/us/podcast/therapy-chat/id1033011989"
     },
     {
       "title": "The Happiness Lab",
@@ -42,13 +43,15 @@ class _PodcastScreenState extends State<PodcastScreen> {
       "title": "We Can Do Hard Things",
       "host": "Glennon Doyle",
       "duration": "60 min",
-      "audioUrl": "https://podcasts.apple.com/us/podcast/we-can-do-hard-things/id1564530722"
+      "audioUrl":
+          "https://podcasts.apple.com/us/podcast/we-can-do-hard-things/id1564530722"
     },
     {
       "title": "Where Should We Begin?",
       "host": "Esther Perel",
       "duration": "50 min",
-      "audioUrl": "https://podcasts.apple.com/us/podcast/where-should-we-begin-with-esther-perel/id1237931798"
+      "audioUrl":
+          "https://podcasts.apple.com/us/podcast/where-should-we-begin-with-esther-perel/id1237931798"
     },
     {
       "title": "The Mental Illness Happy Hour",
@@ -80,7 +83,6 @@ class _PodcastScreenState extends State<PodcastScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: widget.backgroundColor,
-
       navigationBar: CupertinoNavigationBar(
         border: null,
         middle: Text(
@@ -116,7 +118,8 @@ class _PodcastScreenState extends State<PodcastScreen> {
               subtitle: Text(
                 "Host: ${podcasts[index]["host"]!} • ${podcasts[index]["duration"]!}",
               ),
-              trailing: Icon(CupertinoIcons.play_circle_fill, color: Colors.green),
+              trailing:
+                  Icon(CupertinoIcons.play_circle_fill, color: Colors.green),
               onTap: () {
                 Navigator.push(
                   context,
@@ -142,7 +145,11 @@ class PodcastPlayerScreen extends StatefulWidget {
   final String title;
   final Color backgroundColor;
 
-  PodcastPlayerScreen({required this.url, required this.title, required this.backgroundColor});
+  const PodcastPlayerScreen(
+      {super.key,
+      required this.url,
+      required this.title,
+      required this.backgroundColor});
 
   @override
   _PodcastPlayerScreenState createState() => _PodcastPlayerScreenState();

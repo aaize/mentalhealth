@@ -12,13 +12,13 @@ class JoinEventScreen extends StatefulWidget {
   final Color backgroundColor;
 
   const JoinEventScreen({
-    Key? key,
+    super.key,
     required this.eventName,
     required this.eventTime,
     required this.eventDescription,
     required this.eventImage,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   _JoinEventScreenState createState() => _JoinEventScreenState();
@@ -105,10 +105,14 @@ class _JoinEventScreenState extends State<JoinEventScreen> {
             SizedBox(height: 20),
 
             // Event Links
-            _buildLink("More details", "www.mhpsupportcircle.com/details", Icons.info),
-            _buildLink("Join via Web", "www.mhpsupportcircle.com/join", Icons.link),
-            _buildLink("Zoom Meeting", "www.zoom.com/mhp-circle", Icons.video_call),
-            _buildLink("Resources & Articles", "www.mhpsupportcircle.com/resources", Icons.book),
+            _buildLink(
+                "More details", "www.mhpsupportcircle.com/details", Icons.info),
+            _buildLink(
+                "Join via Web", "www.mhpsupportcircle.com/join", Icons.link),
+            _buildLink(
+                "Zoom Meeting", "www.zoom.com/mhp-circle", Icons.video_call),
+            _buildLink("Resources & Articles",
+                "www.mhpsupportcircle.com/resources", Icons.book),
             SizedBox(height: 30),
 
             // Join Event Button
@@ -116,7 +120,8 @@ class _JoinEventScreenState extends State<JoinEventScreen> {
               child: ElevatedButton(
                 onPressed: hasJoined ? null : _joinEvent,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: hasJoined ? Colors.grey : Colors.deepPurpleAccent,
+                  backgroundColor:
+                      hasJoined ? Colors.grey : Colors.deepPurpleAccent,
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 40),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

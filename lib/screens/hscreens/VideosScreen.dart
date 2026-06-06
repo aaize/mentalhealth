@@ -6,7 +6,7 @@ import 'package:mentalhealth/screens/hscreens/VideoPlayerScreen.dart';
 class VideosScreen extends StatelessWidget {
   final Color backgroundColor;
 
-  VideosScreen({Key? key, required this.backgroundColor}) : super(key: key);
+  VideosScreen({super.key, required this.backgroundColor});
 
   final List<Map<String, String>> videos = [
     {
@@ -35,7 +35,8 @@ class VideosScreen extends StatelessWidget {
       'url': 'https://www.youtube.com/watch?v=MIr3RsUWrdo',
     },
     {
-      'title': 'Virtual Wellness Series: How does Nutrition Impact Your Mental Health',
+      'title':
+          'Virtual Wellness Series: How does Nutrition Impact Your Mental Health',
       'source': 'Wellness Series',
       'url': 'https://www.youtube.com/watch?v=eH414ixcIHI',
     },
@@ -47,7 +48,8 @@ class VideosScreen extends StatelessWidget {
     {
       'title': 'How Food Influences Your Mental Health',
       'source': 'Deepak Chopra',
-      'url': 'https://www.facebook.com/DeepakChopra/videos/how-food-influences-your-mental-health/3856601054601401/',
+      'url':
+          'https://www.facebook.com/DeepakChopra/videos/how-food-influences-your-mental-health/3856601054601401/',
     },
     {
       'title': 'Stillness For Stress Relief | 15-Minute Meditation',
@@ -72,7 +74,8 @@ class VideosScreen extends StatelessWidget {
     {
       'title': 'Supporting a Healthy Mind Through Diet & Exercise',
       'source': 'McLean Hospital',
-      'url': 'https://www.mcleanhospital.org/video/supporting-healthy-mind-through-diet-exercise',
+      'url':
+          'https://www.mcleanhospital.org/video/supporting-healthy-mind-through-diet-exercise',
     },
     {
       'title': 'A 10-Minute Meditation for Stress from Headspace',
@@ -86,7 +89,6 @@ class VideosScreen extends StatelessWidget {
     },
   ];
 
-
   String? getYouTubeThumbnail(String url) {
     final Uri? uri = Uri.tryParse(url);
     if (uri == null || !uri.host.contains('youtube.com')) return null;
@@ -99,7 +101,6 @@ class VideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-
       appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
         border: null,
@@ -130,7 +131,8 @@ class VideosScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => VideoPlayerScreen(videoUrl: video['url']!),
+                  builder: (context) =>
+                      VideoPlayerScreen(videoUrl: video['url']!),
                 ),
               );
             },
@@ -149,17 +151,17 @@ class VideosScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: thumbnailUrl != null
                           ? Image.network(
-                        thumbnailUrl,
-                        width: 150,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      )
+                              thumbnailUrl,
+                              width: 150,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )
                           : Container(
-                        width: 150,
-                        height: 100,
-                        color: Colors.grey,
-                        child: Icon(Icons.videocam, color: Colors.white),
-                      ),
+                              width: 150,
+                              height: 100,
+                              color: Colors.grey,
+                              child: Icon(Icons.videocam, color: Colors.white),
+                            ),
                     ),
                     SizedBox(width: 10),
                     Expanded(

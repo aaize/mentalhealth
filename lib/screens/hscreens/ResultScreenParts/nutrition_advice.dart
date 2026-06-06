@@ -8,10 +8,10 @@ class NutritionAdviceScreen extends StatelessWidget {
   final Color backgroundColor;
 
   const NutritionAdviceScreen({
-    Key? key,
+    super.key,
     required this.content,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   // Function to launch URLs
   Future<void> _launchURL(BuildContext context, String url) async {
@@ -27,14 +27,21 @@ class NutritionAdviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Nutrition Advice',
-        style: (GoogleFonts.roboto(color: CupertinoColors.white,
-        fontWeight: FontWeight.w400)),),
+        middle: Text(
+          'Nutrition Advice',
+          style: (GoogleFonts.roboto(
+              color: CupertinoColors.white, fontWeight: FontWeight.w400)),
+        ),
         border: null,
         backgroundColor: backgroundColor,
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-        }, icon: Icon(CupertinoIcons.back,size: 23,)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              CupertinoIcons.back,
+              size: 23,
+            )),
       ),
       child: SafeArea(
         child: ListView(
@@ -42,15 +49,21 @@ class NutritionAdviceScreen extends StatelessWidget {
           children: [
             _buildSectionHeader('General Nutrition Advice'),
             _buildAdviceSection(content),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
             _buildSectionHeader('Recommended Articles'),
             _buildArticlesSection(context),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
             _buildSectionHeader('Informative Videos'),
             _buildVideosSection(context),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
@@ -63,11 +76,10 @@ class NutritionAdviceScreen extends StatelessWidget {
       child: Text(
         title,
         style: GoogleFonts.roboto(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: backgroundColor,
-          decoration: TextDecoration.none
-        ),
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: backgroundColor,
+            decoration: TextDecoration.none),
       ),
     );
   }
@@ -80,7 +92,7 @@ class NutritionAdviceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: CupertinoColors.systemGrey.withOpacity(0.1),
+            color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -88,8 +100,8 @@ class NutritionAdviceScreen extends StatelessWidget {
       ),
       child: Text(
         content,
-        style: GoogleFonts.poppins(fontSize: 16, height: 1.5,
-        color: Colors.green),
+        style:
+            GoogleFonts.poppins(fontSize: 16, height: 1.5, color: Colors.green),
       ),
     );
   }
@@ -98,30 +110,35 @@ class NutritionAdviceScreen extends StatelessWidget {
     final articles = [
       {
         'title': '27 Natural Health and Nutrition Tips That Are Evidence-Based',
-        'url': 'https://www.healthline.com/nutrition/27-health-and-nutrition-tips',
+        'url':
+            'https://www.healthline.com/nutrition/27-health-and-nutrition-tips',
       },
       {
         'title': 'Choosing Healthy Foods for a Balanced Diet',
-        'url': 'https://www.helpguide.org/articles/healthy-eating/healthy-eating.htm',
+        'url':
+            'https://www.helpguide.org/articles/healthy-eating/healthy-eating.htm',
       },
       {
         'title': 'Healthy Eating Plate',
-        'url': 'https://www.hsph.harvard.edu/nutritionsource/healthy-eating-plate/',
+        'url':
+            'https://www.hsph.harvard.edu/nutritionsource/healthy-eating-plate/',
       },
     ];
 
     return Column(
-      children: articles.map((article) => CupertinoListTile(
-        title: Text(
-          article['title']!,
-          style: GoogleFonts.poppins(fontSize: 16,
-          color: CupertinoColors.inactiveGray),
-        ),
-        trailing: const Icon(CupertinoIcons.chevron_forward),
-        onTap: () {
-          _launchURL(context, article['url']!);
-        },
-      )).toList(),
+      children: articles
+          .map((article) => CupertinoListTile(
+                title: Text(
+                  article['title']!,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, color: CupertinoColors.inactiveGray),
+                ),
+                trailing: const Icon(CupertinoIcons.chevron_forward),
+                onTap: () {
+                  _launchURL(context, article['url']!);
+                },
+              ))
+          .toList(),
     );
   }
 
@@ -138,17 +155,19 @@ class NutritionAdviceScreen extends StatelessWidget {
     ];
 
     return Column(
-      children: videos.map((video) => CupertinoListTile(
-        title: Text(
-          video['title']!,
-          style: GoogleFonts.poppins(fontSize: 16,
-          color: CupertinoColors.inactiveGray),
-        ),
-        trailing: const Icon(CupertinoIcons.chevron_forward),
-        onTap: () {
-          _launchURL(context, video['url']!);
-        },
-      )).toList(),
+      children: videos
+          .map((video) => CupertinoListTile(
+                title: Text(
+                  video['title']!,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, color: CupertinoColors.inactiveGray),
+                ),
+                trailing: const Icon(CupertinoIcons.chevron_forward),
+                onTap: () {
+                  _launchURL(context, video['url']!);
+                },
+              ))
+          .toList(),
     );
   }
 }

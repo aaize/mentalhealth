@@ -8,8 +8,7 @@ import 'package:location/location.dart';
 class EmergencyScreen extends StatefulWidget {
   final Color backgroundColor;
 
-  const EmergencyScreen({Key? key, required this.backgroundColor})
-      : super(key: key);
+  const EmergencyScreen({super.key, required this.backgroundColor});
 
   @override
   _EmergencyScreenState createState() => _EmergencyScreenState();
@@ -22,8 +21,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   void _updateMessage(String text) {
     setState(() {
-      _currentMessage = _autoResponses[text.toLowerCase()] ??
-          "Processing your request...";
+      _currentMessage =
+          _autoResponses[text.toLowerCase()] ?? "Processing your request...";
       _showMapButton =
           text.toLowerCase() == "hospital" || text.toLowerCase() == "pharmacy";
       _mapQuery = text.toLowerCase();
@@ -39,7 +38,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   Future<void> _openMaps(String query) async {
     final Uri url =
-    Uri.parse("https://www.google.com/maps/search/?api=1&query=$query");
+        Uri.parse("https://www.google.com/maps/search/?api=1&query=$query");
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     }
@@ -47,25 +46,25 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   Future<void> _sendHelp() async {
     Location location = Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) return;
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) return;
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) return;
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) return;
     }
 
-    _locationData = await location.getLocation();
+    locationData = await location.getLocation();
     final Uri locationUrl = Uri.parse(
-        "https://maps.google.com/?q=${_locationData.latitude},${_locationData.longitude}");
+        "https://maps.google.com/?q=${locationData.latitude},${locationData.longitude}");
     if (await canLaunchUrl(locationUrl)) {
       await launchUrl(locationUrl);
     }
@@ -82,12 +81,12 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
             .take(5)
             .map(
               (contact) => CupertinoActionSheetAction(
-            onPressed: () => _callNumber(contact.phones.isNotEmpty
-                ? contact.phones.first.number
-                : ""),
-            child: Text(contact.displayName),
-          ),
-        )
+                onPressed: () => _callNumber(contact.phones.isNotEmpty
+                    ? contact.phones.first.number
+                    : ""),
+                child: Text(contact.displayName),
+              ),
+            )
             .toList(),
         cancelButton: CupertinoActionSheetAction(
           isDefaultAction: true,
@@ -124,37 +123,37 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   };
 
   List<Map<String, dynamic>> get _emergencyOptions => [
-    {
-      "text": "🚨 Call Emergency",
-      "action": () => _callNumber("112"),
-      "color": CupertinoColors.systemRed,
-    },
-    {
-      "text": "🏥 Nearest Hospital",
-      "action": () => _openMaps("hospital"),
-      "color": CupertinoColors.systemBlue,
-    },
-    {
-      "text": "💊 Pharmacy",
-      "action": () => _openMaps("pharmacy"),
-      "color": CupertinoColors.systemGreen,
-    },
-    {
-      "text": "📍 Share My Location",
-      "action": _sendHelp,
-      "color": CupertinoColors.systemOrange,
-    },
-    {
-      "text": "📞 Emergency Contacts",
-      "action": _alertContacts,
-      "color": CupertinoColors.systemPurple,
-    },
-    {
-      "text": "📚 Safety Guide",
-      "action": _showSafetyTips,
-      "color": CupertinoColors.systemTeal,
-    },
-  ];
+        {
+          "text": "🚨 Call Emergency",
+          "action": () => _callNumber("112"),
+          "color": CupertinoColors.systemRed,
+        },
+        {
+          "text": "🏥 Nearest Hospital",
+          "action": () => _openMaps("hospital"),
+          "color": CupertinoColors.systemBlue,
+        },
+        {
+          "text": "💊 Pharmacy",
+          "action": () => _openMaps("pharmacy"),
+          "color": CupertinoColors.systemGreen,
+        },
+        {
+          "text": "📍 Share My Location",
+          "action": _sendHelp,
+          "color": CupertinoColors.systemOrange,
+        },
+        {
+          "text": "📞 Emergency Contacts",
+          "action": _alertContacts,
+          "color": CupertinoColors.systemPurple,
+        },
+        {
+          "text": "📚 Safety Guide",
+          "action": _showSafetyTips,
+          "color": CupertinoColors.systemTeal,
+        },
+      ];
 
   @override
   Widget build(BuildContext context) {

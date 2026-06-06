@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentalhealth/screens/ChatScreen.dart';
@@ -18,10 +17,10 @@ import 'hscreens/PodcastScreen.dart';
 import 'hscreens/VideosScreen.dart';
 import 'hscreens/WorkshopScreen.dart';
 import 'package:mentalhealth/screens/hscreens/QuestionnaireScreen.dart';
-import 'package:mentalhealth/screens/hscreens/Prof.dart';
+
 class HomeScreen extends StatefulWidget {
   final String userEmail; // The email of the logged-in user
-  const HomeScreen({Key? key, required this.userEmail}) : super(key: key);
+  const HomeScreen({super.key, required this.userEmail});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -56,13 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Color _getColorForEmoji(String emoji) {
     switch (emoji) {
-      case '😊': return CupertinoColors.systemYellow;
-      case '😢': return CupertinoColors.systemBlue;
-      case '😡': return CupertinoColors.systemRed;
-      case '😎': return CupertinoColors.systemGreen;
-      case '😍': return CupertinoColors.systemPink;
-      case '⚡︎': return Color(0xFF6A5ACD);
-      default: return CupertinoColors.systemPurple;
+      case '😊':
+        return CupertinoColors.systemYellow;
+      case '😢':
+        return CupertinoColors.systemBlue;
+      case '😡':
+        return CupertinoColors.systemRed;
+      case '😎':
+        return CupertinoColors.systemGreen;
+      case '😍':
+        return CupertinoColors.systemPink;
+      case '⚡︎':
+        return Color(0xFF6A5ACD);
+      default:
+        return CupertinoColors.systemPurple;
     }
   }
 
@@ -78,15 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Wrap(
               spacing: 20,
               runSpacing: 15,
-              children: ['😊','😢','😡','😎','😍','🤔','😴','☂️','⚡︎']
+              children: ['😊', '😢', '😡', '😎', '😍', '🤔', '😴', '☂️', '⚡︎']
                   .map((e) => CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Text(e, style: const TextStyle(fontSize: 36)),
-                onPressed: () {
-                  _emojiButtonColor(e);
-                  Navigator.pop(context);
-                },
-              )).toList(),
+                        padding: EdgeInsets.zero,
+                        child: Text(e, style: const TextStyle(fontSize: 36)),
+                        onPressed: () {
+                          _emojiButtonColor(e);
+                          Navigator.pop(context);
+                        },
+                      ))
+                  .toList(),
             ),
           ),
         ],
@@ -107,13 +114,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: CupertinoActionSheet(
           actions: [
-            _buildActionSheetItem('Mood Tracker',
-                CupertinoIcons.heart, () {
-                  _navigateTo(MoodHistoryScreen(
-                    email: widget.userEmail,
-                    backgroundColor: backgroundColor,
-                  ));
-                }),
+            _buildActionSheetItem('Mood Tracker', CupertinoIcons.heart, () {
+              _navigateTo(MoodHistoryScreen(
+                email: widget.userEmail,
+                backgroundColor: backgroundColor,
+              ));
+            }),
             _buildActionSheetItem('Profile', CupertinoIcons.person, () {
               _navigateTo(ProfilePage(
                 email: widget.userEmail,
@@ -126,12 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
               isDestructiveAction: true,
               child: const Text(
                 'Logout',
-                style: TextStyle(fontSize: 20, color: Colors.white), // White text
+                style:
+                    TextStyle(fontSize: 20, color: Colors.white), // White text
               ),
             ),
           ],
           cancelButton: CupertinoActionSheetAction(
-            child: const Text('Cancel', style: TextStyle(color: Colors.white)), // White text
+            child: const Text('Cancel',
+                style: TextStyle(color: Colors.white)), // White text
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -139,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActionSheetItem(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildActionSheetItem(
+      String title, IconData icon, VoidCallback onTap) {
     return CupertinoActionSheetAction(
       onPressed: onTap,
       child: Row(
@@ -147,7 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Icon(icon, color: Colors.white, size: 24), // White icon
           SizedBox(width: 10),
-          Text(title, style: TextStyle(color: Colors.white, fontSize: 18)), // White text
+          Text(title,
+              style:
+                  TextStyle(color: Colors.white, fontSize: 18)), // White text
         ],
       ),
     );
@@ -161,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       CupertinoPageRoute(builder: (_) => const LoginScreen()),
-          (route) => false,
+      (route) => false,
     );
   }
 
@@ -178,7 +189,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => ProfileScreen(backgroundColor: backgroundColor, userEmail: widget.userEmail,), // Replace with your screen widget
+                builder: (context) => ProfileScreen(
+                  backgroundColor: backgroundColor,
+                  userEmail: widget.userEmail,
+                ), // Replace with your screen widget
               ),
             );
           },
@@ -236,15 +250,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => QuestionnaireScreen(backgroundColor: backgroundColor,)),
+                    MaterialPageRoute(
+                        builder: (_) => QuestionnaireScreen(
+                              backgroundColor: backgroundColor,
+                            )),
                   );
                 },
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue,
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
-
                 child: Text(
                   'Take Questionnaire',
                   style: GoogleFonts.poppins(
@@ -265,10 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
 
-            Container(
+            SizedBox(
               height: 221,
               child: PageView(
-
                 controller: _pageController,
                 physics: BouncingScrollPhysics(), // iOS-style smooth scrolling
 
@@ -276,23 +290,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   _imageCard(
                       'lib/assets/aomh.png',
                       'Articles on Mental Health',
-                      ArticlesScreen(backgroundColor: backgroundColor,)
-                  ),
-                  _imageCard(
-                      'lib/assets/htimh.jpg',
-                      'Mental Health Videos',
-                      VideosScreen(backgroundColor: backgroundColor)
-                  ),
+                      ArticlesScreen(
+                        backgroundColor: backgroundColor,
+                      )),
+                  _imageCard('lib/assets/htimh.jpg', 'Mental Health Videos',
+                      VideosScreen(backgroundColor: backgroundColor)),
                   _imageCard(
                       'lib/assets/mhp.jpg',
                       'Mental Health Podcasts',
-                      PodcastScreen(backgroundColor: backgroundColor,)
-                  ),
+                      PodcastScreen(
+                        backgroundColor: backgroundColor,
+                      )),
                   _imageCard(
                       'lib/assets/wellnessworkshop.png',
                       'Wellness Workshops',
-                      WorkshopScreen(backgroundColor: backgroundColor,)
-                  ),
+                      WorkshopScreen(
+                        backgroundColor: backgroundColor,
+                      )),
                 ],
               ),
             ),
@@ -300,17 +314,25 @@ class _HomeScreenState extends State<HomeScreen> {
             // Daily Affirmation Section
             DailyAffirmationCard(backgroundColor: backgroundColor),
             SizedBox(height: 20),
-            QuickAccessButtons(backgroundColor: backgroundColor,userEmail: widget.userEmail,),
+            QuickAccessButtons(
+              backgroundColor: backgroundColor,
+              userEmail: widget.userEmail,
+            ),
             SizedBox(height: 20),
             _communityHighlights(),
 
             SizedBox(height: 30),
             // Mood Tracker Summary
-            MoodTrackerSummary(email: widget.userEmail,backgroundColor: backgroundColor,),
+            MoodTrackerSummary(
+              email: widget.userEmail,
+              backgroundColor: backgroundColor,
+            ),
 
             SizedBox(height: 30),
             // Progress Tracker
-            ProgressTracker(backgroundColor: backgroundColor,),
+            ProgressTracker(
+              backgroundColor: backgroundColor,
+            ),
             // Quick Access Buttons
             SizedBox(height: 30),
             // Upcoming Events or Support Groups
@@ -323,18 +345,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            _eventCard('Harmony Helpers', 'Thursday October 10 at 10AM - 2PM', '''A supportive community gathering to discuss mental health topics.
+            _eventCard(
+                'Harmony Helpers',
+                'Thursday October 10 at 10AM - 2PM',
+                '''A supportive community gathering to discuss mental health topics.
                 \n Shared Experiences: Engaging with others facing similar challenges fosters a sense of belonging and reduces feelings of isolation.
                 \n Emotional Support: Regular interactions in a supportive environment can alleviate stress and promote emotional well-being.''',
-                  "lib/assets/harmony.png"
-                  ),
+                "lib/assets/harmony.png"),
             SizedBox(height: 20),
             _eventCard(
                 'Anxiety Support Circle',
                 'Every Friday at 3 PM',
                 'Join a compassionate and understanding community where you can openly share your thoughts and feelings. Guided by mental health professionals, this support circle offers practical coping techniques, mindfulness exercises, and a safe space to connect with others who truly understand your journey.\n\n📌 More details: [www.mhpsupportcircle.com](#)\n🌐 Join via Web: [www.mhpsupportcircle.com/join](#)\n🎥 Zoom Meeting: [www.zoom.com/mhp-circle](#)\n🔗 Resources & Articles: [www.mhpsupportcircle.com/resources](#)',
-                "lib/assets/mhp.jpg"
-            ),
+                "lib/assets/mhp.jpg"),
 
             SizedBox(height: 30),
             // Emergency Contacts Section
@@ -357,7 +380,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Daily Affirmation Card
-
 
   // Mood Tracker Summary
   Widget _moodTrackerSummary() {
@@ -405,14 +427,18 @@ class _HomeScreenState extends State<HomeScreen> {
         _quickAccessButton('Chat', CupertinoIcons.chat_bubble_fill, () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => EmergencyScreen(backgroundColor: backgroundColor,)),
+            MaterialPageRoute(
+                builder: (_) => EmergencyScreen(
+                      backgroundColor: backgroundColor,
+                    )),
           );
         }),
       ],
     );
   }
 
-  Widget _quickAccessButton(String label, IconData icon, VoidCallback onPressed) {
+  Widget _quickAccessButton(
+      String label, IconData icon, VoidCallback onPressed) {
     return CupertinoButton(
       onPressed: onPressed,
       padding: EdgeInsets.zero,
@@ -467,11 +493,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // Image Card Widget with Navigation
   Widget _imageCard(String imagePath, String title, Widget destinationScreen) {
     return CupertinoButton(
-      padding: EdgeInsets.zero,// Removes default button padding
+      padding: EdgeInsets.zero, // Removes default button padding
       onPressed: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(builder: (context) => destinationScreen), // iOS-style transition
+          CupertinoPageRoute(
+              builder: (context) => destinationScreen), // iOS-style transition
         );
       },
       child: ClipRRect(
@@ -479,54 +506,57 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [ // Adds iOS-style soft shadow
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              // Adds iOS-style soft shadow
               BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10,
-              spreadRadius: 2,
-              offset: Offset(0, 4),
-              )],
-          image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Center(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.black87,
-            borderRadius: BorderRadius.circular(10),
+                color: Colors.black26,
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: Offset(0, 4),
+              )
+            ],
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
           ),
-          child: Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
       ),
-    ),
-    ),
     );
   }
 
   // Event Card Widget
-  Widget _eventCard(String eventName, String eventTime, String eventDescription, String imagePath) {
+  Widget _eventCard(String eventName, String eventTime, String eventDescription,
+      String imagePath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => JoinEventScreen(
-              eventName: eventName,
-              eventTime: eventTime,
-              eventDescription: eventDescription,
-              backgroundColor: backgroundColor,
-              eventImage: imagePath),
+                eventName: eventName,
+                eventTime: eventTime,
+                eventDescription: eventDescription,
+                backgroundColor: backgroundColor,
+                eventImage: imagePath),
           ),
         );
       },
@@ -612,11 +642,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             if (name == 'Emergency')
               IconButton(
-                icon: Icon(CupertinoIcons.chat_bubble_fill, color: backgroundColor),
+                icon: Icon(CupertinoIcons.chat_bubble_fill,
+                    color: backgroundColor),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EmergencyScreen(backgroundColor: backgroundColor,)),
+                    MaterialPageRoute(
+                        builder: (context) => EmergencyScreen(
+                              backgroundColor: backgroundColor,
+                            )),
                   );
                 },
               ),
@@ -626,5 +660,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

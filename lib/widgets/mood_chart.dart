@@ -4,20 +4,20 @@ import '../../models/mood_entry.dart';
 
 class MoodChart extends StatelessWidget {
   final List<MoodEntry> moodEntries;
-  final Color backgroundColor;// New color parameter
+  final Color backgroundColor; // New color parameter
 
   const MoodChart({
     required this.moodEntries,
     required this.backgroundColor,
     // Default color
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.0),  // Use color with opacity
+        color: Colors.black.withValues(alpha: 0.0), // Use color with opacity
         borderRadius: BorderRadius.circular(12),
       ),
       padding: EdgeInsets.all(16),
@@ -34,7 +34,7 @@ class MoodChart extends StatelessWidget {
             LineChartBarData(
               spots: _generateChartPoints(),
               isCurved: true,
-              color: backgroundColor,  // Use the same color for the line
+              color: backgroundColor, // Use the same color for the line
               dotData: FlDotData(show: true),
             ),
           ],
@@ -48,7 +48,8 @@ class MoodChart extends StatelessWidget {
     final weekAgo = DateTime.now().subtract(Duration(days: 7));
     final dailyAverages = List.generate(7, (index) {
       final day = weekAgo.add(Duration(days: index));
-      final entries = moodEntries.where((e) => _isSameDay(e.date, day)).toList();
+      final entries =
+          moodEntries.where((e) => _isSameDay(e.date, day)).toList();
 
       if (entries.isEmpty) return 3.0;
 

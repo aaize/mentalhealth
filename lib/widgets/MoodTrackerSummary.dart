@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MoodTrackerSummary extends StatelessWidget {
   final String email;
   final Color backgroundColor;
 
-  const MoodTrackerSummary({required this.email,
-  required this.backgroundColor});
+  const MoodTrackerSummary(
+      {super.key, required this.email, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,8 @@ class MoodTrackerSummary extends StatelessWidget {
 
         // Convert document IDs (dates) to DateTime and sort
         final entries = snapshot.data!.docs
-            .map((doc) => MoodEntry.fromFirestore(doc.id, doc.data() as Map<String, dynamic>))
+            .map((doc) => MoodEntry.fromFirestore(
+                doc.id, doc.data() as Map<String, dynamic>))
             .toList()
           ..sort((a, b) => b.date.compareTo(a.date)); // Sort descending
 

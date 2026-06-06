@@ -5,14 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   final String email;
   final Color backgroundColor;
 
-  const ProfilePage({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
+  const ProfilePage(
+      {super.key, required this.email, required this.backgroundColor});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String lastUpdated = "";
   bool isLoading = true;
   File? _image;
-  bool _isUploading = false;
+  final bool _isUploading = false;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -46,7 +46,8 @@ class _ProfilePageState extends State<ProfilePage> {
           displayName = data['displayName'] ?? 'No name';
           imageUrl = data['imageUrl'] ?? '';
           lastUpdated = data['lastUpdated'] != null
-              ? DateFormat.yMMMd().format((data['lastUpdated'] as Timestamp).toDate())
+              ? DateFormat.yMMMd()
+                  .format((data['lastUpdated'] as Timestamp).toDate())
               : 'Not updated';
           isLoading = false;
         });
@@ -66,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showEditPopup() {
-    TextEditingController _nameController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
 
     showCupertinoDialog(
       context: context,
@@ -74,13 +75,16 @@ class _ProfilePageState extends State<ProfilePage> {
         return CupertinoAlertDialog(
           title: Text("Edit Display Name"),
           content: CupertinoTextField(
-            controller: _nameController,
+            controller: nameController,
             placeholder: "Enter new display name",
-            placeholderStyle: TextStyle(color: CupertinoColors.systemGrey2), // White-grey placeholder
-            style: TextStyle(color: CupertinoColors.systemGrey6), // White-grey text
+            placeholderStyle: TextStyle(
+                color: CupertinoColors.systemGrey2), // White-grey placeholder
+            style: TextStyle(
+                color: CupertinoColors.systemGrey6), // White-grey text
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: CupertinoColors.systemGrey.withOpacity(0.2), // Slight background tint
+              color: CupertinoColors.systemGrey
+                  .withValues(alpha: 0.2), // Slight background tint
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -92,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             CupertinoDialogAction(
               onPressed: () async {
-                String newName = _nameController.text.trim();
+                String newName = nameController.text.trim();
                 if (newName.isNotEmpty) {
                   await FirebaseFirestore.instance
                       .collection('ProfileDetails')
@@ -112,7 +116,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
   void _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
@@ -123,13 +126,19 @@ class _ProfilePageState extends State<ProfilePage> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: widget.backgroundColor,
-        middle: Text("Profile", style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w400, color: CupertinoColors.white)),
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(
-          CupertinoIcons.back,
-          size: 23,
-        )),
+        middle: Text("Profile",
+            style: GoogleFonts.roboto(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                color: CupertinoColors.white)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              CupertinoIcons.back,
+              size: 23,
+            )),
       ),
       child: SafeArea(
         child: Column(
@@ -151,13 +160,21 @@ class _ProfilePageState extends State<ProfilePage> {
           onTap: () {},
           child: CircleAvatar(
             radius: 60,
-            backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
-            child: imageUrl.isEmpty ? Icon(CupertinoIcons.person_fill, size: 60, color: CupertinoColors.systemGrey) : null,
+            backgroundImage:
+                imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+            child: imageUrl.isEmpty
+                ? Icon(CupertinoIcons.person_fill,
+                    size: 60, color: CupertinoColors.systemGrey)
+                : null,
           ),
         ),
         SizedBox(height: 10),
-        Text(displayName, style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold)),
-        Text(widget.email, style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey)),
+        Text(displayName,
+            style:
+                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold)),
+        Text(widget.email,
+            style: GoogleFonts.poppins(
+                fontSize: 16, color: CupertinoColors.systemGrey)),
       ],
     );
   }
@@ -179,8 +196,12 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildStatItem(String label, String count) {
     return Column(
       children: [
-        Text(count, style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold)),
-        Text(label, style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey)),
+        Text(count,
+            style:
+                GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(label,
+            style: GoogleFonts.poppins(
+                fontSize: 16, color: CupertinoColors.systemGrey)),
       ],
     );
   }
@@ -208,7 +229,11 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: BoxDecoration(
           color: CupertinoColors.systemBackground,
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [BoxShadow(color: CupertinoColors.systemGrey.withOpacity(0.3), blurRadius: 5)],
+          boxShadow: [
+            BoxShadow(
+                color: CupertinoColors.systemGrey.withValues(alpha: 0.3),
+                blurRadius: 5)
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -5,11 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/mood_entry.dart';
 import 'package:mentalhealth/widgets/mood_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class MoodAnalyticsScreen extends StatelessWidget {
   final String email;
   final Color backgroundColor;
 
-  MoodAnalyticsScreen({Key? key, required this.email, required this.backgroundColor}) : super(key: key);
+  MoodAnalyticsScreen(
+      {super.key, required this.email, required this.backgroundColor});
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final User? _user = FirebaseAuth.instance.currentUser;
@@ -20,17 +22,20 @@ class MoodAnalyticsScreen extends StatelessWidget {
       appBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
         border: null,
-        middle: Text(
-          'Mood Analytics',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w400,
-          fontSize: 20,
-          color: Colors.white)
-        ),
+        middle: Text('Mood Analytics',
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w400,
+                fontSize: 20,
+                color: Colors.white)),
         leading: IconButton(
-            icon: Icon(CupertinoIcons.back,
-            size: 23,), onPressed: () {
-              Navigator.pop(context);
-        },),
+          icon: Icon(
+            CupertinoIcons.back,
+            size: 23,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -39,10 +44,13 @@ class MoodAnalyticsScreen extends StatelessWidget {
             .collection('entries')
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
           final moodEntries = snapshot.data!.docs
-              .map((doc) => MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
+              .map((doc) =>
+                  MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
               .toList();
 
           return Padding(
@@ -60,7 +68,10 @@ class MoodAnalyticsScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: MoodChart(moodEntries: moodEntries, backgroundColor: backgroundColor,),
+                      child: MoodChart(
+                        moodEntries: moodEntries,
+                        backgroundColor: backgroundColor,
+                      ),
                     ),
                   ),
                 ),
@@ -95,7 +106,6 @@ class MoodAnalyticsScreen extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: CupertinoColors.darkBackgroundGray,
-
               ),
             ),
             SizedBox(height: 10),
@@ -123,7 +133,8 @@ class MoodAnalyticsScreen extends StatelessWidget {
 
   double _calculateWeeklyAverage(List<MoodEntry> entries) {
     final recentEntries = entries
-        .where((e) => e.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+        .where(
+            (e) => e.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
         .toList();
 
     if (recentEntries.isEmpty) return 0.0;
@@ -175,21 +186,24 @@ class MoodAnalyticsScreen extends StatelessWidget {
             margin: EdgeInsets.all(2),
             child: ListTile(
               hoverColor: backgroundColor,
-              leading: Icon(CupertinoIcons.person_fill, color:backgroundColor,
-              size: 50,),
+              leading: Icon(
+                CupertinoIcons.person_fill,
+                color: backgroundColor,
+                size: 50,
+              ),
               title: Text(
                 professional['name']!,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 '${professional['experience']} experience\n'
-                    'Rating: ${professional['rating']}\n'
-                    'Location: ${professional['location']}\n'
-                    'Consultation Fee: ${professional['fee']}',
+                'Rating: ${professional['rating']}\n'
+                'Location: ${professional['location']}\n'
+                'Consultation Fee: ${professional['fee']}',
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

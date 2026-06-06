@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class WorkshopScreen extends StatefulWidget {
   final Color backgroundColor;
 
-  WorkshopScreen({Key? key, required this.backgroundColor}) : super(key: key);
+  const WorkshopScreen({super.key, required this.backgroundColor});
 
   @override
   _WorkshopScreenState createState() => _WorkshopScreenState();
@@ -51,10 +51,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             color: Colors.white,
-
           ),
         ),
-
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => Navigator.pop(context),
@@ -68,7 +66,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             itemCount: workshops.length,
             itemBuilder: (context, index) {
               final workshop = workshops[index];
-              final isRegistered = registeredWorkshops.contains(workshop["title"]);
+              final isRegistered =
+                  registeredWorkshops.contains(workshop["title"]);
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Material(
@@ -80,8 +79,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                       title: Text(
                         workshop["title"]!,
                         style: TextStyle(
@@ -102,7 +101,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                     size: 16, color: Colors.grey),
                                 SizedBox(width: 4),
                                 Text(workshop["date"]!,
-                                    style: TextStyle(color: Colors.grey, decoration: null)),
+                                    style: TextStyle(
+                                        color: Colors.grey, decoration: null)),
                               ],
                             ),
                             SizedBox(height: 4),
@@ -112,7 +112,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                     size: 16, color: Colors.grey),
                                 SizedBox(width: 4),
                                 Text(workshop["time"]!,
-                                    style: TextStyle(color: Colors.grey, decoration: null)),
+                                    style: TextStyle(
+                                        color: Colors.grey, decoration: null)),
                               ],
                             ),
                             SizedBox(height: 4),
@@ -122,19 +123,40 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                     size: 16, color: Colors.grey),
                                 SizedBox(width: 4),
                                 Text(workshop["location"]!,
-                                    style: TextStyle(color: Colors.grey, decoration: null)),
+                                    style: TextStyle(
+                                        color: Colors.grey, decoration: null)),
                               ],
                             ),
                           ],
                         ),
                       ),
                       trailing: CupertinoButton(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         color: isRegistered
                             ? CupertinoColors.inactiveGray
                             : CupertinoColors.activeBlue,
                         borderRadius: BorderRadius.circular(8),
+                        onPressed: isRegistered
+                            ? null
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        WorkshopRegistrationScreen(
+                                      workshop: workshop,
+                                      backgroundColor: widget.backgroundColor,
+                                      onRegister: () {
+                                        setState(() {
+                                          registeredWorkshops
+                                              .add(workshop["title"]!);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
                         child: Text(
                           isRegistered ? "Registered" : "Register",
                           style: TextStyle(
@@ -142,26 +164,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             decoration: null,
                           ),
                         ),
-                        onPressed: isRegistered
-                            ? null
-                            : () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) =>
-                                  WorkshopRegistrationScreen(
-                                    workshop: workshop,
-                                    backgroundColor: widget.backgroundColor,
-                                    onRegister: () {
-                                      setState(() {
-                                        registeredWorkshops
-                                            .add(workshop["title"]!);
-                                      });
-                                    },
-                                  ),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -175,18 +177,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 }
 
-
 class WorkshopRegistrationScreen extends StatefulWidget {
   final Map<String, String> workshop;
   final VoidCallback onRegister;
   final Color backgroundColor;
 
-  WorkshopRegistrationScreen({
-    Key? key,
+  const WorkshopRegistrationScreen({
+    super.key,
     required this.workshop,
     required this.onRegister,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   _WorkshopRegistrationScreenState createState() =>
@@ -305,7 +306,8 @@ class _WorkshopRegistrationScreenState
                 backgroundColor: Colors.black45,
                 decoration: BoxDecoration(
                   color: Colors.white, // Set the background color to white
-                  borderRadius: BorderRadius.circular(13), // Adjust the radius as needed
+                  borderRadius:
+                      BorderRadius.circular(13), // Adjust the radius as needed
                 ),
                 header: Text("Your Details"),
                 children: [
@@ -350,10 +352,10 @@ class _WorkshopRegistrationScreenState
               // Submit Button
               Center(
                 child: CupertinoButton.filled(
+                  onPressed: _isSubmitting ? null : _submitRegistration,
                   child: _isSubmitting
                       ? CupertinoActivityIndicator()
                       : Text("Submit Registration"),
-                  onPressed: _isSubmitting ? null : _submitRegistration,
                 ),
               ),
             ],

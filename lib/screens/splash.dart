@@ -6,11 +6,14 @@ import 'HomeScreen.dart';
 import 'LoginScreen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _jiggleAnimation;
   late Animation<Color?> _colorAnimation;
@@ -28,7 +31,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
     );
 
-    _colorAnimation = ColorTween(begin: Colors.black, end: Colors.deepPurple).animate(
+    _colorAnimation =
+        ColorTween(begin: Colors.black, end: Colors.deepPurple).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
@@ -76,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     shadows: [
                       Shadow(
                         blurRadius: 10.0,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         offset: Offset(2, 2),
                       ),
                     ],

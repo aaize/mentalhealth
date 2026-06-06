@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class ProgressTracker extends StatefulWidget {
   final Color backgroundColor;
 
-  const ProgressTracker({Key? key, required this.backgroundColor}) : super(key: key);
+  const ProgressTracker({super.key, required this.backgroundColor});
 
   @override
   _ProgressTrackerState createState() => _ProgressTrackerState();
@@ -60,13 +60,17 @@ class _ProgressTrackerState extends State<ProgressTracker> {
               ),
               SizedBox(height: 10),
               StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance.collection('progress').doc(userEmail).snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('progress')
+                    .doc(userEmail)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || !snapshot.data!.exists) {
                     return Text('No progress data available.');
                   }
                   var data = snapshot.data!.data() as Map<String, dynamic>;
-                  int completed = data.values.where((val) => val == true).length;
+                  int completed =
+                      data.values.where((val) => val == true).length;
                   int total = data.length;
                   return Column(
                     children: [
@@ -77,7 +81,8 @@ class _ProgressTrackerState extends State<ProgressTracker> {
                         child: LinearProgressIndicator(
                           value: total == 0 ? 0 : completed / total,
                           backgroundColor: CupertinoColors.systemGrey5,
-                          valueColor: AlwaysStoppedAnimation<Color>(widget.backgroundColor),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              widget.backgroundColor),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -106,7 +111,10 @@ class _ProgressTrackerState extends State<ProgressTracker> {
             ),
           ),
           content: StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance.collection('progress').doc(userEmail).snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('progress')
+                .doc(userEmail)
+                .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData || !snapshot.data!.exists) {
                 return Padding(

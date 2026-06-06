@@ -41,12 +41,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     '56+': 4
   };
 
-  final Map<String, int> mealScores = {
-    '1': 1,
-    '2': 10,
-    '3': 20,
-    '4+': 30
-  };
+  final Map<String, int> mealScores = {'1': 1, '2': 10, '3': 20, '4+': 30};
 
   final Map<String, int> workPressureScores = {
     'Low': 4,
@@ -56,20 +51,27 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   int mapResponseToScore(int response) {
     switch (response) {
-      case 1: return -5;
-      case 2: return -6;
-      case 3: return 0;
-      case 4: return 4;
-      case 5: return 5;
-      default: return 0;
+      case 1:
+        return -5;
+      case 2:
+        return -6;
+      case 3:
+        return 0;
+      case 4:
+        return 4;
+      case 5:
+        return 5;
+      default:
+        return 0;
     }
   }
 
   void handleSubmit() {
-    final totalScore = responses.map(mapResponseToScore).reduce((a, b) => a + b) +
-        ageScores[selectedAgeRange]! +
-        mealScores[selectedMeals]! +
-        workPressureScores[selectedWorkPressure]!;
+    final totalScore =
+        responses.map(mapResponseToScore).reduce((a, b) => a + b) +
+            ageScores[selectedAgeRange]! +
+            mealScores[selectedMeals]! +
+            workPressureScores[selectedWorkPressure]!;
 
     Navigator.push(
       context,
@@ -86,7 +88,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     );
   }
 
-  Widget _buildDropdownQuestion(String title, String value, List<String> items, ValueChanged<String?> onChanged) {
+  Widget _buildDropdownQuestion(String title, String value, List<String> items,
+      ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 16.0),
       child: ClipRRect(
@@ -97,7 +100,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 6,
                 spreadRadius: 2,
                 offset: const Offset(0, 3),
@@ -110,11 +113,10 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 18,
-                  color: widget.backgroundColor,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.none
-                ),
+                    fontSize: 18,
+                    color: widget.backgroundColor,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.none),
               ),
             ),
             children: [
@@ -130,10 +132,9 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           item,
-                          style: const TextStyle(color: CupertinoColors.opaqueSeparator,
-                              decoration: TextDecoration.none
-
-                          ),
+                          style: const TextStyle(
+                              color: CupertinoColors.opaqueSeparator,
+                              decoration: TextDecoration.none),
                         ),
                       )
                   },
@@ -158,7 +159,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 6,
                 spreadRadius: 2,
                 offset: const Offset(0, 3),
@@ -171,16 +172,16 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               child: Text(
                 questions[index],
                 style: TextStyle(
-                  fontSize: 18,
-                  color: widget.backgroundColor,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.none
-                ),
+                    fontSize: 18,
+                    color: widget.backgroundColor,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.none),
               ),
             ),
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Column(
                   children: [
                     CupertinoSlider(
@@ -201,10 +202,14 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          Text('Never', style: TextStyle(fontSize: 12,
-                          decoration: TextDecoration.none)),
-                          Text('Always', style: TextStyle(fontSize: 12,
-                              decoration: TextDecoration.none)),
+                          Text('Never',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  decoration: TextDecoration.none)),
+                          Text('Always',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  decoration: TextDecoration.none)),
                         ],
                       ),
                     ),
@@ -243,44 +248,47 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
           children: [
             Expanded(
               child: ListView(
-
                 physics: const BouncingScrollPhysics(),
                 children: [
                   _buildDropdownQuestion(
                     'Select your age range:',
                     selectedAgeRange,
                     ['18-25', '26-35', '36-45', '46-55', '56+'],
-                        (value) => setState(() => selectedAgeRange = value!),
+                    (value) => setState(() => selectedAgeRange = value!),
                   ),
                   _buildDropdownQuestion(
                     'Daily meals:',
                     selectedMeals,
                     ['1', '2', '3', '4+'],
-                        (value) => setState(() => selectedMeals = value!),
+                    (value) => setState(() => selectedMeals = value!),
                   ),
                   _buildDropdownQuestion(
                     'Work pressure level:',
                     selectedWorkPressure,
                     ['Low', 'Moderate', 'High'],
-                        (value) => setState(() => selectedWorkPressure = value!),
+                    (value) => setState(() => selectedWorkPressure = value!),
                   ),
-                  ...List.generate(questions.length, (index) => _buildQuestionSlider(index)),
+                  ...List.generate(
+                      questions.length, (index) => _buildQuestionSlider(index)),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: CupertinoButton(
-                color: widget.backgroundColor, // Set your custom button color here
+                color:
+                    widget.backgroundColor, // Set your custom button color here
                 borderRadius: BorderRadius.circular(20),
-                padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
                 onPressed: handleSubmit,
                 child: const Text(
                   'Results!',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: CupertinoColors.white, // Ensure text color contrasts with the button
+                    color: CupertinoColors
+                        .white, // Ensure text color contrasts with the button
                     decoration: TextDecoration.none,
                   ),
                 ),

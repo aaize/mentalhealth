@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'LoginScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _nameController = TextEditingController(); // For display name
+  final TextEditingController _nameController =
+      TextEditingController(); // For display name
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isLoading = false;
 
   Future<void> _signUpUser() async {
@@ -34,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (!RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       showToast("Please enter a valid email");
       setState(() => _isLoading = false);
@@ -102,8 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -136,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: "NAME",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -161,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: "EMAIL",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -186,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: "PASSWORD",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -211,7 +210,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: "CONFIRM PASSWORD",
                   hintStyle:
-                  GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
+                      GoogleFonts.roboto(fontSize: 13, color: Colors.grey),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     borderSide: BorderSide(color: Colors.white),
@@ -236,18 +235,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
                       : Text(
-                    "SIGN UP",
-                    style: GoogleFonts.roboto(
-                      fontSize: 20,
-                      color: Colors.white,
-                      letterSpacing: 0.168,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                          "SIGN UP",
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            color: Colors.white,
+                            letterSpacing: 0.168,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 8),

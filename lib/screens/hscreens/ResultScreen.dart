@@ -54,16 +54,16 @@ class _ResultScreenState extends State<ResultScreen> {
       child: Text(
         title,
         style: GoogleFonts.poppins(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Colors.white60,
-          decoration: TextDecoration.none
-        ),
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white60,
+            decoration: TextDecoration.none),
       ),
     );
   }
 
-  Widget _buildRecommendationCard(String title, String content, IconData icon, Widget screen) {
+  Widget _buildRecommendationCard(
+      String title, String content, IconData icon, Widget screen) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -78,7 +78,7 @@ class _ResultScreenState extends State<ResultScreen> {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: CupertinoColors.systemGrey.withOpacity(0.1),
+              color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -95,7 +95,8 @@ class _ResultScreenState extends State<ResultScreen> {
           ),
           subtitle: Text(
             content,
-            style: GoogleFonts.poppins(fontSize: 14, height: 1.4, color: Colors.grey),
+            style: GoogleFonts.poppins(
+                fontSize: 14, height: 1.4, color: Colors.grey),
           ),
           trailing: const Icon(CupertinoIcons.chevron_forward, size: 18),
         ),
@@ -105,18 +106,28 @@ class _ResultScreenState extends State<ResultScreen> {
 
   Widget _buildAgeRecommendations() {
     final recommendations = <String, String>{
-      '18-25': '• Establish healthy sleep patterns\n• Regular physical activity 4-5x/week\n• Mindfulness practices\n• Social connection maintenance',
-      '26-35': '• Stress management techniques\n• Balanced work-life routine\n• Annual health checkups\n• Strength training 3x/week',
-      '36-45': '• Cardiovascular exercises\n• Regular health screenings\n• Mental health awareness\n• Nutritional supplements if needed',
-      '46-55': '• Low-impact exercises\n• Bone density monitoring\n• Cognitive activities\n• Regular social engagement',
-      '56+': '• Gentle daily movement\n• Fall prevention measures\n• Regular medical checkups\n• Community participation',
+      '18-25':
+          '• Establish healthy sleep patterns\n• Regular physical activity 4-5x/week\n• Mindfulness practices\n• Social connection maintenance',
+      '26-35':
+          '• Stress management techniques\n• Balanced work-life routine\n• Annual health checkups\n• Strength training 3x/week',
+      '36-45':
+          '• Cardiovascular exercises\n• Regular health screenings\n• Mental health awareness\n• Nutritional supplements if needed',
+      '46-55':
+          '• Low-impact exercises\n• Bone density monitoring\n• Cognitive activities\n• Regular social engagement',
+      '56+':
+          '• Gentle daily movement\n• Fall prevention measures\n• Regular medical checkups\n• Community participation',
     };
 
     return _buildRecommendationCard(
       'Age-Specific Advice (${widget.ageRange})',
-      recommendations[widget.ageRange] ?? '• Maintain regular health checkups\n• Stay physically active\n• Balanced nutrition\n• Social engagement',
+      recommendations[widget.ageRange] ??
+          '• Maintain regular health checkups\n• Stay physically active\n• Balanced nutrition\n• Social engagement',
       CupertinoIcons.heart_circle,
-      AgeAdviceScreen(ageRange: widget.ageRange, content: recommendations[widget.ageRange] ?? '', backgroundColor: widget.backgroundColor,),
+      AgeAdviceScreen(
+        ageRange: widget.ageRange,
+        content: recommendations[widget.ageRange] ?? '',
+        backgroundColor: widget.backgroundColor,
+      ),
     );
   }
 
@@ -124,37 +135,51 @@ class _ResultScreenState extends State<ResultScreen> {
     String content;
     switch (widget.meals) {
       case '1':
-        content = '⚠️ Consider increasing meal frequency:\n• Add nutrient-dense snacks\n• Focus on protein intake\n• Stay hydrated throughout the day';
+        content =
+            '⚠️ Consider increasing meal frequency:\n• Add nutrient-dense snacks\n• Focus on protein intake\n• Stay hydrated throughout the day';
         break;
       case '2':
-        content = '➡️ Ideal: 3-4 balanced meals\n• Include healthy fats\n• Complex carbohydrates\n• Fiber-rich vegetables';
+        content =
+            '➡️ Ideal: 3-4 balanced meals\n• Include healthy fats\n• Complex carbohydrates\n• Fiber-rich vegetables';
         break;
       case '3':
-        content = '✓ Good balance\n• Maintain consistent timing\n• Watch portion sizes\n• Include varied food groups';
+        content =
+            '✓ Good balance\n• Maintain consistent timing\n• Watch portion sizes\n• Include varied food groups';
         break;
       default:
-        content = '✓ Adequate frequency\n• Mindful eating practices\n• Avoid over-snacking\n• Balance macros';
+        content =
+            '✓ Adequate frequency\n• Mindful eating practices\n• Avoid over-snacking\n• Balance macros';
     }
     return _buildRecommendationCard(
       'Nutrition Guidance (${widget.meals} meals)',
       content,
       CupertinoIcons.leaf_arrow_circlepath,
-      NutritionAdviceScreen(content: content, backgroundColor: widget.backgroundColor,),
+      NutritionAdviceScreen(
+        content: content,
+        backgroundColor: widget.backgroundColor,
+      ),
     );
   }
 
   Widget _buildWorkStressAdvice() {
     final advice = {
-      'Low': '• Maintain work-life balance\n• Skill development\n• Proactive stress management',
-      'Moderate': '• Regular breaks\n• Time management\n• Relaxation techniques',
-      'High': '⚠️ Priority Stress Reduction:\n• Daily decompression routine\n• Set clear boundaries\n• Professional support if needed',
+      'Low':
+          '• Maintain work-life balance\n• Skill development\n• Proactive stress management',
+      'Moderate':
+          '• Regular breaks\n• Time management\n• Relaxation techniques',
+      'High':
+          '⚠️ Priority Stress Reduction:\n• Daily decompression routine\n• Set clear boundaries\n• Professional support if needed',
     };
 
     return _buildRecommendationCard(
       'Work Pressure Management (${widget.workPressure})',
-      advice[widget.workPressure] ?? '• Regular stress assessments\n• Healthy coping mechanisms\n• Workload prioritization',
+      advice[widget.workPressure] ??
+          '• Regular stress assessments\n• Healthy coping mechanisms\n• Workload prioritization',
       CupertinoIcons.briefcase,
-      WorkStressAdviceScreen(content: advice[widget.workPressure] ?? '',backgroundColor: widget.backgroundColor,),
+      WorkStressAdviceScreen(
+        content: advice[widget.workPressure] ?? '',
+        backgroundColor: widget.backgroundColor,
+      ),
     );
   }
 
@@ -170,10 +195,11 @@ class _ResultScreenState extends State<ResultScreen> {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: widget.backgroundColor.withOpacity(0.1),
+            color: widget.backgroundColor.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(CupertinoIcons.person_fill, color: widget.backgroundColor),
+          child:
+              Icon(CupertinoIcons.person_fill, color: widget.backgroundColor),
         ),
         title: Text(
           professional.name,
@@ -189,16 +215,19 @@ class _ResultScreenState extends State<ResultScreen> {
             const SizedBox(height: 4),
             Row(
               children: [
-                Icon(CupertinoIcons.star_fill, size: 16, color: CupertinoColors.systemYellow),
+                Icon(CupertinoIcons.star_fill,
+                    size: 16, color: CupertinoColors.systemYellow),
                 const SizedBox(width: 4),
-                Text('${professional.rating}%', style: GoogleFonts.poppins(fontSize: 14)),
+                Text('${professional.rating}%',
+                    style: GoogleFonts.poppins(fontSize: 14)),
               ],
             ),
           ],
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Text('Book', style: TextStyle(color: CupertinoColors.systemBlue)),
+          child: const Text('Book',
+              style: TextStyle(color: CupertinoColors.systemBlue)),
           onPressed: () {/* Add booking logic */},
         ),
       ),
@@ -230,8 +259,7 @@ class _ResultScreenState extends State<ResultScreen> {
         middle: Text(
           'Health Summary',
           style: GoogleFonts.poppins(
-              color: CupertinoColors.white,
-              fontWeight: FontWeight.w500),
+              color: CupertinoColors.white, fontWeight: FontWeight.w500),
         ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -249,7 +277,9 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               children: [
                 CupertinoListTile(
-                  title: Text('Overall Score', style: GoogleFonts.poppins(color: widget.backgroundColor)),
+                  title: Text('Overall Score',
+                      style:
+                          GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(
                     widget.totalScore.toString(),
                     style: GoogleFonts.poppins(
@@ -260,22 +290,26 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ),
                 CupertinoListTile(
-                  title: Text('Age Group', style: GoogleFonts.poppins(color: widget.backgroundColor)),
+                  title: Text('Age Group',
+                      style:
+                          GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.ageRange),
                 ),
                 CupertinoListTile(
-                  title: Text('Daily Meals', style: GoogleFonts.poppins(color: widget.backgroundColor)),
+                  title: Text('Daily Meals',
+                      style:
+                          GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.meals),
                 ),
                 CupertinoListTile(
-                  title: Text('Work Stress', style: GoogleFonts.poppins(color: widget.backgroundColor)),
+                  title: Text('Work Stress',
+                      style:
+                          GoogleFonts.poppins(color: widget.backgroundColor)),
                   additionalInfo: Text(widget.workPressure),
                 ),
               ],
             ),
-
             _buildSectionHeader('Key Areas of Concern'),
-
             Container(
               height: 220,
               margin: const EdgeInsets.symmetric(horizontal: 7),
@@ -303,17 +337,19 @@ class _ResultScreenState extends State<ResultScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 20,),
-
+            SizedBox(
+              height: 20,
+            ),
             _buildAgeRecommendations(),
             _buildNutritionAdvice(),
             _buildWorkStressAdvice(),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
-
             _buildSectionHeader('Recommended Professionals'),
-
-            ...professionals.map((professional) => _buildProfessionalCard(professional)).toList(),
+            ...professionals
+                .map((professional) => _buildProfessionalCard(professional)),
           ],
         ),
       ),

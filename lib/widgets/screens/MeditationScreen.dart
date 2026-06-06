@@ -11,7 +11,7 @@ void main() {
 class MeditationApp extends StatelessWidget {
   final Color backgroundColor;
 
-  const MeditationApp({Key? key, required this.backgroundColor}) : super(key: key);
+  const MeditationApp({super.key, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -28,47 +28,52 @@ class MeditationApp extends StatelessWidget {
 class MeditationScreen extends StatelessWidget {
   final Color backgroundColor;
 
-  const MeditationScreen({Key? key, required this.backgroundColor}) : super(key: key);
+  const MeditationScreen({super.key, required this.backgroundColor});
 
   final List<Map<String, String>> _sessions = const [
     {
       "title": "Morning Calm",
       "duration": "10 mins",
-      "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     },
     {
       "title": "Deep Relaxation",
       "duration": "15 mins",
-      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1940&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1940&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     },
     {
       "title": "Evening Serenity",
       "duration": "20 mins",
-      "image": "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1950&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1950&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     },
     {
       "title": "Stress Relief",
       "duration": "12 mins",
-      "image": "https://images.unsplash.com/photo-1494172961521-33799ddd43a5?auto=format&fit=crop&w=1950&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1494172961521-33799ddd43a5?auto=format&fit=crop&w=1950&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
     },
     {
       "title": "Inner Peace",
       "duration": "18 mins",
-      "image": "https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1950&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1950&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     },
     {
       "title": "Mindful Breathing",
       "duration": "8 mins",
-      "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80",
+      "image":
+          "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80",
       "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     },
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +89,14 @@ class MeditationScreen extends StatelessWidget {
           ),
         ),
         border: null,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(CupertinoIcons.back,size: 23,)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              CupertinoIcons.back,
+              size: 23,
+            )),
         backgroundColor: backgroundColor,
       ),
       child: SafeArea(
@@ -102,8 +112,8 @@ class MeditationScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   gradient: LinearGradient(
                     colors: [
-                      Colors.black.withOpacity(0.8),
-                      Colors.black.withOpacity(0.8),
+                      Colors.black.withValues(alpha: 0.8),
+                      Colors.black.withValues(alpha: 0.8),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -143,7 +153,7 @@ class MeditationScreen extends StatelessWidget {
                               Text(
                                 session["duration"]!,
                                 style: GoogleFonts.roboto(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                 ),
                               ),
                             ],
@@ -188,17 +198,15 @@ class MeditationScreen extends StatelessWidget {
   }
 }
 
-
-
 class MeditationPlayerScreen extends StatefulWidget {
   final Map<String, String> session;
   final Color backgroundColor;
 
   const MeditationPlayerScreen({
-    Key? key,
+    super.key,
     required this.session,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   _MeditationPlayerScreenState createState() => _MeditationPlayerScreenState();
@@ -257,12 +265,18 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           widget.session["title"]!,
-          style: GoogleFonts.roboto(fontWeight: FontWeight.w400, color: Colors.white,fontSize: 20),
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400, color: Colors.white, fontSize: 20),
         ),
         backgroundColor: widget.backgroundColor,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(CupertinoIcons.back,size: 23,)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              CupertinoIcons.back,
+              size: 23,
+            )),
       ),
       child: SafeArea(
         child: Column(
@@ -291,7 +305,7 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               spreadRadius: 2,
             )
@@ -326,20 +340,18 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
         Text(
           widget.session["title"]!,
           style: TextStyle(
-            fontSize: screenWidth * 0.07,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-              decoration: TextDecoration.none
-          ),
+              fontSize: screenWidth * 0.07,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              decoration: TextDecoration.none),
         ),
         const SizedBox(height: 10),
         Text(
           widget.session["duration"]!,
           style: TextStyle(
-            fontSize: screenWidth * 0.05,
-            color: Colors.white.withOpacity(0.8),
-              decoration: TextDecoration.none
-          ),
+              fontSize: screenWidth * 0.05,
+              color: Colors.white.withValues(alpha: 0.8),
+              decoration: TextDecoration.none),
         ),
       ],
     );
@@ -356,7 +368,6 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
                 : 0.0,
             min: 0,
             max: 1,
-
             activeColor: Colors.white,
             thumbColor: Colors.white,
             onChanged: (value) async {
@@ -373,10 +384,15 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(_formatDuration(_position),
-                    style: TextStyle(fontSize: 14, color: Colors.white,
-                    decoration: TextDecoration.none)),
-                Text("-" + _formatDuration(_duration - _position),
-                    style: TextStyle(fontSize: 14, color: Colors.white,decoration: TextDecoration.none)),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        decoration: TextDecoration.none)),
+                Text("-${_formatDuration(_duration - _position)}",
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        decoration: TextDecoration.none)),
               ],
             ),
           ),
@@ -402,5 +418,3 @@ class _MeditationPlayerScreenState extends State<MeditationPlayerScreen> {
     );
   }
 }
-
-

@@ -12,10 +12,10 @@ class MoodHistoryScreen extends StatefulWidget {
   final Color backgroundColor;
 
   const MoodHistoryScreen({
-    Key? key,
+    super.key,
     required this.email,
     required this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   State<MoodHistoryScreen> createState() => _MoodHistoryScreenState();
@@ -69,10 +69,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
 
   Future<void> _clearAllMoodEntries() async {
     final batch = _firestore.batch();
-    final collectionRef = _firestore
-        .collection('moods')
-        .doc(widget.email)
-        .collection('entries');
+    final collectionRef =
+        _firestore.collection('moods').doc(widget.email).collection('entries');
 
     final snapshot = await collectionRef.get();
     for (var doc in snapshot.docs) {
@@ -87,14 +85,16 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: Text('Clear All Entries'),
-        content: Text('Are you sure you want to delete all mood entries? This action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete all mood entries? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: Text('Cancel'),
             onPressed: () => Navigator.pop(context),
           ),
           CupertinoDialogAction(
-            child: Text('Delete', style: TextStyle(color: CupertinoColors.destructiveRed)),
+            child: Text('Delete',
+                style: TextStyle(color: CupertinoColors.destructiveRed)),
             onPressed: () async {
               await _clearAllMoodEntries();
               Navigator.pop(context);
@@ -124,7 +124,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
           );
         }).toList(),
         cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel', style: TextStyle(color: CupertinoColors.destructiveRed)),
+          child: const Text('Cancel',
+              style: TextStyle(color: CupertinoColors.destructiveRed)),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -154,7 +155,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
           children: [
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: const Icon(CupertinoIcons.chart_bar_alt_fill, color: CupertinoColors.white),
+              child: const Icon(CupertinoIcons.chart_bar_alt_fill,
+                  color: CupertinoColors.white),
               onPressed: () => Navigator.push(
                 context,
                 CupertinoPageRoute(
@@ -167,8 +169,9 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
             ),
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: const Icon(CupertinoIcons.delete, color: CupertinoColors.white),
               onPressed: _showClearConfirmationDialog,
+              child: const Icon(CupertinoIcons.delete,
+                  color: CupertinoColors.white),
             ),
           ],
         ),
@@ -186,7 +189,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: CupertinoColors.systemGrey.withOpacity(0.1),
+                        color:
+                            CupertinoColors.systemGrey.withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -210,7 +214,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                       }
 
                       final entries = snapshot.data!.docs
-                          .map((doc) => MoodEntry.fromMap(doc.data() as Map<String, dynamic>))
+                          .map((doc) => MoodEntry.fromMap(
+                              doc.data() as Map<String, dynamic>))
                           .toList();
 
                       return MoodCalendar(
@@ -246,7 +251,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
               padding: const EdgeInsets.all(16),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final tip = _mentalHealthTips[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
@@ -267,23 +272,28 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   final List<Map<String, String>> _mentalHealthTips = [
     {
       'title': 'Practice Mindfulness',
-      'description': 'Take deep breaths and focus on the present moment to reduce stress.',
+      'description':
+          'Take deep breaths and focus on the present moment to reduce stress.',
     },
     {
       'title': 'Stay Active',
-      'description': 'Engage in regular physical activity to boost your mood and energy levels.',
+      'description':
+          'Engage in regular physical activity to boost your mood and energy levels.',
     },
     {
       'title': 'Get Enough Sleep',
-      'description': 'Prioritize a healthy sleep routine to improve mental clarity and emotional stability.',
+      'description':
+          'Prioritize a healthy sleep routine to improve mental clarity and emotional stability.',
     },
     {
       'title': 'Stay Connected',
-      'description': 'Reach out to friends and family for support and companionship.',
+      'description':
+          'Reach out to friends and family for support and companionship.',
     },
     {
       'title': 'Limit Screen Time',
-      'description': 'Reduce screen time before bed to enhance sleep quality and mental well-being.',
+      'description':
+          'Reduce screen time before bed to enhance sleep quality and mental well-being.',
     },
   ];
 
@@ -301,17 +311,17 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
           Text(
             title,
             style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.none
-            ),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.none),
           ),
           const SizedBox(height: 4),
           Text(
             description,
-            style: GoogleFonts.poppins(fontSize: 14,
-                decoration: TextDecoration.none,
-                color: CupertinoColors.systemGrey,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              decoration: TextDecoration.none,
+              color: CupertinoColors.systemGrey,
             ),
           ),
         ],

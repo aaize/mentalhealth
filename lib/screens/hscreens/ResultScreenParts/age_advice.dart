@@ -8,12 +8,11 @@ class AgeAdviceScreen extends StatelessWidget {
   final String content;
   final Color backgroundColor;
 
-  const AgeAdviceScreen({
-    Key? key,
-    required this.ageRange,
-    required this.content,
-    required this.backgroundColor
-  }) : super(key: key);
+  const AgeAdviceScreen(
+      {super.key,
+      required this.ageRange,
+      required this.content,
+      required this.backgroundColor});
 
   // Function to launch URLs
   Future<void> _launchURL(BuildContext context, String url) async {
@@ -30,17 +29,17 @@ class AgeAdviceScreen extends StatelessWidget {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: backgroundColor,
-        middle: Text('Age-Specific Advice ($ageRange)',
-        style: GoogleFonts.roboto(
-          fontWeight: FontWeight.w400,
-          color: CupertinoColors.white
-        ),),
-        leading: IconButton(icon: Icon(CupertinoIcons.back,
-            size: 23), onPressed: () {
-          Navigator.pop(context);
-        },
+        middle: Text(
+          'Age-Specific Advice ($ageRange)',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400, color: CupertinoColors.white),
         ),
-
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.back, size: 23),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       child: SafeArea(
         child: ListView(
@@ -48,18 +47,26 @@ class AgeAdviceScreen extends StatelessWidget {
           children: [
             _buildSectionHeader('Advice for $ageRange'),
             _buildAdviceSection(content),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             _buildSectionHeader('Tips for $ageRange'),
             _buildTipsSection(),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
             _buildSectionHeader('Recommended Articles'),
             _buildArticlesSection(context),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
             _buildSectionHeader('Exercises for $ageRange'),
             _buildExercisesSection(context),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Divider(),
             _buildSectionHeader('Videos for $ageRange'),
             _buildVideosSection(context),
@@ -92,7 +99,7 @@ class AgeAdviceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: CupertinoColors.systemGrey.withOpacity(0.1),
+            color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -100,9 +107,11 @@ class AgeAdviceScreen extends StatelessWidget {
       ),
       child: Text(
         content,
-        style: GoogleFonts.roboto(fontSize: 16, height: 1.5,
-        color: Colors.green,
-        decoration: TextDecoration.none),
+        style: GoogleFonts.roboto(
+            fontSize: 16,
+            height: 1.5,
+            color: Colors.green,
+            decoration: TextDecoration.none),
       ),
     );
   }
@@ -122,7 +131,7 @@ class AgeAdviceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: CupertinoColors.systemGrey.withOpacity(0.1),
+            color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -130,40 +139,57 @@ class AgeAdviceScreen extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: tips.map((tip) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Text(
-            tip,
-            style: GoogleFonts.roboto(fontSize: 16, height: 1.5,
-            color: Colors.green,
-                decoration: TextDecoration.none
-
-          ),
-          ),
-        )).toList(),
+        children: tips
+            .map((tip) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text(
+                    tip,
+                    style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Colors.green,
+                        decoration: TextDecoration.none),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
 
   Widget _buildArticlesSection(BuildContext context) {
     final articles = [
-      {"title": "Longevity To-Do List for Your 30s", "url": "https://www.verywellhealth.com/longevity-to-dos-for-your-30s-2223717"},
-      {"title": "Good Sleep for Good Health", "url": "https://newsinhealth.nih.gov/2021/04/good-sleep-good-health"},
-      {"title": "Mindfulness for Beginners: Reclaiming the Present Moment and Your Life", "url": "https://www.amazon.com/Mindfulness-Beginners-Reclaiming-Present-Moment/dp/1622036670"}
+      {
+        "title": "Longevity To-Do List for Your 30s",
+        "url":
+            "https://www.verywellhealth.com/longevity-to-dos-for-your-30s-2223717"
+      },
+      {
+        "title": "Good Sleep for Good Health",
+        "url": "https://newsinhealth.nih.gov/2021/04/good-sleep-good-health"
+      },
+      {
+        "title":
+            "Mindfulness for Beginners: Reclaiming the Present Moment and Your Life",
+        "url":
+            "https://www.amazon.com/Mindfulness-Beginners-Reclaiming-Present-Moment/dp/1622036670"
+      }
     ];
 
     return Column(
-      children: articles.map((article) => CupertinoListTile(
-        title: Text(
-          article['title']!,
-          style: GoogleFonts.poppins(fontSize: 16,
-          color: CupertinoColors.inactiveGray),
-        ),
-        trailing: const Icon(CupertinoIcons.chevron_forward),
-        onTap: () {
-          _launchURL(context, article['url']!); // Launch the article URL
-        },
-      )).toList(),
+      children: articles
+          .map((article) => CupertinoListTile(
+                title: Text(
+                  article['title']!,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, color: CupertinoColors.inactiveGray),
+                ),
+                trailing: const Icon(CupertinoIcons.chevron_forward),
+                onTap: () {
+                  _launchURL(
+                      context, article['url']!); // Launch the article URL
+                },
+              ))
+          .toList(),
     );
   }
 
@@ -175,25 +201,31 @@ class AgeAdviceScreen extends StatelessWidget {
       },
       {
         'name': 'Cardio Exercises at Home',
-        'url': 'https://www.medicalnewstoday.com/articles/cardio-exercises-at-home'
+        'url':
+            'https://www.medicalnewstoday.com/articles/cardio-exercises-at-home'
       },
       {
         'name': 'Yoga for Relaxation',
-        'url': 'https://www.healthline.com/health/fitness-exercise/morning-stretches'
-      },];
+        'url':
+            'https://www.healthline.com/health/fitness-exercise/morning-stretches'
+      },
+    ];
 
     return Column(
-      children: exercises.map((exercise) => CupertinoListTile(
-        title: Text(
-          exercise['name']!,
-          style: GoogleFonts.poppins(fontSize: 16,
-          color: CupertinoColors.inactiveGray),
-        ),
-        trailing: const Icon(CupertinoIcons.chevron_forward),
-        onTap: () {
-          _launchURL(context, exercise['url']!); // Launch the exercise URL
-        },
-      )).toList(),
+      children: exercises
+          .map((exercise) => CupertinoListTile(
+                title: Text(
+                  exercise['name']!,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, color: CupertinoColors.inactiveGray),
+                ),
+                trailing: const Icon(CupertinoIcons.chevron_forward),
+                onTap: () {
+                  _launchURL(
+                      context, exercise['url']!); // Launch the exercise URL
+                },
+              ))
+          .toList(),
     );
   }
 
@@ -206,20 +238,23 @@ class AgeAdviceScreen extends StatelessWidget {
       {
         'title': '10 Minute Morning Stretch for Every Day',
         'url': 'https://www.youtube.com/watch?v=ihba9Lw0tv4'
-      },];
+      },
+    ];
 
     return Column(
-      children: videos.map((video) => CupertinoListTile(
-        title: Text(
-          video['title']!,
-          style: GoogleFonts.poppins(fontSize: 16,
-          color: CupertinoColors.inactiveGray),
-        ),
-        trailing: const Icon(CupertinoIcons.chevron_forward),
-        onTap: () {
-          _launchURL(context, video['url']!); // Launch the video URL
-        },
-      )).toList(),
+      children: videos
+          .map((video) => CupertinoListTile(
+                title: Text(
+                  video['title']!,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, color: CupertinoColors.inactiveGray),
+                ),
+                trailing: const Icon(CupertinoIcons.chevron_forward),
+                onTap: () {
+                  _launchURL(context, video['url']!); // Launch the video URL
+                },
+              ))
+          .toList(),
     );
   }
 }

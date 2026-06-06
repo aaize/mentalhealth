@@ -11,18 +11,20 @@ class MoodCalendar extends StatelessWidget {
   final Color primaryColor;
 
   const MoodCalendar({
-    Key? key,
+    super.key,
     required this.currentMonth,
     required this.moodEntries,
     required this.onMonthChanged,
     required this.onDayPressed,
     required this.primaryColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final daysInMonth = DateUtils.getDaysInMonth(currentMonth.year, currentMonth.month);
-    final firstWeekday = DateTime(currentMonth.year, currentMonth.month, 1).weekday;
+    final daysInMonth =
+        DateUtils.getDaysInMonth(currentMonth.year, currentMonth.month);
+    final firstWeekday =
+        DateTime(currentMonth.year, currentMonth.month, 1).weekday;
     final entriesMap = {
       for (var entry in moodEntries)
         DateFormat('yyyy-MM-dd').format(entry.date): entry.emoji
@@ -53,11 +55,17 @@ class MoodCalendar extends StatelessWidget {
                 padding: EdgeInsets.all(0), // Ensure no extra padding
                 onPressed: () => onDayPressed(date),
                 child: Container(
-                  margin: const EdgeInsets.all(5), // Increased margin for better spacing
-                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8), // Add padding to increase highlight area
+                  margin: const EdgeInsets.all(
+                      5), // Increased margin for better spacing
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 2,
+                      horizontal: 8), // Add padding to increase highlight area
                   decoration: BoxDecoration(
-                    color: _isToday(date) ? primaryColor.withOpacity(0.4) : null, // Make highlight broader
-                    borderRadius: BorderRadius.circular(12), // Increase for rounded effect
+                    color: _isToday(date)
+                        ? primaryColor.withValues(alpha: 0.4)
+                        : null, // Make highlight broader
+                    borderRadius: BorderRadius.circular(
+                        12), // Increase for rounded effect
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -65,24 +73,28 @@ class MoodCalendar extends StatelessWidget {
                       Text(
                         day.toString(),
                         style: TextStyle(
-                          fontSize: 16, // Increase font size for better visibility
+                          fontSize:
+                              16, // Increase font size for better visibility
                           fontWeight: FontWeight.bold,
-                          color: _isToday(date) ? primaryColor : CupertinoColors.label,
+                          color: _isToday(date)
+                              ? primaryColor
+                              : CupertinoColors.label,
                         ),
                       ),
                       if (emoji != null)
                         Padding(
-                          padding: const EdgeInsets.only(top: 4), // Adjust spacing
+                          padding:
+                              const EdgeInsets.only(top: 4), // Adjust spacing
                           child: Text(
                             emoji,
-                            style: const TextStyle(fontSize: 20), // Increase emoji size
+                            style: const TextStyle(
+                                fontSize: 20), // Increase emoji size
                           ),
                         ),
                     ],
                   ),
                 ),
               );
-
             },
           ),
         ],
@@ -98,7 +110,7 @@ class MoodCalendar extends StatelessWidget {
         children: [
           Text(
             DateFormat('MMMM yyyy').format(currentMonth),
-            style:  TextStyle(
+            style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 18,
               fontWeight: FontWeight.w600,

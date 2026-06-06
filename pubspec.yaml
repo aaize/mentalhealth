@@ -49,7 +49,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   lottie:
   firebase_core:
-  google_fonts:
+  google_fonts: ^6.3.2
   path_provider_android:
   kf_drawer:
   fluttertoast:

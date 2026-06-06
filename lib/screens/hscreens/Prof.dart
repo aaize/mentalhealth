@@ -6,26 +6,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../moodtracking/mood_history_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Color backgroundColor;
   final String userEmail;
 
-
   const ProfileScreen({
-    Key? key,
+    super.key,
     required this.backgroundColor,
     required this.userEmail,
-  }) : super(key: key);
+  });
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -59,7 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           displayName = data['displayName'] ?? 'No name';
           imageUrl = data['imageUrl'] ?? '';
           lastUpdated = data['lastUpdated'] != null
-              ? DateFormat.yMMMd().format((data['lastUpdated'] as Timestamp).toDate())
+              ? DateFormat.yMMMd()
+                  .format((data['lastUpdated'] as Timestamp).toDate())
               : 'Not updated';
           isLoading = false;
         });
@@ -100,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .getPublicUrl(fileName);
 
         setState(() {
-          imageUrl = publicUrl;  // Update the imageUrl immediately
+          imageUrl = publicUrl; // Update the imageUrl immediately
         });
 
         // Update Firestore with the new image URL
@@ -121,25 +114,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       } finally {
         setState(() {
-          _isUploading = false;  // Hide loading state after upload
+          _isUploading = false; // Hide loading state after upload
         });
       }
     }
   }
 
   void _showEditPopup() {
-    TextEditingController _nameController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
     showCupertinoDialog(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
           title: Text("Edit Display Name"),
           content: CupertinoTextField(
-            controller: _nameController,
+            controller: nameController,
             placeholder: "Enter new display name",
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: CupertinoColors.systemGrey.withOpacity(0.2),
+              color: CupertinoColors.systemGrey.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -151,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             CupertinoDialogAction(
               onPressed: () async {
-                String newName = _nameController.text.trim();
+                String newName = nameController.text.trim();
                 if (newName.isNotEmpty) {
                   await FirebaseFirestore.instance
                       .collection('ProfileDetails')
@@ -177,9 +170,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: widget.backgroundColor,
         middle: Text("Profile", style: TextStyle(color: Colors.white)),
-        leading: IconButton(icon: Icon(CupertinoIcons.back,size: 23,), onPressed: () {
-          Navigator.pop(context);
-        },),
+        leading: IconButton(
+          icon: Icon(
+            CupertinoIcons.back,
+            size: 23,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
@@ -211,7 +210,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ? NetworkImage(imageUrl)
                     : (_image != null ? FileImage(_image!) : null),
                 child: imageUrl.isEmpty && _image == null
-                    ? Icon(CupertinoIcons.person_fill, size: 60, color: CupertinoColors.systemGrey)
+                    ? Icon(CupertinoIcons.person_fill,
+                        size: 60, color: CupertinoColors.systemGrey)
                     : null,
               ),
               Container(
@@ -232,12 +232,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(height: 10),
         Text(
           displayName,
-          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold,              decoration: TextDecoration.none,
+          style: GoogleFonts.poppins(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
           ),
         ),
         Text(
           widget.userEmail,
-          style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey,              decoration: TextDecoration.none,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: CupertinoColors.systemGrey,
+            decoration: TextDecoration.none,
           ),
         ),
       ],
@@ -263,13 +269,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           count,
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold,              decoration: TextDecoration.none,
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(fontSize: 16, color: CupertinoColors.systemGrey,              decoration: TextDecoration.none,
-
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: CupertinoColors.systemGrey,
+            decoration: TextDecoration.none,
           ),
         ),
       ],
@@ -281,24 +292,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Column(
         children: [
-          _buildButton(CupertinoIcons.pencil_circle, "Edit Name", _showEditPopup),
+          _buildButton(
+              CupertinoIcons.pencil_circle, "Edit Name", _showEditPopup),
           SizedBox(height: 10),
-
           _buildButton(
             CupertinoIcons.graph_circle,
             "Mood Tracker",
-                () => Navigator.push(
+            () => Navigator.push(
               context,
               CupertinoPageRoute(
                 builder: (context) => MoodHistoryScreen(
                     backgroundColor: widget.backgroundColor,
-                    email: widget.userEmail
-                ),
+                    email: widget.userEmail),
               ),
             ),
           ),
           SizedBox(height: 10),
-          _buildButton(CupertinoIcons.settings_solid, "Settings", _showEditPopup),
+          _buildButton(
+              CupertinoIcons.settings_solid, "Settings", _showEditPopup),
           SizedBox(height: 10),
           _buildButton(CupertinoIcons.lock_open, "Log Out", _logout),
           SizedBox(height: 10),
@@ -317,18 +328,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [BoxShadow(color: CupertinoColors.systemGrey.withOpacity(0.3), blurRadius: 5)],
+          boxShadow: [
+            BoxShadow(
+                color: CupertinoColors.systemGrey.withValues(alpha: 0.3),
+                blurRadius: 5)
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color:CupertinoColors.white),
+            Icon(icon, color: CupertinoColors.white),
             SizedBox(width: 10),
-            Text(text, style: GoogleFonts.poppins(fontSize: 18,
-              fontWeight: FontWeight.w400,
-              color: CupertinoColors.white,
-              decoration: TextDecoration.none,
-            )),
+            Text(text,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: CupertinoColors.white,
+                  decoration: TextDecoration.none,
+                )),
           ],
         ),
       ),
@@ -348,13 +365,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontWeight: FontWeight.bold,
               color: widget.backgroundColor,
               decoration: TextDecoration.none,
-
             ),
           ),
           SizedBox(height: 10),
           _buildDetailItem("Last Updated", lastUpdated),
-          _buildDetailItem("Account Created", "Jan 1, 2023"), // Replace with actual data
-          _buildDetailItem("Streak Started", "Mar 15, 2023"), // Replace with actual data
+          _buildDetailItem(
+              "Account Created", "Jan 1, 2023"), // Replace with actual data
+          _buildDetailItem(
+              "Streak Started", "Mar 15, 2023"), // Replace with actual data
         ],
       ),
     );
@@ -380,7 +398,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 16,
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.none,
-
             ),
           ),
         ],

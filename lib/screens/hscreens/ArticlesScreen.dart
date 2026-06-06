@@ -21,7 +21,7 @@ class Article {
 
 class ArticlesScreen extends StatefulWidget {
   final Color backgroundColor;
-  const ArticlesScreen({Key? key, required this.backgroundColor}) : super(key: key);
+  const ArticlesScreen({super.key, required this.backgroundColor});
 
   @override
   _ArticlesScreenState createState() => _ArticlesScreenState();
@@ -38,42 +38,48 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
       source: 'Journal Courier',
       date: 'February 23, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.myjournalcourier.com/features/article/mental-fitness-in-stay-sharp-distracted-world-20149370.php',
+      url:
+          'https://www.myjournalcourier.com/features/article/mental-fitness-in-stay-sharp-distracted-world-20149370.php',
     ),
     Article(
       title: 'Prescribing Stand-Up Comedy: A New Approach to Mental Health',
       source: 'The Times',
       date: 'February 20, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.thetimes.co.uk/article/comedy-prescription-antidepressants-nhs-craic-health-0dc52zrkf',
+      url:
+          'https://www.thetimes.co.uk/article/comedy-prescription-antidepressants-nhs-craic-health-0dc52zrkf',
     ),
     Article(
       title: 'PILLAR Expands Mental Health Support with New Grant',
       source: 'LMT Online',
       date: 'February 22, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.lmtonline.com/local/article/webb-nonprofit-funding-methodist-ministries-laredo-20175717.php',
+      url:
+          'https://www.lmtonline.com/local/article/webb-nonprofit-funding-methodist-ministries-laredo-20175717.php',
     ),
     Article(
       title: 'Narcissism and the Youth Mental Health Crisis',
       source: 'The Australian',
       date: 'February 19, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.theaustralian.com.au/commentary/narcissism-at-the-heart-of-childrens-mental-health-crisis/news-story/f369002722fc008c3b3c2af3db32737a',
+      url:
+          'https://www.theaustralian.com.au/commentary/narcissism-at-the-heart-of-childrens-mental-health-crisis/news-story/f369002722fc008c3b3c2af3db32737a',
     ),
     Article(
       title: 'Supporting New Dads: Protecting Mental Health After Childbirth',
       source: 'Herald Sun',
       date: 'February 19, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.heraldsun.com.au/health/mental-health/deakin-university-study-reveals-firsttime-dads-struggle-with-parenthood/news-story/9ab0237af75e22c19c42cd3dcd153f37',
+      url:
+          'https://www.heraldsun.com.au/health/mental-health/deakin-university-study-reveals-firsttime-dads-struggle-with-parenthood/news-story/9ab0237af75e22c19c42cd3dcd153f37',
     ),
     Article(
       title: 'Rise in Teenagers Seeking Mental Health Benefits Post-COVID',
       source: 'The Times',
       date: 'February 21, 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.thetimes.co.uk/article/more-teenagers-on-benefits-for-mental-health-than-before-covid-tskrlh5qv',
+      url:
+          'https://www.thetimes.co.uk/article/more-teenagers-on-benefits-for-mental-health-than-before-covid-tskrlh5qv',
     ),
     Article(
       title: 'Top 10 Trends to Watch in 2025',
@@ -101,10 +107,10 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
       source: 'World Economic Forum',
       date: 'January 2025',
       imageUrl: 'lib/assets/articlesonmental.png',
-      url: 'https://www.weforum.org/stories/2025/01/4-imperatives-for-improving-mental-health-care-in-2025/',
+      url:
+          'https://www.weforum.org/stories/2025/01/4-imperatives-for-improving-mental-health-care-in-2025/',
     ),
   ];
-
 
   @override
   void initState() {
@@ -116,7 +122,9 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
   void _onSearchChanged() {
     setState(() {
       _filteredArticles = articles.where((article) {
-        return article.title.toLowerCase().contains(_searchController.text.toLowerCase());
+        return article.title
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
       }).toList();
     });
   }
@@ -129,26 +137,30 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
         backgroundColor: widget.backgroundColor,
         middle: _isSearching
             ? CupertinoSearchTextField(
-          controller: _searchController,
-          style: GoogleFonts.poppins(),
-          prefixIcon: const Icon(CupertinoIcons.search),
-        )
+                controller: _searchController,
+                style: GoogleFonts.poppins(),
+                prefixIcon: const Icon(CupertinoIcons.search),
+              )
             : Text(
-          'Articles',
-          style: GoogleFonts.poppins(fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.w400),
-        ),
-        leading: CupertinoButton(onPressed: () {
+                'Articles',
+                style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400),
+              ),
+        leading: CupertinoButton(
+          onPressed: () {
             Navigator.pop(context);
-        },
-        child: Icon(CupertinoIcons.back),
-        sizeStyle: CupertinoButtonSize.medium,),
+          },
+          sizeStyle: CupertinoButtonSize.medium,
+          child: Icon(CupertinoIcons.back),
+        ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: Icon(_isSearching ? CupertinoIcons.xmark : CupertinoIcons.search),
           onPressed: () => setState(() => _isSearching = !_isSearching),
           sizeStyle: CupertinoButtonSize.small,
+          child:
+              Icon(_isSearching ? CupertinoIcons.xmark : CupertinoIcons.search),
         ),
       ),
       child: SafeArea(
@@ -163,7 +175,10 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => WebViewScreen(url: article.url,backgroundColor: widget.backgroundColor,),
+                    builder: (context) => WebViewScreen(
+                      url: article.url,
+                      backgroundColor: widget.backgroundColor,
+                    ),
                   ),
                 );
               },
@@ -193,15 +208,19 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         children: [
                           Text(
                             article.title,
-                            style: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 16,
-                            color: CupertinoColors.opaqueSeparator),
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: CupertinoColors.opaqueSeparator),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '${article.source} • ${article.date}',
-                            style: GoogleFonts.poppins(fontSize: 12, color: CupertinoColors.systemGrey),
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: CupertinoColors.systemGrey),
                           ),
                         ],
                       ),
